@@ -1,0 +1,57 @@
+// 生成顏色 class 名稱: .color / .bg-color
+@mixin generate-color-classes($colors) {
+  @each $k, $v in $colors {
+    .#{$k} {
+      color: $v;
+    }
+    .bg-#{$k} {
+      background-color: $v;
+    }
+  }
+}
+
+// 文字函式
+@mixin font-style($size, $weight, $letter-spacing, $line-height) {
+  font-size: $size;
+  font-weight: $weight;
+  letter-spacing: $letter-spacing;
+  line-height: $line-height;
+  font-family: 'Inter', sans-serif;
+}
+// 使用範本:
+// @include font-style(16px, 400, 1%, 160%);
+
+// RWD 媒體查詢函式
+@mixin only-mobile {
+  @media (width < 480px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (width >= 480px) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (width >= 1024px) {
+    @content;
+  }
+}
+
+// .example {
+//   // 在所有裝置上的基本樣式-->預設是手機板
+//   background-color: blue;
+//   color: white;
+
+//   // 平板裝置的樣式-->要寫在這個標籤裡面
+//   @include tablet {
+//     background-color: green;
+//   }
+
+//   // 桌面裝置的樣式-->要寫在這個標籤裡面
+//   @include desktop {
+//     background-color: red;
+//   }
+// }

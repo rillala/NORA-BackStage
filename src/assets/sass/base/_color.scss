@@ -1,0 +1,63 @@
+// 藍綠色系
+$blue-1: #d5faff; // 湖水亮色
+$blue-2: #bae6ec; // 湖水預設色
+$blue-3: #3eb3c2; // 主視覺預設色
+$blue-4: #347781; // 湖水深色
+
+// 咖啡色系
+$brown-1: #fef7d2; // 咖啡亮色
+$brown-2: #c0a790; // 咖啡預設
+$brown-3: #9a8470; //咖啡深色
+
+// 黃綠色系
+$yellow-1: #faffb6; // 黃綠亮色
+$yellow-2: #ced38c; // 黃綠預設
+$yellow-3: #8f9546; // 黃綠暗色
+
+// 中性色系
+$white01: #fff;
+$dark: #30322a;
+$light-gray: #f1f1f1; // 淺灰1
+$dark-gray: #d9d9d9; // 深灰2
+
+//警示色
+$red01: #f09f9f;
+
+$color: (
+  // 藍綠色系
+  blue-1: #d5faff,
+  // 湖水亮色
+  blue-2: #bae6ec,
+  // 湖水預設色
+  blue-3: #3eb3c2,
+  // 主視覺預設色
+  blue-4: #347781,
+
+  // 湖水深色
+  // 咖啡色系
+  brown-1: #fef7d2,
+  // 咖啡亮色
+  brown-2: #c0a790,
+  // 咖啡預設
+  brown-3: #9a8470,
+
+  //咖啡深色
+  // 黃綠色系
+  yellow-1: #faffb6,
+  // 黃綠亮色
+  yellow-2: #ced38c,
+  // 黃綠預設
+  yellow-3: #8f9546,
+
+  // 黃綠暗色
+  // 中性色系
+  white01: #fff,
+  // 黑色
+  dark: #30322a,
+  // 淺灰1
+  light-gray: #f1f1f1,
+  // 深灰2
+  dark-gray: #d9d9d9,
+  //警示色
+  red01: #f09f9f
+);

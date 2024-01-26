@@ -1,0 +1,107 @@
+@import '../mixin';
+// @include font-style($size, $weight, $letter-spacing, $line-height)
+
+h1,
+.h1 {
+  // 手機板
+  @include font-style(40px, 700, 10%, 125%);
+
+  // 平板 + 桌機板
+  @include tablet {
+    @include font-style(64px, 700, 10%, 125%);
+  }
+}
+
+h2,
+.h2 {
+  // 手機板
+  @include font-style(32px, 700, 10%, 125%);
+
+  // 平板 + 桌機板
+  @include tablet {
+    @include font-style(40px, 700, 10%, 125%);
+  }
+}
+
+h3,
+.h3 {
+  // 手機板
+  @include font-style(30px, 400, 2%, 125%);
+
+  // 平板 + 桌機板
+  @include tablet {
+    @include font-style(32px, 400, 2%, 125%);
+  }
+}
+
+h4,
+.h4 {
+  // 手機板
+  @include font-style(24px, 400, 1%, 125%);
+
+  // 平板 + 桌機板
+  @include tablet {
+    @include font-style(24px, 400, 1%, 125%);
+  }
+}
+
+p,
+.p {
+  // 手機板
+  @include font-style(16px, 400, 1%, 160%);
+
+  // 平板 + 桌機板
+  @include tablet {
+    @include font-style(20px, 400, 1%, 160%);
+  }
+}
+
+.tinyp {
+  // 手機板
+  @include font-style(14px, 400, 1%, 160%);
+
+  // 平板 + 桌機板
+  @include tablet {
+    @include font-style(16px, 400, 1%, 160%);
+  }
+}
+
+.footerp {
+  // 手機板
+  @include font-style(12px, 400, 1%, 160%);
+
+  // 平板 + 桌機板
+  @include tablet {
+    @include font-style(12px, 400, 1%, 160%);
+  }
+}
+
+.title {
+  // 手機板
+  line-height: 125%;
+
+  // 平板 + 桌機板
+  @include tablet {
+    line-height: 125%;
+  }
+}
+
+.text {
+  // 手機板
+  line-height: 160%;
+
+  // 平板 + 桌機板
+  @include tablet {
+    line-height: 160%;
+  }
+}
+
+.list {
+  // 手機板
+  line-height: 180%;
+
+  // 平板 + 桌機板
+  @include tablet {
+    line-height: 180%;
+  }
+}
