@@ -1,14 +1,9 @@
-import './assets/main.css'
-
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-
+import ViewUIPlus from 'view-ui-plus'
+import 'view-ui-plus/dist/styles/viewuiplus.css'
 import App from './App.vue'
 import router from './router'
-
+// import 'font-awesome/css/font-awesome.min.css';
+// import store from './store'
 const app = createApp(App)
-
-app.use(createPinia())
-app.use(router)
-
-app.mount('#app')
+createApp(App).use(router).use(ViewUIPlus).mount('#app')

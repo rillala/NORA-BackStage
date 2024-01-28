@@ -1,0 +1,50 @@
+*{
+  font-family: 'Inter', sans-serif;
+}
+
+.menu-box{
+  height:100%;
+}
+.ivu-menu {
+  background: $blue-3;
+  height: 100%;
+}
+
+//失效?
+.ivu-menu-vertical .ivu-menu-item:hover, .ivu-menu-vertical .ivu-menu-submenu-title:hover {
+  color: $dark;
+}
+.ivu-menu-vertical .ivu-menu-submenu-title:hover {
+  color: $dark;
+}
+.ivu-menu-light.ivu-menu-vertical .ivu-menu-item:hover {
+  background: $blue-4;
+}
+
+.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu){
+  background-color:$blue-2;
+  color:$dark;
+
+}
+
+/* 子菜單 4和 5 中的 ivu-icon-ios-arrow-down 圖示 */
+// .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) .ivu-menu-item[name="4"] .ivu-icon-ios-arrow-down:before,
+// .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) .ivu-menu-item[name="5"] .ivu-icon-ios-arrow-down:before {
+//   content: "\f116";
+// }
+
+// .ivu-menu-light.ivu-menu-vertical .ivu-menu-item.ivu-menu-submenu .ivu-icon-ios-arrow-down:before,
+// .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active.ivu-menu-submenu .ivu-icon-ios-arrow-down:before {
+//   content: none;
+// }
+
+#logo {
+  display: block;
+  height: 150px; 
+  margin-left:40px;
+  text-decoration: none;
+  background-image: url(@/assets/image/header/back-logo.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
