@@ -1,7 +1,7 @@
 <template>
   <div class="menu-box">
     <RouterLink to="/" id="logo"></RouterLink>
-    <Menu theme="light" active-name="1">
+    <Menu theme="light" active-name="1" class="menu-container">
       <MenuGroup>
         <MenuItem :name="index" v-for="(link, index) in navList">
           <RouterLink :to="link.path">{{ link.name }}</RouterLink>
@@ -61,4 +61,19 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/sass/page/header.scss";
+.menu-box{
+  // width:330px;
+  height: 100vh;
+  overflow: auto;
+  position: relative;
+  // overflow-x:hidden;
+  z-index: 1;
+
+}
+
+// .menu-group {
+//   
+//   height:auto;
+//   overflow-y: visible;
+// }
 </style>
