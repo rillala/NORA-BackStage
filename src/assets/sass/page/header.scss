@@ -1,17 +1,22 @@
-*{
-  font-family: 'Inter', sans-serif;
+* {
+  font-family: "Inter", sans-serif;
 }
 
-.menu-box{
-  height:100%;
+.menu-box {
+  height: 100%;
+  background: $blue-3;
+  padding: 20px 0;
 }
 .ivu-menu {
-  background: $blue-3;
   height: 100%;
+  background: $blue-3;
+  color: $white01;
+  @include font-style(24px, 700, 10%, 125%);
 }
 
 //失效?
-.ivu-menu-vertical .ivu-menu-item:hover, .ivu-menu-vertical .ivu-menu-submenu-title:hover {
+.ivu-menu-vertical .ivu-menu-item:hover,
+.ivu-menu-vertical .ivu-menu-submenu-title:hover {
   color: $dark;
 }
 .ivu-menu-vertical .ivu-menu-submenu-title:hover {
@@ -21,10 +26,9 @@
   background: $blue-4;
 }
 
-.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu){
-  background-color:$blue-2;
-  color:$dark;
-
+.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
+  background-color: $blue-2;
+  color: $dark;
 }
 
 /* 子菜單 4和 5 中的 ivu-icon-ios-arrow-down 圖示 */
@@ -40,11 +44,10 @@
 
 #logo {
   display: block;
-  height: 150px; 
-  margin-left:40px;
+  height: 150px;
+  margin-left: 40px;
   text-decoration: none;
   background-image: url(@/assets/image/header/back-logo.png);
   background-size: contain;
   background-repeat: no-repeat;
 }
-
