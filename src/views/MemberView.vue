@@ -3,11 +3,21 @@ export default {};
 </script>
 
 <template>
-  <main></main>
-</template>
-
-<style lang="scss" scoped></style>
-<template>
+  <main>
+    <h2 class="title dark">會員管理</h2>
+    <div class="search">
+      <h4 class="dark">會員清單</h4>
+      <Space direction="vertical" size="large" type="flex">
+        <Input
+          class="search-input"
+          search
+          enter-button
+          placeholder="請輸入會員編號進行搜尋"
+          v-model="search"
+        />
+      </Space>
+    </div>
+  </main>
   <div class="admin">
     <Row justify="center" class="code-row-bg custom-row-bg ">
       <Col span="4">管理員編號</Col>
@@ -31,14 +41,16 @@ export default {};
       <Col span="4">nora0101</Col>
       <Col span="4">123nora321</Col>
       <Col span="4"><Switch  true-color="#B6FF7D" false-color="#FF8686" class="btn"/></Col>
-      <Col span="4"><font-awesome-icon :icon="['fas', 'file-pen']" /></Col>
+      <Col span="4"></Col>
     </Row> 
-    <font-awesome-icon :icon="['fas', 'file-pen']" />
-    <i class="fa-solid fa-file-pen"></i>
+  
     </div>
 </template>
 
 <style lang="scss" scoped>
+.search {
+  width: 300px;
+}
 
 .admin{
   width:800px;
