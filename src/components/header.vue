@@ -61,19 +61,5 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/sass/page/header.scss";
-.menu-box{
-  // width:330px;
-  height: 100vh;
-  overflow: auto;
-  position: relative;
-  // overflow-x:hidden;
-  z-index: 1;
 
-}
-
-// .menu-group {
-//   
-//   height:auto;
-//   overflow-y: visible;
-// }
 </style>
