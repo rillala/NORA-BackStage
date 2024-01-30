@@ -6,7 +6,9 @@ import headerCom from "@/components/header.vue";
 <template>
   <main id="app-wrap">
     <headerCom id="app-nav" />
-    <RouterView id="app-main-view" />
+    <div id="app-content">
+      <RouterView id="app-main-view" />
+    </div>
   </main>
 </template>
 
@@ -17,6 +19,10 @@ import headerCom from "@/components/header.vue";
 
   #app-main-view {
     flex-grow: 1;
+  }
+
+  #app-content {
+    padding: 100px 150px 0;
   }
 }
 </style>
