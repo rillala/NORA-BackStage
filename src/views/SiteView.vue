@@ -562,7 +562,7 @@ export default {
 
     <br />
 
-    <Table class="tablet" height="500" :columns="columns" :data="selectedList">
+    <Table class="table" height="500" :columns="columns" :data="selectedList">
       <template #info="{ row, index }">
         <Input type="text" v-model="editInfo" v-if="editIndex === index" />
         <span v-else>{{ row.info }}</span>
@@ -673,5 +673,9 @@ h4 {
   display: flex;
   justify-content: end;
   gap: 20px;
+}
+
+.table {
+  width: 100%;
 }
 </style>

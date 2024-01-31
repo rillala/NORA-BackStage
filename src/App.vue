@@ -13,6 +13,10 @@ import headerCom from "@/components/header.vue";
 </template>
 
 <style lang="scss" scoped>
+* {
+  box-sizing: border-box;
+}
+
 #app-wrap {
   display: flex;
   height: 100svh;
