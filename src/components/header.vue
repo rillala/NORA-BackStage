@@ -1,12 +1,15 @@
 <template>
   <div class="menu-box">
     <RouterLink to="/" id="logo"></RouterLink>
+    <div class="box">
+      <p class="white01">管理員 #{{ adminId }} 您好</p>
+      <Button class="white01 logout" type="text" @click="logoOut">登出</Button>
+    </div>
+
     <Menu theme="light" active-name="1">
-      <MenuGroup>
-        <MenuItem :name="index" v-for="(link, index) in navList">
-          <RouterLink :to="link.path">{{ link.name }}</RouterLink>
-        </MenuItem>
-      </MenuGroup>
+      <MenuItem :name="index" v-for="(link, index) in navList">
+        <RouterLink :to="link.path">{{ link.name }}</RouterLink>
+      </MenuItem>
     </Menu>
   </div>
 </template>
@@ -16,6 +19,8 @@ import { RouterLink, RouterView } from "vue-router";
 export default {
   data() {
     return {
+      adminId: "1",
+      isLogin: true,
       navList: [
         {
           name: "管理員管理",
@@ -56,9 +61,77 @@ export default {
       ],
     };
   },
+  methods: {
+    logoOut() {
+      window.location.href = "https://tibamef2e.com/chd104/g1/";
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/sass/page/header.scss";
+.menu-box {
+  height: 100%;
+  background: $blue-3;
+  padding: 20px 0;
+}
+
+.box {
+  margin: 15px auto 20px;
+  text-align: center;
+  p {
+    @include font-style(20px, 700, 10%, 125%);
+  }
+  .logout {
+    margin: 5px auto 0;
+    @include font-style(20px, 700, 10%, 125%);
+    &:hover {
+      background: transparent;
+      color: $blue-4;
+    }
+  }
+}
+.ivu-menu {
+  background: $blue-3;
+  @include font-style(24px, 700, 10%, 125%);
+  a {
+    display: block;
+    width: 100%;
+    text-align: center;
+    color: $white01;
+  }
+}
+
+//失效?
+.ivu-menu-vertical .ivu-menu-item:hover,
+.ivu-menu-vertical .ivu-menu-submenu-title:hover {
+  color: $dark;
+}
+.ivu-menu-vertical .ivu-menu-submenu-title:hover {
+  color: $dark;
+}
+.ivu-menu-light.ivu-menu-vertical .ivu-menu-item:hover {
+  background: $blue-4;
+}
+
+.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
+  background-color: $blue-3;
+  color: $dark;
+}
+
+.ivu-menu-light.ivu-menu-vertical
+  .ivu-menu-item-active:not(.ivu-menu-submenu):after {
+  display: none;
+}
+
+#logo {
+  display: block;
+  height: 150px;
+  margin-top: 20px;
+  text-decoration: none;
+  background-image: url(@/assets/image/header/back-logo.png);
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
 </style>

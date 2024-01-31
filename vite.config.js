@@ -25,6 +25,9 @@ export default defineConfig({
   },
   css: {
     preprocessorOptions: {
+      less: {
+        javascriptEnabled: true,
+      },
       scss: {
         additionalData: `
         @import "./src/assets/sass/main.scss";

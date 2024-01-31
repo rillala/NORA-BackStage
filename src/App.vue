@@ -17,12 +17,13 @@ import headerCom from "@/components/header.vue";
   display: flex;
   height: 100svh;
 
-  #app-main-view {
-    flex-grow: 1;
-  }
-
   #app-content {
-    padding: 100px 150px 0;
+    height: 100svh;
+    padding: 80px 100px 0;
+    flex-grow: 1;
+    #app-main-view {
+      width: 100%;
+    }
   }
 }
 </style>
