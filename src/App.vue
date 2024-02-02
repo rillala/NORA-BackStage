@@ -9,7 +9,9 @@ const isLogin = true;
 
 <template>
   <main>
-    <section v-if="!isLogin"><loginPage /></section>
+    <section v-if="!isLogin">
+      <loginPage />
+    </section>
     <section v-else id="app-wrap">
       <headerCom id="app-nav" />
       <div id="app-content">
@@ -32,6 +34,7 @@ const isLogin = true;
     height: 100svh;
     padding: 80px 100px 0;
     flex-grow: 1;
+
     #app-main-view {
       width: 100%;
     }
