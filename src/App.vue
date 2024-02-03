@@ -4,12 +4,14 @@ import headerCom from "@/components/header.vue";
 import loginPage from "@/views/LoginPageView.vue";
 
 // 開發後台登入頁面用變數 isLogin, 一般切後台內頁請設置為 "true", 之後接登入 token
-const isLogin = true;
+const isLogin = false;
 </script>
 
 <template>
   <main>
-    <section v-if="!isLogin"><loginPage /></section>
+    <section v-if="!isLogin">
+      <loginPage />
+    </section>
     <section v-else id="app-wrap">
       <headerCom id="app-nav" />
       <div id="app-content">
@@ -32,6 +34,7 @@ const isLogin = true;
     height: 100svh;
     padding: 80px 100px 0;
     flex-grow: 1;
+
     #app-main-view {
       width: 100%;
     }
