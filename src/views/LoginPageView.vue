@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 import { mapActions } from 'pinia';
 import userStore from '@/stores/user';
 
@@ -12,7 +13,7 @@ export default {
   },
   methods: {
 
-    ...mapActions(userStore, ['updateToken']),
+    ...mapActions(userStore, ['updateToken', 'checkLogin']),
     signin() {
 
       axios.post('https://fakestoreapi.com/auth/login', {
@@ -31,6 +32,8 @@ export default {
             // console.log(login)
             this.updateToken(response.data.token);
             console.log('login success', response.data.token);
+            window.location.reload();
+            //在取得token後重整畫面(App.vue載入狀態為isLogin = true)
           }
         })
         .catch(error => {
