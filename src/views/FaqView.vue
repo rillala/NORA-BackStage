@@ -4,18 +4,18 @@
 
 <template>
   <main>
-    <h2 class="news-title dark">常見問題管理</h2>
+    <h2 class="dark">常見問題管理</h2>
 
-    <div class="news-search">
+    <div class="search">
       <h4>常見問題清單</h4>
       <Input 
         search 
         enter-button 
-        placeholder="請輸入關鍵字進行搜尋" class="news-id-search"
+        class="searchInput"
       />
     </div>
 
-  <Table class="news-table" :columns="columns" :data="newsList">
+  <Table class="table" :columns="columns" :data="newsList">
       <template #title="{ row }">
         <strong>{{ row.title }}</strong>
       </template>
