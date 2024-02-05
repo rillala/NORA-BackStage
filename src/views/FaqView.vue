@@ -56,11 +56,11 @@ h4 {
   width: 100%;
 }
 
-.news-id-search {
+.searchInput {
   width: 400px;
 }
 
-.news-search {
+.search {
   margin-bottom: 60px;
 }
 
