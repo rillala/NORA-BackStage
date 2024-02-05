@@ -1,12 +1,14 @@
 // https://pinia.vuejs.org/core-concepts/state.html
 // vuex
-import { defineStore } from 'pinia'
 
+import { defineStore } from 'pinia';
 export default defineStore('userStore', {
   // 對應 data
+  //
   state: () => ({
     token: '',   // 後端僅返回token(通行證/令牌)
-    userData: {} // 可以在login API中返回user資訊
+    userData: {}, // 可以在login API中返回user資訊
+    isLogin: false,
   }),
 
   // 對應 computed (物件形式)
@@ -27,15 +29,19 @@ export default defineStore('userStore', {
     },
     updateToken(payload) {
       if (payload) {
-        this.token = payload
-        localStorage.setItem('token', payload)
+        this.token = payload;
+        localStorage.setItem('token', payload);
       } else {
-        this.token = ''
-        localStorage.removeItem('token')
+        this.token = '';
+        localStorage.removeItem('token');
       }
     },
     updateName(payload) {
-      this.name = payload
-    }
+      this.name = payload;
+    },
+    // updateToken(val) {
+    //   this.token = val
+    // }
+
   }
 })
