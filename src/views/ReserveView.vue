@@ -1,5 +1,6 @@
 <script>
 import apiInstance from "@/plugins/auth";
+import { getImageUrl } from "@/assets/js/common";
 
 export default {
   mounted() {
@@ -16,12 +17,18 @@ export default {
           console.error("Error:", error);
         });
     },
+    getImageUrl(paths) {
+      return getImageUrl(paths);
+    },
   },
 };
 </script>
 
 <template>
-  <main></main>
+  <main>
+    <img :src="getImageUrl('test.png')" alt="test" />
+    <img :src="getImageUrl('/sub/cat.png')" alt="test" />
+  </main>
 </template>
 
 <style lang="scss" scoped></style>
