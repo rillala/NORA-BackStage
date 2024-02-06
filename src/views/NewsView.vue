@@ -107,13 +107,8 @@ export default {
     },
   },
   methods: {
-    showDetail(){
-
-    }
-
   },
   watch: {
-
   },
 };
 </script>
