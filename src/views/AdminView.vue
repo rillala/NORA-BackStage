@@ -1,5 +1,5 @@
 <script>
-import axios from 'axios';
+import apiInstance from "@/plugins/auth";
 
 export default {
   data() {
@@ -53,15 +53,18 @@ export default {
       adminList: [],
     }
   },
-  created() {
-    axios.get(`${import.meta.env.VITE_NORA_URL}/phps/getadmin.php`)
-      .then((response) => {
-        this.adminList = response.data;
-      }
-      ).catch((error) => {
-        console.error("Error", error);
-      }
-      );
+  // created() {
+  //   axios.get(`${import.meta.env.VITE_NORA_URL}/phps/getadmin.php`)
+  //     .then((response) => {
+  //       this.adminList = response.data;
+  //     }
+  //     ).catch((error) => {
+  //       console.error("Error", error);
+  //     }
+  //     );
+  // },
+  mounted() {
+    this.getPHP();
   },
   methods: {
     handleEdit(row, index) {
@@ -76,6 +79,16 @@ export default {
       this.selectedList[index].adminstatus =
         !this.selectedList[index].adminstatus;
     },
+    getPHP() {
+      apiInstance
+        .get("./getadmin.php")
+        .then((response) => {
+          this.adminList = response.data;
+        }
+        ).catch((error) => {
+          console.error("Error", error);
+        });
+    }
   }
 }
 </script>
