@@ -1,4 +1,6 @@
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -29,14 +31,14 @@ export default {
         },
         {
           title: '管理員密碼',
-          key: 'pwd',
+          key: 'psw',
           align: 'center',
           width: '200'
 
         },
         {
           title: '帳號狀態',
-          key: 'adminstatus',
+          key: 'status',
           width: '100',
           align: "center",
           slot: 'status',
@@ -48,31 +50,18 @@ export default {
           slot: 'edit'
         }
       ],
-      adminList: [
-        {
-          adminid: 1,
-          name: "super",
-          acc: 'super01',
-          pwd: 'NORACAMP',
-          adminstatus: true,
-
-        },
-        {
-          adminid: 1,
-          name: "super",
-          acc: 'super01',
-          pwd: 'NORACAMP',
-          adminstatus: true,
-        },
-        {
-          adminid: 1,
-          name: "super",
-          acc: 'super01',
-          pwd: 'NORACAMP',
-          adminstatus: true,
-        }
-      ]
+      adminList: [],
     }
+  },
+  created() {
+    axios.get(`${import.meta.env.VITE_NORA_URL}/phps/getadmin.php`)
+      .then((response) => {
+        this.adminList = response.data;
+      }
+      ).catch((error) => {
+        console.error("Error", error);
+      }
+      );
   },
   methods: {
     handleEdit(row, index) {
@@ -109,7 +98,7 @@ export default {
       </template>
       <!--狀態切換-->
       <template #status="{ row, index }">
-        <Switch true-color="#13ce66" false-color="#ff4949" v-model="row.adminstatus" @on-change="statusChange(index)" />
+        <Switch true-color="#13ce66" false-color="#ff4949" v-model="row.status" @on-change="statusChange(index)" />
       </template>
       <!-- 編輯 -->
       <template #edit="{ row, index }">
