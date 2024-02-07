@@ -1,6 +1,44 @@
 <script setup>
+  import { ref } from 'vue';
+  import axios from 'axios';
 
+  const columns = ref([
+    {
+      type: 'selection', // 列的类型为选择框
+      width: 60, // 列的宽度为 60
+      align: 'center' // 文字居中显示
+    },
+    {
+      title: '問題編號', 
+      key: 'id', 
+      sortable: true 
+    },
+    {
+      title: '顯示狀態', 
+      key: 'status', 
+      sortable: true 
+    },
+    {
+      title: '建立日期',
+      key: 'date', 
+      sortable: true 
+    },
+    {
+      title: '問題類別', 
+      key: 'type', 
+      sortable: true 
+    },
+    {
+      title: '問題', 
+      key: 'question' 
+    },
+    {
+      title: '回答', 
+      key: 'answer' 
+    },
+  ]);
 </script>
+
 
 <template>
   <main>
@@ -15,7 +53,7 @@
       />
     </div>
 
-  <Table class="table" :columns="columns" :data="newsList">
+  <Table class="table" :columns="columns" :data="quesList">
       <template #title="{ row }">
         <strong>{{ row.title }}</strong>
       </template>
@@ -34,7 +72,7 @@
   </Table>
 
   <div class="add-btn">
-    <Button class="news-add" @click="addNew()">新增</Button>
+    <Button class="add" @click="addNew()">新增</Button>
   </div>
   </main>
 </template>
