@@ -3,15 +3,21 @@ import apiInstance from "@/plugins/auth";
 import { getImageUrl } from "@/assets/js/common";
 
 export default {
+  data() {
+    return {
+      sites: [],
+    };
+  },
   mounted() {
-    this.test();
+    this.getPHP();
   },
   methods: {
-    test() {
+    getPHP() {
       apiInstance
-        .get("/test.php")
+        .get("./campSite.php")
         .then((response) => {
           console.log(response.data); // 这里应该能看到 { "number": 123 }
+          this.sites = response.data.sites;
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -28,6 +34,7 @@ export default {
   <main>
     <img :src="getImageUrl('test.png')" alt="test" />
     <img :src="getImageUrl('/sub/cat.png')" alt="test" />
+    <div>{{ sites }}</div>
   </main>
 </template>
 
