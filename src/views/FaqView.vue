@@ -1,5 +1,5 @@
 <script setup>
-  import { ref } from 'vue';
+  import { ref, onMounted } from 'vue';
   import axios from 'axios';
 
   const columns = ref([
@@ -10,12 +10,12 @@
     },
     {
       title: '問題編號', 
-      key: 'id', 
+      key: 'faq_id', 
       sortable: true 
     },
     {
       title: '顯示狀態', 
-      key: 'status', 
+      key: 'faq_status', 
       sortable: true 
     },
     {
@@ -25,7 +25,7 @@
     },
     {
       title: '問題類別', 
-      key: 'type', 
+      key: 'faq_type', 
       sortable: true 
     },
     {
@@ -37,6 +37,20 @@
       key: 'answer' 
     },
   ]);
+
+  const loading = ref(true);
+  const quesList = ref([]);
+
+  onMounted(async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_NORA_URL}/phps/getFaq.php`);
+      quesList.value = response.data;
+      loading.value = true;
+    } catch (error) {
+      console.error('發生錯誤:', error);
+      loading.value = false;
+    }
+});
 </script>
 
 
