@@ -1,4 +1,6 @@
 <script>
+import axios from 'axios';
+
 export default {
   data(){
     return {
@@ -53,60 +55,37 @@ export default {
         },
       ],
       newsList: [
-        {
-          articleId: 1,
-          title: "野良祝大家2024新年快樂！",
-          createDate: new Date().toISOString().split('T')[0],
-          status: "上架中",
-        },
-        {
-          articleId: 2,
-          title: "野良露營年末大特賣！走過路過不要錯過！",
-          createDate: new Date().toISOString().split('T')[0],
-          status: "上架中",
-        },
-        {
-          articleId: 3,
-          title: "來野良走春玩耍吧！春節搶先預約最棒的營地！",
-          createDate: new Date().toISOString().split('T')[0],
-          status: "上架中",
-        },
-        {
-          articleId: 4,
-          title: "野良好！野良棒！野良呱呱叫！",
-          createDate: "2024-02-01",
-          status: "草稿",
-        },
-        {
-          articleId: 5,
-          title: "野良露營！專題滿分！贊不絕口！",
-          createDate: "2024-01-31",
-          status: "已下架",
-        },
-        {
-          articleId: 6,
-          title: "野良之家的孩子們～正在等待你的到來！",
-          createDate: "2024-01-08",
-          status: "上架中",
-        },
+        // {
+        //   articleId: 1,
+        //   title: "野良祝大家2024新年快樂！",
+        //   createDate: new Date().toISOString().split('T')[0],
+        //   status: "上架中",
+        // },
       ],
-      addNew: false
+      addNew: false,
+      statusMap: { 
+        0 : "草稿",
+        1 : "上架中",
+        2 : "已下架",
+      },
     }
   },
   computed: {
-    filterNewsList() { //搜尋的篩選
-      if (!this.newsFilter) { // 若newsFilter是空的就會是原本的newsList
-        return this.newsList;
+  },
+  created() {
+    axios.get(`${import.meta.env.VITE_NORA_URL}/phps/news.php`)
+      .then((response) => {
+        this.newsList = response.data;
       }
-
-      const filterText = this.newsFilter.toLowerCase(); //將搜尋的關鍵字轉換成小寫，進行大小寫不敏感的比較
-      return this.newsList.filter((item) => //使用filter的方法 篩選符合搜尋條件的newsList項目
-        item.articleId.toString().includes(filterText) ||
-        item.title.toLowerCase().includes(filterText) //檢查文章編號跟文章標題是否符合關鍵字
+      ).catch((error) => {
+        console.error("Error", error);
+      }
       );
-    },
   },
   methods: {
+    getStatusMap(status) {
+      return this.statusMap[status] || "未知狀態";
+    }
   },
   watch: {
   },
@@ -155,9 +134,13 @@ export default {
       </Modal>
     </Space>
 
-    <Table class="news-table" :columns="columns" :data="filterNewsList">
+    <Table class="news-table" :columns="columns" :data="newsList">
         <template #title="{ row }">
           <strong>{{ row.title }}</strong>
+        </template>
+
+        <template #status="{ row }">
+          <strong>{{ row.status }}</strong>
         </template>
 
         <template #edit="{ row, index }">
