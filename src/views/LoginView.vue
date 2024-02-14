@@ -1,9 +1,9 @@
 <script>
-import { List, ListItem, ListItemMeta, Input } from 'view-ui-plus';
+import { List, ListItem, ListItemMeta, Input, FormItem, Row, Button } from 'view-ui-plus';
 
 
 export default {
-  components: { ListItemMeta, ListItem, List, Input },
+  components: { ListItemMeta, ListItem, List, Input, FormItem, Row, Button },
   data() {
     return {
       modal1: false,
@@ -82,20 +82,30 @@ export default {
         }
       ],
       //^^^^^預約訂單明細^^^^^
+
       nameValue: "",
       priceValue: "",
       descriptionValue: "",
       categoryValue: "服飾",
       index: 1,
-      formDynamic: {
-        items: [
+      colorDynamic: {
+        colors: [
           {
             value: '',
             index: 1,
             status: 1
           }
         ]
-      }
+      },
+      specDynamic: {
+        specs: [
+          {
+            value: '',
+            index: 1,
+            status: 1
+          }
+        ]
+      },
     }
   },
   methods: {
@@ -111,17 +121,28 @@ export default {
     handleReset(name) {
       this.$refs[name].resetFields();
     },
-    handleAdd() {
+    addColor() {
       this.index++;
-      this.formDynamic.items.push({
+      this.colorDynamic.colors.push({
         value: '',
         index: this.index,
         status: 1
       });
     },
-    handleRemove(index) {
-      this.formDynamic.items[index].status = 0;
-    }
+    removeColor(index) {
+      this.colorDynamic.colors[index].status = 0;
+    },
+    addSpec() {
+      this.index++;
+      this.specDynamic.specs.push({
+        value: '',
+        index: this.index,
+        status: 1
+      });
+    },
+    removeSpec(index) {
+      this.specDynamic.specs[index].status = 0;
+    },
   }
 }
 </script>
@@ -245,33 +266,35 @@ export default {
     </Modal>
 
 
+    <!-- 這邊下面是表格類的燈箱 -->
     <Button @click="modal2 = true">新增商品</Button>
 
     <Modal title="新增商品" v-model="modal2" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消">
-      <Form ref="formDynamic" :model="formDynamic">
-        <List item-layout="vertical">
+      <List item-layout="vertical">
+        <Form>
           <ListItem>
-            <Row class="row" justify="center" align="middle">
+
+            <p align="center" class="list-title">商品照片</p>
+
+
+          </ListItem>
+
+          <ListItem>
+
+            <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center" class=" row-title">
               <span>商品名稱：</span>
               </Col>
               <Col span="19">
-              <Input v-model="nameValue" />
+              <Input v-model="nameValue" placeholder="請輸入名稱" />
               </Col>
             </Row>
-            <Row class="row" justify="center" align="middle">
-              <Col span="5" align="center">
-              <span>商品價格：</span>
-              </Col>
-              <Col span="7">
-              <FromeItem>
-                <Input v-model="priceValue" />
-              </FromeItem>
-              </Col>
+
+            <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center">
               <span>商品類別：</span>
               </Col>
-              <Col span="7">
+              <Col span="19">
               <FromeItem>
                 <Select v-model="categoryValue">
                   <Option value="服飾">服飾</Option>
@@ -281,50 +304,109 @@ export default {
               </FromeItem>
               </Col>
             </Row>
-            <Row class="row">
-              <template v-for="(item, index) in formDynamic.items">
-                <Col span="24">
-                <FormItem v-if="item.status" :key="index" :label="'商品顏色： '" :prop="'items.' + index + '.value'"
-                  :rules="{ required: true, message: 'Item ' + item.index + ' can not be empty', trigger: 'blur' }">
-                  <Row>
-                    <Col span="10">
-                    <Input type="text" v-model="item.value" placeholder="Enter something..."></Input>
-                    </Col>
-                    <Col span="4" offset="1">
-                    <Button @click="handleRemove(index)">Delete</Button>
-                    </Col>
-                  </Row>
-                </FormItem>
-                </Col>
-              </template>
-            </Row>
-            <FormItem>
-              <Row>
-                <Col span="12">
-                <Button type="dashed" long @click="handleAdd" icon="md-add"></Button>
-                </Col>
-              </Row>
-            </FormItem>
-            <!-- <FormItem>
-              <Button type="primary" @click="handleSubmit('formDynamic')">Submit</Button>
-              <Button @click="handleReset('formDynamic')" style="margin-left: 8px">Reset</Button>
-            </FormItem> -->
-            <Row class="row" justify="center" align="middle">
+
+          </ListItem>
+
+          <ListItem justify="center" align="middle">
+
+            <p align="center" class="list-title">商品顏色</p>
+
+            <template v-for="(color, index) in  colorDynamic.colors " class="dynamic-add">
+              <FormItem v-if="color.status" :key="index" :label="'商品顏色' + color.index" :prop="'items.' + index + '.value'"
+                class="dynamic-row">
+                <Row :gutter="4">
+                  <Col span="18">
+                  <Input type="text" v-model="color.value" placeholder="請輸入顏色"></Input>
+                  </Col>
+                  <Col span="4">
+                  <Button @click="removeColor(index)">刪除</Button>
+                  </Col>
+                </Row>
+              </FormItem>
+            </template>
+            <Button type="dashed" @click="addColor" icon="md-add">新增商品顏色</Button>
+
+          </ListItem>
+
+          <ListItem justify="center" align="middle">
+
+            <p align="center" class="list-title">商品規格</p>
+
+            <template v-for="( spec, index ) in  specDynamic.specs ">
+              <FormItem v-if="spec.status" :key="index" :label="'商品規格' + spec.index" :prop="'items.' + index + '.value'"
+                class="dynamic-row">
+                <Row :gutter="4">
+                  <Col span="18">
+                  <Input type="text" v-model="spec.value" placeholder="請輸入規格"></Input>
+                  </Col>
+                  <Col span="4">
+                  <Button @click="removeSpec(index)">刪除</Button>
+                  </Col>
+                </Row>
+              </FormItem>
+            </template>
+
+            <Button type="dashed" @click="addSpec" icon="md-add">新增商品規格</Button>
+
+          </ListItem>
+
+          <ListItem justify="center" align="middle">
+
+            <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center" class=" row-title">
               <span>商品說明：</span>
               </Col>
               <Col span="19">
-              <Input type="textarea" :rows="5" v-model="descriptionValue" maxlength="200" show-word-limit />
+              <Input type="textarea" :rows="5" v-model="descriptionValue" maxlength="200" show-word-limit
+                placeholder="請輸入說明" />
               </Col>
             </Row>
+
           </ListItem>
-        </List>
-      </Form>
+
+          <ListItem>
+
+            <Row class="form-row" justify="center" align="middle">
+              <Col span="5" align="center">
+              <span>商品價格：</span>
+              </Col>
+              <Col span="17">
+              <FromeItem>
+                <Input v-model="priceValue" placeholder="請輸入單價" />
+              </FromeItem>
+              </Col>
+              <Col span="2" align="center">
+              <span>元</span>
+              </Col>
+            </Row>
+
+          </ListItem>
+
+          <!-- <FormItem> -->
+          <!-- <Button type="primary">Submit</Button> -->
+          <!-- @click="handleSubmit('formDynamic')" -->
+          <!-- <Button style="margin-left: 8px">Reset</Button> -->
+          <!-- @click="handleReset('formDynamic')" -->
+          <!-- </FormItem> -->
+
+        </Form>
+
+      </List>
+      <template #footer>
+        <Button>取消</Button>
+        <Button type="primary">儲存</Button>
+      </template>
     </Modal>
   </Space>
 </template>
 
 <style lang="less" scoped>
+.ivu-row {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+//預約訂單明細
 .vertical-center-modal {
   display: flex;
   align-items: center;
@@ -369,5 +451,16 @@ export default {
     flex-grow: 1;
     margin-right: 10px;
   }
+}
+
+//新增商品
+.form-row {
+  margin: 5px 40px;
+}
+
+.dynamic-row {
+  width: 100%;
+  padding: 5px 0px 5px 55px;
+  margin-bottom: 0px;
 }
 </style>
