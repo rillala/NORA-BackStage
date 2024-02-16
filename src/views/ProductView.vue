@@ -1,7 +1,115 @@
+<template>
+  <div>
+    <h2>新增商品</h2>
+    <form @submit.prevent="addProduct">
+      <div>
+        <label for="images">商品圖片：</label>
+        <input type="file" id="images" @change="handleImageUpload" accept="image/*" required>
+      </div>
+      <div>
+        <label for="title">商品標題：</label>
+        <input type="text" id="title" v-model="product.title" required>
+      </div>
+      <div>
+        <label for="category">商品類別：</label>
+        <input type="text" id="category" v-model="product.category" required>
+      </div>
+      <div>
+        <label for="description">商品描述：</label>
+        <textarea id="description" v-model="product.description" required></textarea>
+      </div>
+      <div>
+        <label for="price">商品價格：</label>
+        <input type="number" id="price" v-model="product.price" required>
+      </div>
+      <div>
+        <label for="state">商品狀態：</label>
+        <input type="text" id="state" v-model="product.state" required>
+      </div>
+      <div>
+        <label for="createdate">建立日期：</label>
+        <input type="date" id="createdate" v-model="product.createdate" required>
+      </div>
+      <button type="submit">新增商品</button>
+    </form>
+  </div>
+</template>
+
 <script>
+import apiInstance from "@/plugins/auth";
+
 export default {
   data() {
     return {
+      product: {
+        images: null,
+        title: '',
+        category: '',
+        description: '',
+        price: null,
+        state: '',
+        createdate: ''
+      }
+    };
+  },
+  methods: {
+    handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    // 選擇直接上傳檔案
+    this.product.images = file;
+  }
+},
+addProduct() {
+  const formData = new FormData();
+  formData.append('images', this.product.images);
+  formData.append('title', this.product.title);
+  formData.append('category', this.product.category);
+  formData.append('description', this.product.description);
+  formData.append('price', this.product.price);
+  formData.append('state', this.product.state);
+  formData.append('createdate', this.product.createdate);
+  
+  apiInstance.post('/addProduct.php', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.error(error);
+  });
+},
+    getPHP() {
+      apiInstance
+        .get("./getProduct.php")
+        .then((response) => {
+          this.adminList = response.data;
+        }
+        ).catch((error) => {
+          console.error("Error", error);
+        });
+    }
+  },
+  mounted() {
+    this.getPHP();
+  }
+  
+};
+</script>
+
+
+
+<!-- <script>
+import apiInstance from "@/plugins/auth";
+
+export default {
+  data() {
+    return {
+      search:'',
+
       columns: [
         {
           type: 'selection',
@@ -10,72 +118,89 @@ export default {
         },
         {
           title: '商品編號',
-          key: 'name',
+          key: 'id',
           sortable: true
         },
         {
           title: '商品名稱',
-          key: 'age'
+          key: 'name'
+        },
+        {
+          title: '顏色',
+          key: 'color'
+        },
+        {
+          title: '尺寸',
+          key:'size',
         },
         {
           title: '商品價格',
-          key: 'address',
+          key: 'price',
           sortable: true
         },
         {
           title: '商品類別',
-          key: 'address',
+          key: 'category',
           filters: [
             {
-              label: 'New York',
-              value: 'New York'
+              label: '文青生活',
+              value: '文青生活'
             },
             {
-              label: 'London',
-              value: 'London'
+              label: '服飾',
+              value: '服飾'
             },
             {
-              label: 'Sydney',
-              value: 'Sydney'
+              label: '營地用品',
+              value: '營地用品'
             }
           ],
           filterMethod(value, row) {
-            return row.address.indexOf(value) > -1;
+            return row.category.indexOf(value) > -1;
           }
         },
         {
           title: '商品狀態',
-          key: 'address'
+          key: 'status',
         },
         {
           title: '編輯',
-          key: 'address'
+          key: 'price'
         },
       ],
       data: [
         {
-          name: 'John Brown',
-          age: 18,
-          address: 'New York No. 1 Lake Park',
-          date: '2016-10-03'
+          id: '11111',
+          name:'New York No. 1 Lake Park',
+          price:  18,
+          category: '文青生活',
+          color: '黑',
+          size: 'XL',
+          status: 'true'
         },
         {
-          name: 'Jim Green',
-          age: 24,
-          address: 'London No. 1 Lake Park',
-          date: '2016-10-01'
+          id: '22222',
+          name: 'London No. 1 Lake Park',
+          price: 24,
+          category: '服飾',
+          color: '黑',
+          size: 'XL'
         },
         {
-          name: 'Joe Black',
-          age: 30,
-          address: 'Sydney No. 1 Lake Park',
-          date: '2016-10-02'
+          id: '33333',
+          name: 'Sydney No. 1 Lake Park',
+          price: 30,
+          category: '服飾',
+          color: '黑',
+          size: 'XL'
         },
         {
-          name: 'Jon Snow',
-          age: 26,
-          address: 'Ottawa No. 2 Lake Park',
-          date: '2016-10-04'
+          id: '44444',
+          name: 'Ottawa No. 2 Lake Park',
+          price: 26,
+          category: '營地用品',
+          color: '黑',
+          size: 'XL'
         }
       ]
     }
@@ -83,8 +208,24 @@ export default {
   methods: {
     handleSelectAll(status) {
       this.$refs.selection.selectAll(status);
+    },
+    handleFilter(){
+      console.log(this.search.id)
+    },
+    getPHP() {
+      apiInstance
+        .get("./getadmin.php")
+        .then((response) => {
+          this.adminList = response.data;
+        }
+        ).catch((error) => {
+          console.error("Error", error);
+        });
     }
-  }
+  },
+  mounted() {
+    
+  },
 }
 </script>
 
@@ -94,7 +235,7 @@ export default {
 
     <div class="product-search">
       <h4>商品列表清單</h4>
-      <Input search enter-button placeholder="請輸入商品名稱或商品Id進行搜尋" class="product-id-search" v-model="newsFilter" />
+      <Input search enter-button placeholder="請輸入商品名稱或商品Id進行搜尋" class="product-id-search" v-model="this.search" @onchange="handleFilter" />
     </div>
     <Table class="product-table" border ref="selection" :columns="columns" :data="data"></Table>
     <div style="margin-top: 16px">
@@ -117,4 +258,4 @@ h4 {
   margin-top: 20px;
 }
 
-</style>
+</style> -->
