@@ -83,9 +83,6 @@ export default {
       );
   },
   methods: {
-    getStatusMap(status) {
-      return this.statusMap[status] || "未知狀態";
-    }
   },
   watch: {
   },
@@ -137,10 +134,6 @@ export default {
     <Table class="news-table" :columns="columns" :data="newsList">
         <template #title="{ row }">
           <strong>{{ row.title }}</strong>
-        </template>
-
-        <template #status="{ row }">
-          <strong>{{ row.status }}</strong>
         </template>
 
         <template #edit="{ row, index }">
