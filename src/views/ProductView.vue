@@ -4,7 +4,7 @@
     <form @submit.prevent="addProduct">
       <div>
         <label for="images">商品圖片：</label>
-        <input type="text" id="images" v-model="product.images" required>
+        <input type="file" id="images" @change="handleImageUpload" accept="image/*" required>
       </div>
       <div>
         <label for="title">商品標題：</label>
@@ -42,7 +42,7 @@ export default {
   data() {
     return {
       product: {
-        images: '',
+        images: null,
         title: '',
         category: '',
         description: '',
@@ -53,18 +53,38 @@ export default {
     };
   },
   methods: {
-    addProduct() {
-      apiInstance.post('/addProduct.php', this.product)
-        .then(response => {
-          console.log(response.data); // 處理後端回應，例如提示用戶新增成功或失敗
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    },
+    handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    // 選擇直接上傳檔案
+    this.product.images = file;
+  }
+},
+addProduct() {
+  const formData = new FormData();
+  formData.append('images', this.product.images);
+  formData.append('title', this.product.title);
+  formData.append('category', this.product.category);
+  formData.append('description', this.product.description);
+  formData.append('price', this.product.price);
+  formData.append('state', this.product.state);
+  formData.append('createdate', this.product.createdate);
+  
+  apiInstance.post('/addProduct.php', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.error(error);
+  });
+},
     getPHP() {
       apiInstance
-        .get("./getadmin.php")
+        .get("./getProduct.php")
         .then((response) => {
           this.adminList = response.data;
         }
