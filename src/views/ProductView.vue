@@ -4,8 +4,10 @@
     <form @submit.prevent="addProduct">
       <div>
         <label for="images">商品圖片：</label>
-        <input type="file" id="images" @change="handleImageUpload" accept="image/*" required>
+        <!-- 修改為支持多文件選擇 -->
+        <input type="file" id="images" @change="handleImageUpload" accept="image/*" multiple required>
       </div>
+      <!-- 其他表單字段保持不變 -->
       <div>
         <label for="title">商品標題：</label>
         <input type="text" id="title" v-model="product.title" required>
@@ -33,71 +35,61 @@
       <button type="submit">新增商品</button>
     </form>
   </div>
+  <AddProduct></AddProduct>
 </template>
 
 <script>
 import apiInstance from "@/plugins/auth";
+import AddProduct from "@/components/addProduct.vue";
 
 export default {
-  data() {
-    return {
-      product: {
-        images: null,
-        title: '',
-        category: '',
-        description: '',
-        price: null,
-        state: '',
-        createdate: ''
-      }
-    };
-  },
-  methods: {
-    handleImageUpload(event) {
-      const file = event.target.files[0];
-      if (file) {
-        // 選擇直接上傳檔案
-        this.product.images = file;
-      }
+    data() {
+        return {
+            product: {
+                // 移除 images 屬性，因為我們將使用 FormData 直接處理圖片數據
+                title: '',
+                category: '',
+                description: '',
+                price: null,
+                state: '',
+                createdate: ''
+            },
+            formData: new FormData() // 增加 formData 來管理表單數據和文件
+        };
     },
-    addProduct() {
-      const formData = new FormData();
-      formData.append('images', this.product.images);
-      formData.append('title', this.product.title);
-      formData.append('category', this.product.category);
-      formData.append('description', this.product.description);
-      formData.append('price', this.product.price);
-      formData.append('state', this.product.state);
-      formData.append('createdate', this.product.createdate);
-
-      apiInstance.post('/addProduct.php', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+    methods: {
+        handleImageUpload(event) {
+            const files = event.target.files;
+            if (files) {
+                // 為每個選擇的文件添加到 formData 中
+                for (let i = 0; i < files.length; i++) {
+                    this.formData.append('images[]', files[i]);
+                }
+            }
+        },
+        addProduct() {
+            // 將其他表單數據添加到 formData 中
+            this.formData.append('title', this.product.title);
+            this.formData.append('category', this.product.category);
+            this.formData.append('description', this.product.description);
+            this.formData.append('price', this.product.price);
+            this.formData.append('state', this.product.state);
+            this.formData.append('createdate', this.product.createdate);
+            // 發送 formData 到後端
+            apiInstance.post('/addProduct.php', this.formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then(response => {
+                console.log(response.data); // 處理響應
+            })
+                .catch(error => {
+                console.error(error); // 處理錯誤
+            });
         }
-      })
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(error => {
-          console.error(error);
-        });
     },
-    getPHP() {
-      apiInstance
-        .get("./getProduct.php")
-        .then((response) => {
-          this.adminList = response.data;
-        }
-        ).catch((error) => {
-          console.error("Error", error);
-        });
-    },
-    
-  },
-  mounted() {
-    this.getPHP();
-  }
-
+    components: { AddProduct }
 };
 </script>
 
