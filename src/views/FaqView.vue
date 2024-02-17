@@ -1,6 +1,6 @@
 <script setup>
   import { ref, onMounted } from 'vue';
-  import axios from 'axios';
+  import apiInstance from "@/plugins/auth";
 
   const columns = ref([
     {
@@ -38,17 +38,23 @@
     },
   ]);
 
-  const loading = ref(true);
   const quesList = ref([]);
 
-  onMounted(async () => {
+  function getPHP(){
+    apiInstance.get("./getFaq.php") // API請求獲取getFaq.php檔的數據
+    .then((response) => {
+      quesList.value = response.data; // 將獲取到的數據賦職
+    })
+    .catch((error) => {
+      console.error("Error", error); // 輸出錯誤訊息給主控台
+    });
+  } 
+
+  onMounted( () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_NORA_URL}/phps/getFaq.php`);
-      quesList.value = response.data;
-      loading.value = true;
+      getPHP();
     } catch (error) {
       console.error('發生錯誤:', error);
-      loading.value = false;
     }
 });
 </script>
