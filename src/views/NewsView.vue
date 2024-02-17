@@ -1,5 +1,6 @@
 <script>
-import axios from 'axios';
+// import axios from 'axios';
+import apiInstance from "@/plugins/auth";
 
 export default {
   data(){
@@ -14,7 +15,7 @@ export default {
         },
         {
           title: "文章編號",
-          key: "articleId",
+          key: "article_id",
           width: "120",
           align: "center",
           sortable: "true",
@@ -29,7 +30,7 @@ export default {
         },
         {
           title: "建立時間",
-          key: "createDate",
+          key: "create_date",
           width: "120",
           align: "center",
           sortable: "true",
@@ -72,17 +73,31 @@ export default {
   },
   computed: {
   },
-  created() {
-    axios.get(`${import.meta.env.VITE_NORA_URL}/phps/news.php`)
-      .then((response) => {
-        this.newsList = response.data;
-      }
-      ).catch((error) => {
-        console.error("Error", error);
-      }
-      );
+  // created() {
+  //   axios.get(`${import.meta.env.VITE_NORA_URL}/phps/news.php`)
+  //     .then((response) => {
+  //       this.newsList = response.data;
+  //     }
+  //     ).catch((error) => {
+  //       console.error("Error", error);
+  //     }
+  //     );
+  // },
+  mounted() {
+    this.getPHP();
   },
   methods: {
+    getPHP() {
+      apiInstance
+        .get("./news.php")
+        .then((response) => {
+          console.log(response.data);
+          this.newsList = response.data;
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    },
   },
   watch: {
   },
