@@ -17,7 +17,12 @@
         </thead>
         <tbody>
           <tr v-for="product in products" :key="product.id">
-            <td><img :src="getImageUrl(product.images)" alt="商品圖片" style="width: 100px; height: auto;"></td>
+            <td>
+              <!-- 顯示多張圖片 -->
+              <div v-for="(image, index) in product.images" :key="index">
+                <img :src="getImageUrl(image)" alt="商品圖片" style="width: 100px; height: auto;">
+              </div>
+            </td>
             <td>{{ product.title }}</td>
             <td>{{ product.category }}</td>
             <td>{{ product.description }}</td>
@@ -32,8 +37,8 @@
 </template>
 
 <script>
-import apiInstance from "@/plugins/auth";
 import { getImageUrl } from "@/assets/js/common";
+import apiInstance from "@/plugins/auth";
 
 export default {
   data() {
@@ -42,24 +47,23 @@ export default {
     };
   },
   created() {
-    // 在創建時從後端獲取商品列表
-    this.getPHP();
+    this.getProducts();
   },
   methods: {
-    getPHP() {
+    getProducts() {
       apiInstance
         .get("./getProduct.php")
-        .then((response) => {
-          console.log(response.products); // 这里应该能看到 { "number": 123 }
+        .then(response => {
           this.products = response.data;
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("Error:", error);
         });
     },
-    getImageUrl(paths) {
-      return getImageUrl(paths);
-    },
+    getImageUrl(image) {
+      // 如果您的圖片路徑是相對於後端服務器的，這裡可能需要添加基礎URL
+      return getImageUrl(image);
+    }
   }
 };
 </script>
