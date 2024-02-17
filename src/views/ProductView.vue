@@ -54,34 +54,34 @@ export default {
   },
   methods: {
     handleImageUpload(event) {
-  const file = event.target.files[0];
-  if (file) {
-    // 選擇直接上傳檔案
-    this.product.images = file;
-  }
-},
-addProduct() {
-  const formData = new FormData();
-  formData.append('images', this.product.images);
-  formData.append('title', this.product.title);
-  formData.append('category', this.product.category);
-  formData.append('description', this.product.description);
-  formData.append('price', this.product.price);
-  formData.append('state', this.product.state);
-  formData.append('createdate', this.product.createdate);
-  
-  apiInstance.post('/addProduct.php', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  })
-  .then(response => {
-    console.log(response.data);
-  })
-  .catch(error => {
-    console.error(error);
-  });
-},
+      const file = event.target.files[0];
+      if (file) {
+        // 選擇直接上傳檔案
+        this.product.images = file;
+      }
+    },
+    addProduct() {
+      const formData = new FormData();
+      formData.append('images', this.product.images);
+      formData.append('title', this.product.title);
+      formData.append('category', this.product.category);
+      formData.append('description', this.product.description);
+      formData.append('price', this.product.price);
+      formData.append('state', this.product.state);
+      formData.append('createdate', this.product.createdate);
+
+      apiInstance.post('/addProduct.php', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
     getPHP() {
       apiInstance
         .get("./getProduct.php")
@@ -91,12 +91,13 @@ addProduct() {
         ).catch((error) => {
           console.error("Error", error);
         });
-    }
+    },
+    
   },
   mounted() {
     this.getPHP();
   }
-  
+
 };
 </script>
 

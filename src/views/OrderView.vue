@@ -17,7 +17,7 @@
         </thead>
         <tbody>
           <tr v-for="product in products" :key="product.id">
-            <td><img :src="product.images" alt="商品圖片" style="width: 100px; height: auto;"></td>
+            <td><img :src="getImageUrl(product.images)" alt="商品圖片" style="width: 100px; height: auto;"></td>
             <td>{{ product.title }}</td>
             <td>{{ product.category }}</td>
             <td>{{ product.description }}</td>
@@ -33,6 +33,7 @@
 
 <script>
 import apiInstance from "@/plugins/auth";
+import { getImageUrl } from "@/assets/js/common";
 
 export default {
   data() {
@@ -55,6 +56,9 @@ export default {
         .catch((error) => {
           console.error("Error:", error);
         });
+    },
+    getImageUrl(paths) {
+      return getImageUrl(paths);
     },
   }
 };
