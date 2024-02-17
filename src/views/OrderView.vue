@@ -1,86 +1,157 @@
-<template>
-  <div>
-    <h2>商品列表</h2>
-    <div v-if="products.length === 0">尚無商品</div>
-    <div v-else>
-      <table>
-        <thead>
-          <tr>
-            <th>商品圖片</th>
-            <th>商品標題</th>
-            <th>商品類別</th>
-            <th>商品描述</th>
-            <th>商品價格</th>
-            <th>商品狀態</th>
-            <th>建立日期</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="product in products" :key="product.id">
-            <td>
-              <!-- 顯示多張圖片 -->
-              <div v-for="(image, index) in product.images" :key="index">
-                <img :src="getImageUrl(image)" alt="商品圖片" style="width: 100px; height: auto;">
-              </div>
-            </td>
-            <td>{{ product.title }}</td>
-            <td>{{ product.category }}</td>
-            <td>{{ product.description }}</td>
-            <td>{{ product.price }}</td>
-            <td>{{ product.state }}</td>
-            <td>{{ product.createdate }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</template>
-
 <script>
-import { getImageUrl } from "@/assets/js/common";
 import apiInstance from "@/plugins/auth";
 
 export default {
   data() {
     return {
-      products: []
-    };
-  },
-  created() {
-    this.getProducts();
+      search:'',
+
+      columns: [
+        {
+          type: 'selection',
+          width: 60,
+          align: 'center'
+        },
+        {
+          title: '商品編號',
+          key: 'id',
+          sortable: true
+        },
+        {
+          title: '商品名稱',
+          key: 'name'
+        },
+        {
+          title: '顏色',
+          key: 'color'
+        },
+        {
+          title: '尺寸',
+          key:'size',
+        },
+        {
+          title: '商品價格',
+          key: 'price',
+          sortable: true
+        },
+        {
+          title: '商品類別',
+          key: 'category',
+          filters: [
+            {
+              label: '文青生活',
+              value: '文青生活'
+            },
+            {
+              label: '服飾',
+              value: '服飾'
+            },
+            {
+              label: '營地用品',
+              value: '營地用品'
+            }
+          ],
+          filterMethod(value, row) {
+            return row.category.indexOf(value) > -1;
+          }
+        },
+        {
+          title: '商品狀態',
+          key: 'status',
+        },
+        {
+          title: '編輯',
+          key: 'price'
+        },
+      ],
+      data: [
+        {
+          id: '11111',
+          name:'New York No. 1 Lake Park',
+          price:  18,
+          category: '文青生活',
+          color: '黑',
+          size: 'XL',
+          status: 'true'
+        },
+        {
+          id: '22222',
+          name: 'London No. 1 Lake Park',
+          price: 24,
+          category: '服飾',
+          color: '黑',
+          size: 'XL'
+        },
+        {
+          id: '33333',
+          name: 'Sydney No. 1 Lake Park',
+          price: 30,
+          category: '服飾',
+          color: '黑',
+          size: 'XL'
+        },
+        {
+          id: '44444',
+          name: 'Ottawa No. 2 Lake Park',
+          price: 26,
+          category: '營地用品',
+          color: '黑',
+          size: 'XL'
+        }
+      ]
+    }
   },
   methods: {
-    getProducts() {
-      apiInstance
-        .get("./getProduct.php")
-        .then(response => {
-          this.products = response.data;
-        })
-        .catch(error => {
-          console.error("Error:", error);
-        });
+    handleSelectAll(status) {
+      this.$refs.selection.selectAll(status);
     },
-    getImageUrl(image) {
-      // 如果您的圖片路徑是相對於後端服務器的，這裡可能需要添加基礎URL
-      return getImageUrl(image);
+    handleFilter(){
+      console.log(this.search.id)
+    },
+    getPHP() {
+      apiInstance
+        .get("./getadmin.php")
+        .then((response) => {
+          this.adminList = response.data;
+        }
+        ).catch((error) => {
+          console.error("Error", error);
+        });
     }
-  }
-};
+  },
+  mounted() {
+    
+  },
+}
 </script>
 
-<style scoped>
-table {
-  width: 100%;
-  border-collapse: collapse;
+<template>
+  <main>
+    <h2 class="product-title dark">商品列表管理</h2>
+
+    <div class="product-search">
+      <h4>商品列表清單</h4>
+      <Input search enter-button placeholder="請輸入商品名稱或商品Id進行搜尋" class="product-id-search" v-model="this.search" @onchange="handleFilter" />
+    </div>
+    <Table class="product-table" border ref="selection" :columns="columns" :data="data"></Table>
+    <div style="margin-top: 16px">
+      <Button @click="handleSelectAll(true)">Set all selected</Button>
+      <Button @click="handleSelectAll(false)">Cancel all selected</Button>
+    </div>
+  </main>
+</template>
+
+<style lang="scss" scoped>
+h2 {
+  margin-bottom: 20px;
 }
 
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
+h4 {
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+.product-table{
+  margin-top: 20px;
 }
 
-th {
-  background-color: #f2f2f2;
-  text-align: left;
-}
 </style>
