@@ -1,5 +1,5 @@
 <template>
-  <AddProduct></AddProduct>
+  <AddProduct @product-changed="refreshPage"></AddProduct>
   <div>
     <h2>商品列表</h2>
     <div v-if="products.length === 0">尚無商品</div>
@@ -14,6 +14,8 @@
             <th>商品價格</th>
             <th>商品狀態</th>
             <th>建立日期</th>
+            <th>商品顏色</th>
+            <th>商品尺寸</th>
           </tr>
         </thead>
         <tbody>
@@ -30,6 +32,8 @@
             <td>{{ product.price }}</td>
             <td>{{ product.state }}</td>
             <td>{{ product.createdate }}</td>
+            <td>{{ product.color }}</td>
+            <td>{{ product.size }}</td>
           </tr>
         </tbody>
       </table>
@@ -67,6 +71,9 @@ export default {
     getImageUrl(image) {
       // 如果您的圖片路徑是相對於後端服務器的，這裡可能需要添加基礎URL
       return getImageUrl(image);
+    },
+    refreshPage(){
+      window.location.reload();
     }
   }
 };

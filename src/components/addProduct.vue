@@ -16,6 +16,8 @@ export default {
 				description: '',
 				price: null,
 				state: 0,
+				color: '',
+				size: '',
 			},
 			formData: new FormData()
 		}
@@ -76,6 +78,8 @@ export default {
 			this.formData.append('price', this.product.price);
 			this.formData.append('state', this.product.state);
 			this.formData.append('createdate', localISOTime); // 使用當前日期時間
+			this.formData.append('color', this.product.color);
+			this.formData.append('size', this.product.size);
 
 			apiInstance.post('/addProduct.php', this.formData, {
 				headers: {
@@ -88,28 +92,15 @@ export default {
 				.catch(error => {
 					console.error(error);
 				});
-				this.modal2 = false;
+			this.$emit('product-changed');
+			this.modal2 = false;
 		},
-
-		// handleSubmit(name) {
-		// 	this.$refs[name].validate((valid) => {
-		// 		if (valid) {
-		// 			this.$Message.success('儲存成功');
-		// 		} else {
-		// 			this.$Message.error('儲存失敗');
-		// 		}
-		// 	})
-		// },
-		// handleReset(name) {
-		// 	this.$refs[name].resetFields();
-		// },
 	}
 }
 </script>
 
 <template>
 	<Space wrap>
-		<!-- 這邊下面是表格類的燈箱 -->
 		<Button @click="modal2 = true">新增商品</Button>
 
 		<Modal title="新增商品" v-model="modal2" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消"
@@ -120,9 +111,8 @@ export default {
 						<p align="center" class="list-title">商品圖片</p>
 						<input type="file" id="images" @change="handleImageUpload" accept="image/*" multiple required>
 						<div v-for="(file, index) in selectedFiles" :key="index">
-        <img :src="file.url" :alt="file.name" style="width: 100px; height: auto;">
-        <p>{{ file.name }}</p>
-    </div>
+							<img :src="file.url" :alt="file.name" style="width: 100px; height: auto;">
+						</div>
 					</ListItem>
 
 					<ListItem>
@@ -156,7 +146,7 @@ export default {
 						</Row>
 						<Row class="form-row" justify="center" align="middle">
 							<Col span="19">
-							<Input type="text" placeholder="請輸入商品顏色(選填)"></Input>
+							<Input type="text" v-model="product.color" placeholder="請輸入商品顏色(選填)"></Input>
 							</Col>
 						</Row>
 					</ListItem>
@@ -167,7 +157,7 @@ export default {
 						</Row>
 						<Row class="form-row" justify="center" align="middle">
 							<Col span="19">
-							<Input type="text" placeholder="請輸入商品尺寸(選填)"></Input>
+							<Input type="text" v-model="product.size" placeholder="請輸入商品尺寸(選填)"></Input>
 							</Col>
 						</Row>
 					</ListItem>
