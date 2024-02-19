@@ -10,16 +10,19 @@ export default {
 		return {
 			modal2: false,
 			selectedFiles: [], // 用於存储已選擇文件的信息
+			colorInput: '',//暫存顏色輸入框內容
+			sizeInput: '',//暫存尺寸輸入框內容
+			productColors: [], // 用於存儲多個顏色
+			productSizes: [], // 用於存儲多個尺寸
 			product: {
 				title: '',
 				category: '',
 				description: '',
 				price: null,
 				state: 0,
-				color: '',
-				size: '',
 			},
-			formData: new FormData()
+			formData: new FormData(),
+			
 		}
 	},
 	methods: {
@@ -67,6 +70,24 @@ export default {
 				}
 			}
 		},
+		addColor() {
+			if (this.colorInput) {
+				this.productColors.push(this.colorInput);
+				this.colorInput = ''; // 清空輸入
+			}
+		},
+		removeColor(index) {
+			this.productColors.splice(index, 1);
+		},
+		addSize() {
+			if (this.sizeInput) {
+				this.productSizes.push(this.sizeInput);
+				this.sizeInput = ''; // 清空輸入
+			}
+		},
+		removeSize(index) {
+			this.productSizes.splice(index, 1);
+		},
 		addProduct() {
 			// 在發送前自動設置 createdate 為當前日期時間
 			const now = new Date();
@@ -78,8 +99,10 @@ export default {
 			this.formData.append('price', this.product.price);
 			this.formData.append('state', this.product.state);
 			this.formData.append('createdate', localISOTime); // 使用當前日期時間
-			this.formData.append('color', this.product.color);
-			this.formData.append('size', this.product.size);
+
+			// 將顏色和尺寸數據轉換為 JSON 字符串並添加到 formData
+			this.formData.append('colors', JSON.stringify(this.productColors));
+			this.formData.append('sizes', JSON.stringify(this.productSizes));
 
 			apiInstance.post('/addProduct.php', this.formData, {
 				headers: {
@@ -95,6 +118,7 @@ export default {
 			this.$emit('product-changed');
 			this.modal2 = false;
 		},
+		
 	}
 }
 </script>
@@ -146,9 +170,13 @@ export default {
 						</Row>
 						<Row class="form-row" justify="center" align="middle">
 							<Col span="19">
-							<Input type="text" v-model="product.color" placeholder="請輸入商品顏色(選填)"></Input>
+							<Input type="text" v-model="colorInput" placeholder="請輸入商品顏色"></Input>
+							<Button @click="addColor">添加顏色</Button>
 							</Col>
 						</Row>
+						<div v-for="(color, index) in productColors" :key="index">
+							{{ color }} <Button @click="removeColor(index)">移除</Button>
+						</div>
 					</ListItem>
 
 					<ListItem justify="center" align="middle">
@@ -157,9 +185,13 @@ export default {
 						</Row>
 						<Row class="form-row" justify="center" align="middle">
 							<Col span="19">
-							<Input type="text" v-model="product.size" placeholder="請輸入商品尺寸(選填)"></Input>
+							<Input type="text" v-model="sizeInput" placeholder="請輸入商品尺寸"></Input>
+							<Button @click="addSize">添加尺寸</Button>
 							</Col>
 						</Row>
+						<div v-for="(size, index) in productSizes" :key="index">
+							{{ size }} <Button @click="removeSize(index)">移除</Button>
+						</div>
 					</ListItem>
 
 					<ListItem justify="center" align="middle">
