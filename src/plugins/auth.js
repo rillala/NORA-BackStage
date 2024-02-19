@@ -4,8 +4,8 @@ import axios from "axios";
 //創建一個axios實例(可以有很多個)
 const apiInstance = axios.create({
   // Set a base URL for all requests
-  baseURL: "https://tibamef2e.com/chd104/g1/phps/",
-  //   baseURL: "http://localhost/NORAapi/phps/",
+  // baseURL: "https://tibamef2e.com/chd104/g1/phps/",
+  baseURL: "http://localhost/NORAapi/phps/",
   // Set a default timeout for all requests (in milliseconds)
   timeout: 5000,
   // Set default headers for all requests

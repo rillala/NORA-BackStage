@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios';
+import apiInstance from "@/plugins/auth";
 import { useRouter } from 'vue-router';
 import { mapActions } from 'pinia';
 import userStore from '@/stores/user';
@@ -7,43 +8,80 @@ import userStore from '@/stores/user';
 export default {
   data() {
     return {
-      adminName: 'mor_2314',
-      adminPwwd: '83r5^_',
+      adminEnter: {
+        acc: "admin02",
+        psw: "NORA123"
+      },
+      // adminName: 'mor_2314',
+      // adminPwwd: '83r5^_',
+      //fakestoreapi登入
     };
   },
   methods: {
+    ...mapActions(userStore, ['updateToken', 'checkLogin', 'updateAdminName']),
 
-    ...mapActions(userStore, ['updateToken', 'checkLogin']),
-    signin() {
+    login() {
+      const bodyFormData = new FormData();
+      bodyFormData.append('acc', this.adminEnter.acc);
+      bodyFormData.append('psw', this.adminEnter.psw);
 
-      axios.post('https://fakestoreapi.com/auth/login', {
-        username: this.adminName,
-        password: this.adminPwwd,
-        // }, {
-        //   headers: {
-        //     'Content-Type': 'application/json'
-        //   }
-        //   //fetch一定要加不然抓不到
+      apiInstance({
+        method: 'post',
+        url: '/adminLogin.php',
+        // headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: { "Content-Type": "multipart/form-data" },
+        data: bodyFormData
+      }).then(res => {
+        console.log(res);
+        if (res && res.data && res.data.success === true) {
+          // 如果後端success為true，則處理登入成功的情況
+          this.updateToken(res.data.token);
+          //
+          this.updateAdminName(res.data.acc);
+          //
+        } else if (res && res.data && res.data.success === false) {
+          // 如果後端success為false，則處理登入失敗的情況
+          alert(res.data.message);
+        } else {
+          //   如果後端返回的數據格式不符合預期，則提醒用戶或開發者檢查問題
+          alert('登入失敗：伺服器回應錯誤');
+        }
+      }).catch(error => {
+        console.log(error);
       })
-        .then(response => {
-          if (response.data && response.data.token) {
-            // localStorage.setItem('token', response.data.token)
-            // this.updateToken('123')
-            // console.log(login)
-            this.updateToken(response.data.token);
-            console.log('login success', response.data.token);
-            window.location.reload();
-            //在取得token後重整畫面(App.vue載入狀態為isLogin = true)
-          }
-        })
-        .catch(error => {
-          console.error(error)
-          alert('登入失敗');
-          // error時執行這邊
-          // 登入失敗
-          // 系統維護中
-        });
-    }
+    },
+
+    //fakestoreapi登入
+    // signin() {
+
+    //   axios.post('https://fakestoreapi.com/auth/login', {
+    //     username: this.adminName,
+    //     password: this.adminPwwd,
+    //     // }, {
+    //     //   headers: {
+    //     //     'Content-Type': 'application/json'
+    //     //   }
+    //     //   //fetch一定要加不然抓不到
+    //   })
+    //     .then(response => {
+    //       if (response.data && response.data.token) {
+    //         // localStorage.setItem('token', response.data.token)
+    //         // this.updateToken('123')
+    //         // console.log(login)
+    //         this.updateToken(response.data.token);
+    //         console.log('login success', response.data.token);
+    //         window.location.reload();
+    //         //在取得token後重整畫面(App.vue載入狀態為isLogin = true)
+    //       }
+    //     })
+    //     .catch(error => {
+    //       console.error(error)
+    //       alert('登入失敗');
+    //       // error時執行這邊
+    //       // 登入失敗
+    //       // 系統維護中
+    //     });
+    // }
   }
 };
 </script>
@@ -58,13 +96,12 @@ export default {
         </div>
         <!-- 登入表單 -->
         <label id="adminName">
-          帳號：<input type="text" id="adminName" v-model="adminName"><br />
+          帳號：<input type="text" id="adminName" v-model="adminEnter.acc"><br />
         </label>
         <label id="adminPwwd">
-          密碼：<input type="password" id="adminPwwd" v-model="adminPwwd"><br />
+          密碼：<input type="password" id="adminPwwd" v-model="adminEnter.psw"><br />
         </label>
-        <button @click="signin">登入</button>
-        <!-- 登入失敗提示 -->
+        <button @click="login">登入</button>
       </div>
     </div>
   </main>
