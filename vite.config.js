@@ -17,6 +17,7 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     host: "0.0.0.0",
+    port:5174,
     proxy: {
       // 带选项写法：http://localhost:5173/api/bar.php -> https://tibamef2e.com/cgd103/g1/api/bar.php
       "/api": {

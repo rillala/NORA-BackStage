@@ -13,22 +13,46 @@ export default {
         {
           title: "會員編號",
           key: "member_id",
-          width: "50",
+          width: "100",
           align: "center",
           sortable: true,
         },
         {
+          title: "第三方登入",
+          key: "user_id",
+          width: "100",
+          align: "center",
+          sortable: true,
+        },
+        {
+          title: "會員名字",
+          key: "name",
+          width: "100",
+          align: "center",
+        },
+        {
+          title: "日期",
+          key: "date",
+          width: "100",
+          align: "center",
+        },
+        {
           title: "會員信箱",
           key: "email",
-          width: "180",
+          width: "200",
+          align: "center",
+        },
+        {
+          title: "會員密碼",
+          key: "psw",
+          width: "160",
           align: "center",
         },
         {
           title: "照片",
-          key: this.getImageUrl("pic"),
+          key: "photo",
           width: "180",
           align: "center",
-          // slot:"photo"
         },
         {
           title: "會員手機",
@@ -40,7 +64,6 @@ export default {
           key: "address",
           width: "220",
           align: "center",
-          // sortable: true,
         },
         {
           title: "狀態",
@@ -48,42 +71,13 @@ export default {
           width: "100",
           align: "center",
           sortable: true,
-          // slot: "status",
         },
         {
           title: "查看",
           width: "100",
           align: "center",
-          // slot: "action",
         },
       ],
-      // memberList: [
-      //   {
-      //     memberId: 1,
-      //     // photo:getImageUrl('test.png'), 
-      //     email: 'tibame@gmail.com',
-      //     phone: "0912-345-678",
-      //     address:"320桃園市中壢區復興路46號",
-      //   },
-      //   {
-      //     memberId: 2,
-      //     email: 'tibame@gmail.com',
-      //     phone: "0912-345-678",
-      //     address:"320桃園市中壢區復興路46號",
-      //   },
-      //   {
-      //     memberId: 3,
-      //     email: 'tibame@gmail.com',
-      //     phone: "0912-345-678",
-      //     address:"320桃園市中壢區復興路46號",
-      //   },
-      //   {
-      //     memberId: 4,
-      //     email: 'tibame@gmail.com',
-      //     phone: "0912-345-678",
-      //     address:"320桃園市中壢區復興路46號",
-      //   },  
-      // ],
       memberList: [],
     };
   },
@@ -115,7 +109,7 @@ export default {
     },
     getPHP() {
       apiInstance
-        .get("./member.php")
+        .get("./members.php")
         .then((response) => {
           console.log(response.data); // 這裡應該能看到 { "number": 123 }
           this.memberList = response.data.members;
