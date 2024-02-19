@@ -57,7 +57,7 @@ export default {
       this.updateToken('');
       //清除token
       this.updateAdminName('')
-      // window.location.reload();
+      window.location.reload();
     },
     getAdminName() {
       this.adminName = localStorage.getItem('adminName');
@@ -90,7 +90,7 @@ export default {
 }
 
 .box {
-  margin: 15px auto 20px;
+  margin: 20px auto 15px;
   text-align: center;
 
   p {
@@ -115,12 +115,12 @@ export default {
   a {
     display: block;
     width: 100%;
-    text-align: center;
+    text-align: start;
+    padding-left: 23px;
     color: $white01;
   }
 }
 
-//失效?
 .ivu-menu-vertical .ivu-menu-item:hover,
 .ivu-menu-vertical .ivu-menu-submenu-title:hover {
   color: $dark;

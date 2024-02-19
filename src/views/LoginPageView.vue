@@ -110,7 +110,7 @@ export default {
 <style lang="scss" scoped>
 main {
   height: 100vh;
-  background-color: $blue-3;
+  background-color: $blue-2;
   display: flex;
   align-items: center;
 }
@@ -125,6 +125,9 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: $blue-3;
+  border-radius: 30px;
+  padding-bottom: 20px;
 }
 
 #logo {
@@ -155,6 +158,8 @@ main {
     color: #000;
     font-weight: normal;
     padding: 0 10px;
+    border: none;
+    border-radius: 3px;
   }
 }
 
@@ -167,14 +172,26 @@ main {
     color: #000;
     font-weight: normal;
     padding: 0 10px;
+    border: none;
+    border-radius: 3px;
+
   }
 }
 
 button {
+  background: $blue-1;
   width: 80px;
   height: 30px;
   border: none;
   border-radius: 10px;
   margin: 10px;
+  transition: 200ms;
+  font-weight: bold;
+}
+
+button:hover {
+  color: $white01;
+  background: $blue-4;
+  transition: 200ms;
 }
 </style>

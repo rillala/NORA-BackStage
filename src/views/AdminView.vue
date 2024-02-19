@@ -29,13 +29,13 @@ export default {
           title: '管理員帳號',
           key: 'acc',
           align: 'center',
-          width: '180'
+          width: '150'
         },
         {
           title: '管理員密碼',
           key: 'psw',
           align: 'center',
-          width: '200'
+          width: '150'
         },
         {
           title: '帳號狀態',
@@ -85,7 +85,7 @@ export default {
       apiInstance
         .get("./getAdmin.php")
         .then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
           this.adminList = response.data;
         }).catch((error) => {
           console.error("Error", error);
@@ -137,6 +137,10 @@ export default {
           console.error("Error", error);
         });
     },
+
+    //狀態修改
+
+
   },
 }
 </script>
@@ -145,13 +149,14 @@ export default {
   <!-- 新增燈箱(暫) -->
   <Modal title="新增管理員" v-model="modalAdd">
     <div style="display: flex; flex-direction:column ; align-items: center;">
-      <Space>新增名稱：<Input v-model="addAdminData.name" />
-      </Space><br />
-      <Space>新增帳號：<Input v-model="addAdminData.acc" />
-      </Space><br />
-      <Space>新增密碼：<Input type="password" v-model="pswfirst" />
-      </Space><br />
-      <Space style="position: relative; right: 14px;">再次輸入密碼：<Input type="password" v-model="addAdminData.psw" />
+      <Space class="addInput">新增名稱：<Input v-model="addAdminData.name" />
+      </Space>
+      <Space class="addInput">新增帳號：<Input v-model="addAdminData.acc" />
+      </Space>
+      <Space class="addInput">新增密碼：<Input type="password" v-model="pswfirst" />
+      </Space>
+      <Space style="position: relative; right: 14px;" class="addInput">再次輸入密碼：<Input type="password"
+          v-model="addAdminData.psw" />
       </Space>
     </div>
     <template #footer>
@@ -171,7 +176,7 @@ export default {
 
     <br />
 
-    <Table class="admin-table" height="500" :columns="columns" :data="adminList">
+    <Table class="admin-table" :columns="columns" :data="adminList">
 
       <template #info="{ row, index }">
         <Input type="text" v-model="editInfo" v-if="editIndex === index" />
@@ -211,10 +216,11 @@ export default {
         </div>
       </template>
 
-
-
     </Table>
-    <Button @click="modalAdd = true">新增管理員</Button>
+
+    <Space type="flex" style="justify-content: end; padding: 10px;">
+      <Button type="primary" @click="modalAdd = true">新增管理員</Button>
+    </Space>
 
   </main>
 </template>
@@ -261,5 +267,9 @@ h4 {
 
 .vertical-center-modal .ivu-modal {
   top: 0;
+}
+
+.addInput {
+  padding-bottom: 3px;
 }
 </style>
