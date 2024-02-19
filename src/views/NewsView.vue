@@ -6,7 +6,7 @@ export default {
   data() {
     return {
       search: "",
-      newsFilter: "",
+      newsFilter: "", //篩選
       columns: [
         {
           type: "selection",
@@ -55,7 +55,7 @@ export default {
           slot: "delete",
         },
       ],
-      newsList: [],
+      newsList: [], //文章列表
       modal2: false, //新增的燈箱預設關閉
       statusMap: {
         0: "草稿",
@@ -64,22 +64,27 @@ export default {
       },
       nameValue: "", //文章標題
       contentValue: "", //文章內文
-      imgName: "", //文章圖片
+      imgNames: [], //文章圖片
       selectedStatus: "draft", // 預設是草稿狀態
+      editModalVisible: false,
+      editArticle: {
+        title: "",
+        content: "",
+        imgNames: [], // 圖片
+        status: "draft" // 預設狀態
+      },
     }
   },
-  // created() {
-  //   axios.get(`${import.meta.env.VITE_NORA_URL}/phps/getNews.php`)
-  //     .then((response) => {
-  //       this.newsList = response.data;
-  //     }
-  //     ).catch((error) => {
-  //       console.error("Error", error);
-  //     }
-  //     );
-  // },
+  computed: {
+    filteredNewsList() {
+      const filterText = this.newsFilter.toLowerCase().trim();
+      return this.newsList.filter(news => {
+        return news.article_id.toString().includes(filterText) || news.title.toLowerCase().includes(filterText);
+      }); //接收 newsFilter 屬性的值作為參數，把它轉換成小寫且去除空白字符，然後用 filter 方法過濾 newsList。
+    }
+  },
   mounted() {
-    this.getPHP();
+    this.getPHP(); //抓到資料庫的資料
   },
   methods: {
     getPHP() {
@@ -92,20 +97,48 @@ export default {
           console.error("Error:", error);
         });
     },
-    uploadSuccess(response) {
-      this.imgName = response.data.filename; //假設回傳的數據包含圖片檔名
+    uploadSuccess(response) { //上傳圖片是否成功
+      this.imgNames.push(response.data.filename); //將上傳成功的圖片檔名放到陣列中
       console.log("上傳成功", response);
     },
-    selectStatus(status) { //文章狀態選擇
+    changeStatus(status) { //文章狀態選擇
       this.selectedStatus = status;
     },
-    cancelAdd(){
-      this.modal2 = "false";
+    saveArticle() { //儲存文章
+      this.selectedStatus = this.tempStatus;
     },
-    saveArticle(){
-      
-    }
+    cancelAdd() { //取消文章
+      this.modal2 = false;
+    },
+    showEditModal(article){
+      // 把傳入的文章賦值給編輯文章對象並打開彈窗
+      this.editArticle = {
+        title: article.title,
+        content: article.content,
+        imgNames: article.imgNames,
+        status: article.status
+      };
+      this.editModalVisible = true;
+    },
+    saveEdit() { //保存編輯完的文章
+      // 把編輯後的文章發到後端保存 關閉彈窗
+      this.editModalVisible = false;
+    },
+    cancelEdit() {
+      // 取消編輯 關閉彈窗
+      this.editModalVisible = false;
+    },
   },
+  // created() {
+  //   axios.get(`${import.meta.env.VITE_NORA_URL}/phps/getNews.php`)
+  //     .then((response) => {
+  //       this.newsList = response.data;
+  //     }
+  //     ).catch((error) => {
+  //       console.error("Error", error);
+  //     }
+  //     );
+  // },
 };
 </script>
 
@@ -113,76 +146,166 @@ export default {
   <main>
     <h2 class="news-title dark">最新消息管理</h2>
 
+    <!-- 搜尋 -->
     <div class="news-search">
       <h4>最新消息清單</h4>
       <Input search enter-button placeholder="請輸入文章編號或文章標題進行搜尋" class="news-id-search" v-model="newsFilter" />
     </div>
 
+    <!-- 新增文章按鈕 -->
+    <Button @click="modal2 = true">新增</Button>
+
+    <!-- 文章列表 -->
+    <!-- <Table class="news-table" :columns="columns" :data="newsList"> -->
+      <Table class="news-table" :columns="columns" :data="filteredNewsList">
+      <template #title="{ row }">
+        <strong>{{ row.title }}</strong>
+      </template>
+
+      <template #status="{ row }">
+        {{ statusMap[row.status] }}
+      </template>
+
+      <template #edit="{ row, index }">
+        <Button size="small" @click="showEditModal(row)">
+          <img src="@/assets/image/icon/edit.svg" alt="編輯按鈕" />
+        </Button>
+      </template>
+
+      <template #delete="{ row, index }">
+        <Button size="small" @click="remove(index)">
+          <img src="@/assets/image/icon/delete.svg" alt="刪除按鈕" />
+        </Button>
+      </template>
+    </Table>
+
     <Space wrap>
+
       <!-- 新增文章燈箱 -->
-      <Button @click="modal2 = true">新增</Button>
 
-      <Modal title="新增文章" v-model="modal2" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消" align="center">
+      <Modal title="新增文章" v-model="modal2" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消"
+        align="center">
 
-      <List item-layout="vertical">
-        <Form>
-          <ListItem>
-            <Row class="form-row" justify="center" align="middle">
-              <Col span="5" align="center" class=" row-title">
-              <span>消息標題</span>
-              </Col>
-              <Col span="19">
-              <Input v-model="nameValue" placeholder="請輸入標題" />
-              </Col>
-            </Row>
+        <List item-layout="vertical">
+          <Form>
+            <ListItem>
+              <Row class="form-row" justify="center" align="middle">
+                <Col span="5" align="center" class=" row-title">
+                <span>消息標題</span>
+                </Col>
+                <Col span="19">
+                <Input v-model="nameValue" placeholder="請輸入標題" />
+                </Col>
+              </Row>
 
-            <Row class="form-row" justify="center" align="middle">
-              <Col span="5" align="center">
-              <span>消息內容</span>
-              </Col>
-              <Col span="19">
+              <Row class="form-row" justify="center" align="middle">
+                <Col span="5" align="center">
+                <span>消息內容</span>
+                </Col>
+                <Col span="19">
                 <textarea rows="15" cols="49" v-model="contentValue" placeholder="請輸入內文"></textarea>
-              </Col>
-            </Row>
+                </Col>
+              </Row>
 
-            <Row class="form-row" justify="center" align="middle">
-              <Col span="5" align="center">
-              <span>消息圖片</span>
-              </Col>
-              <Col span="19">
-                <Upload multiple :limit="3" action="" @success="uploadSuccess">
+              <Row class="form-row" justify="center" align="middle">
+                <Col span="5" align="center">
+                <span>消息圖片</span>
+                </Col>
+                <Col span="19">
+                <Upload multiple :limit="3 - imgNames.length" action="" @success="uploadSuccess">
                   <Button icon="md-add">上傳圖片</Button>
                 </Upload>
-                <div v-if="imgName">{{ imgName }}</div>
-              </Col>
-            </Row>
+                <div v-for="imgName in imgNames" :key="imgName">{{ imgName }}</div>
+                </Col>
+              </Row>
 
-            <Row class="form-row" justify="center" align="middle">
-              <Col span="5" align="center">
-              <span>消息狀態</span>
-              </Col>
+              <Row class="form-row" justify="center" align="middle">
+                <Col span="5" align="center">
+                <span>消息狀態</span>
+                </Col>
 
-              <Col span="19">
-                <button class="statusBtn" :class="{ 'selected': selectedStatus === 'draft' }" @click="selectStatus('draft')">草稿</button>
+                <Col span="19">
+                <span class="statusBtn" :class="{ 'selected': selectedStatus === 'draft' }"
+                  @click="changeStatus('draft')">草稿</span>
 
-                <button class="statusBtn" :class="{ 'selected': selectedStatus === 'publish' }" @click="selectStatus('publish')">立即上架</button>
+                <span class="statusBtn" :class="{ 'selected': selectedStatus === 'publish' }"
+                  @click="changeStatus('publish')">立即上架</span>
 
-                <button class="statusBtn" :class="{ 'selected': selectedStatus === 'schedule' }" @click="selectStatus('schedule')">排程上架</button>
-              </Col>
+                <!-- <span class="statusBtn" :class="{ 'selected': selectedStatus === 'schedule' }" @click="changeStatus('schedule')">排程上架</span> -->
+                </Col>
+              </Row>
+
+            </ListItem>
+          </Form>
+        </List>
+
+        <template #footer>
+          <Button type="dashed" @click="cancelAdd">取消</Button>
+          <Button type="primary" @click="saveArticle">儲存</Button>
+        </template>
+      </Modal>
+
+  <!-- 編輯文章 -->
+      <Modal title="编辑文章" v-model="editModalVisible" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消" align="center">
+    <List item-layout="vertical">
+      <Form>
+        <ListItem>
+          <Row class="form-row" justify="center" align="middle">
+            <Col span="5" align="center" class=" row-title">
+              <span>消息標題</span>
+            </Col>
+            <Col span="19">
+              <Input v-model="editArticle.title" placeholder="請輸入標題" />
+            </Col>
           </Row>
 
-          </ListItem>
-        </Form>
-      </List>
+          <Row class="form-row" justify="center" align="middle">
+            <Col span="5" align="center">
+              <span>消息內容</span>
+            </Col>
+            <Col span="19">
+              <textarea rows="15" cols="49" v-model="editArticle.content" placeholder="請輸入內文"></textarea>
+            </Col>
+          </Row>
 
-      <template #footer>
-        <Button type="dashed" @click="cancelAdd">取消</Button>
-        <Button type="primary" @click="saveArticle">儲存</Button>
-      </template>
-      </Modal>
+          <Row class="form-row" justify="center" align="middle">
+            <Col span="5" align="center">
+              <span>消息圖片</span>
+            </Col>
+            <Col span="19">
+              <Upload multiple action="" @success="uploadSuccess">
+                <Button icon="md-add">上傳圖片</Button>
+              </Upload>
+              <div v-for="imgName in editArticle.imgNames" :key="imgName">{{ imgName }}</div>
+            </Col>
+          </Row>
+
+          <Row class="form-row" justify="center" align="middle">
+            <Col span="5" align="center">
+              <span>消息狀態</span>
+            </Col>
+
+            <Col span="19">
+              <span class="statusBtn" :class="{ 'selected': editArticle.status === 'draft' }" @click="changeStatus('draft')">草稿</span>
+              <span class="statusBtn" :class="{ 'selected': editArticle.status === 'publish' }" @click="changeStatus('publish')">立即上架</span>
+            </Col>
+          </Row>
+        </ListItem>
+      </Form>
+    </List>
+
+    <template #footer>
+      <Button type="dashed" @click="cancelEdit">取消</Button>
+      <Button type="primary" @click="saveEdit">保存</Button>
+    </template>
+  </Modal>
+
     </Space>
 
-  <!-- <Button class="news-add" @click="addNew = true">新增</Button>
+  </main>
+</template>
+
+    <!-- <Button class="news-add" @click="addNew = true">新增</Button>
   <Modal draggable default scrollable ok-text="送出"
     class="add-window"
     title="新增文章"
@@ -207,27 +330,6 @@ export default {
       <input class="now" type="button" name="now" id="now" value="立即上架">
     </div>
   </Modal> -->
-
-    <Table class="news-table" :columns="columns" :data="newsList">
-      <template #title="{ row }">
-        <strong>{{ row.title }}</strong>
-      </template>
-
-      <template #edit="{ row, index }">
-        <Button size="small" @click="showDetail(index)">
-          <img src="@/assets/image/icon/edit.svg" alt="編輯按鈕" />
-        </Button>
-      </template>
-
-      <template #delete="{ row, index }">
-        <Button size="small" @click="remove(index)">
-          <img src="@/assets/image/icon/delete.svg" alt="刪除按鈕" />
-        </Button>
-      </template>
-    </Table>
-
-  </main>
-</template>
 
 <style lang="scss" scoped>
 h2 {
@@ -294,13 +396,17 @@ button {
 }
 
 .statusBtn {
-  border: 1px solid black ;
+  border: 1px solid black;
   padding: 4px 8px;
   margin-right: 10px;
+  cursor: pointer;
 }
 
 .selected {
   background-color: #D5FAFF; //被選到後的背景顏色
 }
 
+::placeholder {
+  color: #cbcbcb;
+}
 </style>
