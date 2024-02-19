@@ -1,28 +1,12 @@
-<template>
-  <div class="menu-box">
-    <RouterLink to="/" id="logo"></RouterLink>
-    <div class="box">
-      <p class="white01">管理員 #{{ adminId }} 您好</p>
-      <Button class="white01 logout" type="text" @click="logOut">登出</Button>
-    </div>
-
-    <Menu theme="light" active-name="1">
-      <MenuItem :name="index" v-for="(link, index) in navList">
-      <RouterLink :to="link.path">{{ link.name }}</RouterLink>
-      </MenuItem>
-    </Menu>
-  </div>
-</template>
 <script>
 import { RouterLink, RouterView } from "vue-router";
 import { mapState, mapActions } from 'pinia';
 import userStore from '@/stores/user';
 
-
 export default {
   data() {
     return {
-      adminId: "1",
+      adminName: "",
       isLogin: true,
       navList: [
         {
@@ -64,20 +48,39 @@ export default {
       ],
     };
   },
-  computed: {
-    ...mapState(userStore, ['token'])
+  mounted() {
+    this.getAdminName();
   },
   methods: {
-    ...mapActions(userStore, ['updateToken']),
+    ...mapActions(userStore, ['updateToken', 'checkUserData', 'updateAdminName']),
     logOut() {
       this.updateToken('');
       //清除token
+      this.updateAdminName('')
       window.location.reload();
-
-    }
+    },
+    getAdminName() {
+      this.adminName = localStorage.getItem('adminName');
+    },
   },
 };
 </script>
+
+<template>
+  <div class="menu-box">
+    <RouterLink to="/" id="logo"></RouterLink>
+    <div class="box">
+      <p class="white01">管理員 {{ adminName }} 您好</p>
+      <Button class="white01 logout" type="text" @click="logOut">登出</Button>
+    </div>
+
+    <Menu theme="light" active-name="1">
+      <MenuItem :name="index" v-for="(link, index) in navList">
+      <RouterLink :to="link.path">{{ link.name }}</RouterLink>
+      </MenuItem>
+    </Menu>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .menu-box {
@@ -87,7 +90,7 @@ export default {
 }
 
 .box {
-  margin: 15px auto 20px;
+  margin: 20px auto 15px;
   text-align: center;
 
   p {
@@ -112,12 +115,12 @@ export default {
   a {
     display: block;
     width: 100%;
-    text-align: center;
+    text-align: start;
+    padding-left: 23px;
     color: $white01;
   }
 }
 
-//失效?
 .ivu-menu-vertical .ivu-menu-item:hover,
 .ivu-menu-vertical .ivu-menu-submenu-title:hover {
   color: $dark;

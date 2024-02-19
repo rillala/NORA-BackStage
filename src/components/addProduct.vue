@@ -1,80 +1,99 @@
 <script>
-import { List, ListItem, ListItemMeta, Input, FormItem, Row, Button } from 'view-ui-plus';
+import { List, ListItem, ListItemMeta, Input, FormItem, Row, Button, Col } from 'view-ui-plus';
+import apiInstance from "@/plugins/auth";
+
 
 
 export default {
-	components: { ListItemMeta, ListItem, List, Input, FormItem, Row, Button },
+	components: { ListItemMeta, ListItem, List, Input, FormItem, Row, Button, Col },
 	data() {
 		return {
-
 			modal2: false,
-			//^^^新增商品燈箱^^^
-
-			imgDynamic: [
-				{
-					imgUrl: "",
-					imgAlt: ""
-				}
-			],
-			nameValue: "",
-			priceValue: "",
-			descriptionValue: "",
-			categoryValue: "服飾",
-			index: 1,
-			colorDynamic: {
-				colors: [
-					{
-						value: '',
-						index: 1,
-						status: 1
-					}
-				]
+			selectedFiles: [], // 用於存储已選擇文件的信息
+			product: {
+				title: '',
+				category: '',
+				description: '',
+				price: null,
+				state: 0,
+				color: '',
+				size: '',
 			},
-			specDynamic: {
-				specs: [
-					{
-						value: '',
-						index: 1,
-						status: 1
-					}
-				]
-			},
+			formData: new FormData()
 		}
 	},
 	methods: {
-		addColor() {
-			this.index++;
-			this.colorDynamic.colors.push({
-				value: '',
-				index: this.index,
-				status: 1
-			});
-		},
-		removeColor(index) {
-			this.colorDynamic.colors[index].status = 0;
-		},
-		addSpec() {
-			this.index++;
-			this.specDynamic.specs.push({
-				value: '',
-				index: this.index,
-				status: 1
-			});
-		},
-		removeSpec(index) {
-			this.specDynamic.specs[index].status = 0;
-		},
-		handleSubmit(name) {
-			this.$refs[name].validate((valid) => {
-				if (valid) {
-					this.$Message.success('儲存成功');
+		handleBeforeChange() {
+			return new Promise((resolve, reject) => {
+				if (this.product.state === 0) {
+					this.$Modal.confirm({
+						title: '上架確認',
+						content: '您確認要上架商品嗎？',
+						onOk: () => {
+							resolve(); // 確認下架
+							this.product.state = 1;
+						},
+						onCancel: () => {
+							reject(); // 取消下架
+						}
+					});
 				} else {
-					this.$Message.error('儲存失敗');
+					this.$Modal.confirm({
+						title: '下架確認',
+						content: '您確認要下架商品嗎？',
+						onOk: () => {
+							resolve(); // 確認上架
+							this.product.state = 0;
+						},
+						onCancel: () => {
+							reject(); // 取消上架
+						}
+					});
+				}
+			});
+		},
+		handleImageUpload(event) {
+			this.selectedFiles = []; // 清空之前的選擇
+			const files = event.target.files;
+			if (files) {
+				for (let i = 0; i < files.length; i++) {
+					this.formData.append('images[]', files[i]);
+					// 創建並存储預覽 URL
+					const fileReader = new FileReader();
+					fileReader.onload = (e) => {
+						this.selectedFiles.push({ name: files[i].name, url: e.target.result });
+					};
+					fileReader.readAsDataURL(files[i]);
+				}
+			}
+		},
+		addProduct() {
+			// 在發送前自動設置 createdate 為當前日期時間
+			const now = new Date();
+			const timezoneOffset = now.getTimezoneOffset() * 60000; // 時區偏移量，以毫秒為單位
+			const localISOTime = (new Date(now - timezoneOffset)).toISOString().slice(0, 19).replace('T', ' ');
+			this.formData.append('title', this.product.title);
+			this.formData.append('category', this.product.category);
+			this.formData.append('description', this.product.description);
+			this.formData.append('price', this.product.price);
+			this.formData.append('state', this.product.state);
+			this.formData.append('createdate', localISOTime); // 使用當前日期時間
+			this.formData.append('color', this.product.color);
+			this.formData.append('size', this.product.size);
+
+			apiInstance.post('/addProduct.php', this.formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
 				}
 			})
-		},
-		handleReset(name) {
-			this.$refs[name].resetFields();
+				.then(response => {
+					console.log(response.data);
+				})
+				.catch(error => {
+					console.error(error);
+				});
+			this.$emit('product-changed');
+			this.modal2 = false;
 		},
 	}
 }
@@ -82,33 +101,27 @@ export default {
 
 <template>
 	<Space wrap>
-
-
-		<!-- 這邊下面是表格類的燈箱 -->
 		<Button @click="modal2 = true">新增商品</Button>
 
-		<Modal title="新增商品" v-model="modal2" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消">
+		<Modal title="新增商品" v-model="modal2" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消"
+			footer-hide>
 			<List item-layout="vertical">
 				<Form>
 					<ListItem justify="center" align="middle">
-
-						<p align="center" class="list-title">商品照片</p>
-
-
-						<Upload multiple action="">
-							<Button icon="md-add">上傳圖片</Button>
-						</Upload>
-
+						<p align="center" class="list-title">商品圖片</p>
+						<input type="file" id="images" @change="handleImageUpload" accept="image/*" multiple required>
+						<div v-for="(file, index) in selectedFiles" :key="index">
+							<img :src="file.url" :alt="file.name" style="width: 100px; height: auto;">
+						</div>
 					</ListItem>
 
 					<ListItem>
-
 						<Row class="form-row" justify="center" align="middle">
 							<Col span="5" align="center" class=" row-title">
 							<span>商品名稱：</span>
 							</Col>
 							<Col span="19">
-							<Input v-model="nameValue" placeholder="請輸入名稱" />
+							<Input v-model="product.title" placeholder="請輸入商品名稱" required />
 							</Col>
 						</Row>
 
@@ -117,107 +130,81 @@ export default {
 							<span>商品類別：</span>
 							</Col>
 							<Col span="19">
-							<FormItem>
-								<Select v-model="categoryValue">
-									<Option value="服飾">服飾</Option>
-									<Option value="文青生活">文青生活</Option>
-									<Option value="露營用品">露營用品</Option>
-								</Select>
-							</FormItem>
+							<Select v-model="product.category" placeholder="請選擇商品類別">
+								<Option value="Nora品牌服飾">Nora品牌服飾</Option>
+								<Option value="Nora文青生活">Nora文青生活</Option>
+								<Option value="Nora營地用品">Nora營地用品</Option>
+							</Select>
 							</Col>
 						</Row>
 
 					</ListItem>
 
 					<ListItem justify="center" align="middle">
-
-						<p align="center" class="list-title">商品顏色</p>
-
-						<template v-for="(color, index) in  colorDynamic.colors " class="dynamic-add">
-							<FormItem v-if="color.status" :key="index" :label="'商品顏色' + color.index" :prop="'items.' + index + '.value'"
-								class="dynamic-row">
-								<Row :gutter="4">
-									<Col span="18">
-									<Input type="text" v-model="color.value" placeholder="請輸入顏色"></Input>
-									</Col>
-									<Col span="4">
-									<Button @click="removeColor(index)">刪除</Button>
-									</Col>
-								</Row>
-							</FormItem>
-						</template>
-						<Button type="dashed" @click="addColor" icon="md-add">新增商品顏色</Button>
-
+						<Row class="form-row" justify="center" align="middle">
+							<p align="center" class="list-title">商品顏色</p>
+						</Row>
+						<Row class="form-row" justify="center" align="middle">
+							<Col span="19">
+							<Input type="text" v-model="product.color" placeholder="請輸入商品顏色(選填)"></Input>
+							</Col>
+						</Row>
 					</ListItem>
 
 					<ListItem justify="center" align="middle">
-
-						<p align="center" class="list-title">商品規格</p>
-
-						<template v-for="( spec, index ) in  specDynamic.specs ">
-							<FormItem v-if="spec.status" :key="index" :label="'商品規格' + spec.index" :prop="'items.' + index + '.value'"
-								class="dynamic-row">
-								<Row :gutter="4">
-									<Col span="18">
-									<Input type="text" v-model="spec.value" placeholder="請輸入規格"></Input>
-									</Col>
-									<Col span="4">
-									<Button @click="removeSpec(index)">刪除</Button>
-									</Col>
-								</Row>
-							</FormItem>
-						</template>
-
-						<Button type="dashed" @click="addSpec" icon="md-add">新增商品規格</Button>
-
+						<Row class="form-row" justify="center" align="middle">
+							<p align="center" class="list-title">商品尺寸</p>
+						</Row>
+						<Row class="form-row" justify="center" align="middle">
+							<Col span="19">
+							<Input type="text" v-model="product.size" placeholder="請輸入商品尺寸(選填)"></Input>
+							</Col>
+						</Row>
 					</ListItem>
 
 					<ListItem justify="center" align="middle">
-
 						<Row class="form-row" justify="center" align="middle">
 							<Col span="5" align="center" class=" row-title">
-							<span>商品說明：</span>
-							</Col>
-							<Col span="19">
-							<Input type="textarea" :rows="5" v-model="descriptionValue" maxlength="200" show-word-limit
-								placeholder="請輸入說明" />
+							<span>商品詳情：</span>
 							</Col>
 						</Row>
-
+						<Row class="form-row" justify="center" align="middle">
+							<Col span="19">
+							<Input type="textarea" :rows="5" v-model="product.description" placeholder="請輸入商品詳情" required />
+							</Col>
+						</Row>
 					</ListItem>
 
 					<ListItem>
-
 						<Row class="form-row" justify="center" align="middle">
 							<Col span="5" align="center">
 							<span>商品價格：</span>
 							</Col>
-							<Col span="17">
-							<FormItem>
-								<Input v-model="priceValue" placeholder="請輸入單價" />
-							</FormItem>
+							<Col span="17" align="middle">
+							<Input v-model="product.price" placeholder="請輸入單價" required />
 							</Col>
 							<Col span="2" align="center">
 							<span>元</span>
 							</Col>
 						</Row>
-
 					</ListItem>
-
-					<!-- <FormItem> -->
-					<!-- <Button type="primary">Submit</Button> -->
-					<!-- @click="handleSubmit('formDynamic')" -->
-					<!-- <Button style="margin-left: 8px">Reset</Button> -->
-					<!-- @click="handleReset('formDynamic')" -->
-					<!-- </FormItem> -->
-
+					<ListItem>
+						<Row class="form-row" justify="center" align="middle">
+							<Col span="5" align="center">
+							<span>上架：</span>
+							</Col>
+							<Col span="5" align="middle">
+							<Switch :before-change="handleBeforeChange" />
+							</Col>
+						</Row>
+					</ListItem>
+					<Row class="form-row form-footer" justify="center" align="middle">
+						<Button @click="modal2 = false">取消</Button>
+						<Button style="background-color: rgb(71, 236, 236);" @click="addProduct">送出</Button>
+					</Row>
 				</Form>
 
 			</List>
-			<template #footer>
-				<Button type="dashed">取消</Button>
-				<Button type="primary">儲存</Button>
-			</template>
 		</Modal>
 	</Space>
 </template>
@@ -284,5 +271,12 @@ export default {
 	width: 100%;
 	padding: 5px 0px 5px 55px;
 	margin-bottom: 0px;
+}
+
+.form-footer {
+	display: flex;
+	justify-content: right;
+	gap: 8px;
+	margin-top: 20px;
 }
 </style>

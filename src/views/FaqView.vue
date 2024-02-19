@@ -1,6 +1,7 @@
 <script setup>
   import { ref, onMounted } from 'vue';
   import apiInstance from "@/plugins/auth";
+import { Row } from 'view-ui-plus';
 
   const columns = ref([
     {
@@ -36,9 +37,23 @@
       title: '回答', 
       key: 'answer' 
     },
+    {
+      title: "編輯",
+      width: "80",
+      align: "center",
+      slot: "edit",
+    },
+    {
+      title: "刪除",
+      width: "80",
+      align: "center",
+      slot: "delete",
+    },
   ]);
 
   const quesList = ref([]);
+  const addBtn = ref(false);
+  const selectDefault = ref('1');
 
   function getPHP(){
     apiInstance.get("./getFaq.php") // API請求獲取getFaq.php檔的數據
@@ -49,14 +64,24 @@
       console.error("Error", error); // 輸出錯誤訊息給主控台
     });
   } 
-
   onMounted( () => {
     try {
       getPHP();
     } catch (error) {
       console.error('發生錯誤:', error);
     }
-});
+  });
+  function addNew(){
+    addBtn.value = !addBtn.value;
+  }
+  function store(){
+    // 新增數據
+  }
+
+  function showDetail(){
+  }
+
+  function remove(index){}
 </script>
 
 
@@ -72,8 +97,68 @@
         class="searchInput"
       />
     </div>
+    <!-- 新增按鈕 -->
+    <div class="add-btn">
+      <Button class="add" @click="addNew()">新增</Button>
+    </div>
+    <!-- 燈箱 -->
+      <Modal title="新增常見問題" v-model="addBtn" class="vertical-center-modal" width="600">
+      <List item-layout="vertical">
+        <Form>
+          <ListItem justify="center" align="middle">
+            <Row class="form-row" justify="center" align="middle">
+              <Col span="5" align="center">
+                <span>問題類別：</span>
+              </Col>
+              <Col span="19">
+                <FromeItem>
+                  <Select>
+                    <Option value="營地預約">營地預約</Option>
+                    <Option value="中途之家">中途之家</Option>
+                    <Option value="裝備租借">裝備租借</Option>
+                    <Option value="商品購物">商品購物</Option>
+                  </Select>
+                </FromeItem>
+              </Col>
+            </Row>
+            <Row class="form-row" justify="center" align="middle">
+              <Col span="5" align="center" >
+                <span>問題：</span>
+              </Col>
+              <Col span="19" align="center">
+                <Input placeholder="請輸入標題" />
+              </Col>
+            </Row>
+            <Row class="form-row" justify="center" align="middle">
+              <Col span="5" align="center" >
+                <span>回答：</span>
+              </Col>
+              <Col span="19" align="center">
+                <Input type="textarea" :rows="4" placeholder="請輸入回覆" /> 
+              </Col>
+            </Row>
+            <Row class="form-row" justify="center" align="middle">
+              <Col span="5" align="center">
+                <span>顯示狀態</span>
+              </Col>
+              <Col span="19" align="start">
+                <RadioGroup  v-model="selectDefault">
+                  <Radio label="1" class="radioStyle">顯示</Radio>
+                  <Radio label="0" class="radioStyle">隱藏</Radio>
+                </RadioGroup>
+              </Col>
+            </Row>
+          </ListItem>
+        </Form>
+      </List>
+      <template #footer>
+        <Button type="dashed" @click="addNew()">取消</Button>
+        <Button type="primary" @click="store()">儲存</Button>
+      </template>
+    </Modal>
 
-  <Table class="table" :columns="columns" :data="quesList">
+    <!-- 數據列表 -->
+    <Table class="table" :columns="columns" :data="quesList">
       <template #title="{ row }">
         <strong>{{ row.title }}</strong>
       </template>
@@ -89,11 +174,7 @@
             <img src="@/assets/image/icon/delete.svg" alt="刪除按鈕" />
           </Button>
       </template>
-  </Table>
-
-  <div class="add-btn">
-    <Button class="add" @click="addNew()">新增</Button>
-  </div>
+    </Table>
   </main>
 </template>
 
@@ -124,8 +205,13 @@ h4 {
 
 .add-btn {
   display: flex;
-  justify-content: flex-end;
+  
 }
-
+.form-row {
+  margin: 5px 40px;
+}
+.radioStyle{
+  margin: 20px;
+}
 </style>
 
