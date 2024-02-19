@@ -1,11 +1,12 @@
 <script>
 import apiInstance from "@/plugins/auth";
+import { getImageUrl } from "@/assets/js/common";
 
 export default {
   data() {
     return {
-      search:'',
-
+      search: '',
+      products: [],
       columns: [
         {
           type: 'selection',
@@ -27,7 +28,7 @@ export default {
         },
         {
           title: '尺寸',
-          key:'size',
+          key: 'size',
         },
         {
           title: '商品價格',
@@ -67,8 +68,8 @@ export default {
       data: [
         {
           id: '11111',
-          name:'New York No. 1 Lake Park',
-          price:  18,
+          name: 'New York No. 1 Lake Park',
+          price: 18,
           category: '文青生活',
           color: '黑',
           size: 'XL',
@@ -105,22 +106,29 @@ export default {
     handleSelectAll(status) {
       this.$refs.selection.selectAll(status);
     },
-    handleFilter(){
+    handleFilter() {
       console.log(this.search.id)
     },
-    getPHP() {
+    getProducts() {
       apiInstance
-        .get("./getadmin.php")
-        .then((response) => {
-          this.adminList = response.data;
-        }
-        ).catch((error) => {
-          console.error("Error", error);
+        .get("./getProduct.php")
+        .then(response => {
+          this.products = response.data;
+        })
+        .catch(error => {
+          console.error("Error:", error);
         });
+    },
+    getImageUrl(image) {
+      // 如果您的圖片路徑是相對於後端服務器的，這裡可能需要添加基礎URL
+      return getImageUrl(image);
+    },
+    refreshPage(){
+      window.location.reload();
     }
   },
   mounted() {
-    
+
   },
 }
 </script>
@@ -131,7 +139,8 @@ export default {
 
     <div class="product-search">
       <h4>商品列表清單</h4>
-      <Input search enter-button placeholder="請輸入商品名稱或商品Id進行搜尋" class="product-id-search" v-model="this.search" @onchange="handleFilter" />
+      <Input search enter-button placeholder="請輸入商品名稱或商品Id進行搜尋" class="product-id-search" v-model="this.search"
+        @onchange="handleFilter" />
     </div>
     <Table class="product-table" border ref="selection" :columns="columns" :data="data"></Table>
     <div style="margin-top: 16px">
@@ -150,8 +159,8 @@ h4 {
   font-weight: 700;
   margin-bottom: 5px;
 }
-.product-table{
+
+.product-table {
   margin-top: 20px;
 }
-
 </style>
