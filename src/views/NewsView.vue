@@ -1,13 +1,15 @@
 <script>
 // import axios from 'axios';
 import apiInstance from "@/plugins/auth";
+import { getImageUrl } from "@/assets/js/common";
 
 export default {
   data() {
     return {
-      search: "",
+      search: "", //搜尋
       newsFilter: "", //篩選
-      columns: [
+
+      columns: [ //表格內容
         {
           type: "selection",
           width: "60",
@@ -55,32 +57,41 @@ export default {
           slot: "delete",
         },
       ],
+
       newsList: [], //文章列表
-      modal2: false, //新增的燈箱預設關閉
-      statusMap: {
+      statusMap: { //文章狀態
         0: "草稿",
         1: "上架中",
         2: "已下架",
       },
+      selectedStatus: "draft", // 文章狀態預設是草稿
       nameValue: "", //文章標題
       contentValue: "", //文章內文
       imgNames: [], //文章圖片
-      selectedStatus: "draft", // 預設是草稿狀態
-      editModalVisible: false,
-      editArticle: {
+      
+      addBox: false, //新增燈箱預設關閉
+      addData: {
         title: "",
         content: "",
-        imgNames: [], // 圖片
-        status: "draft" // 預設狀態
+        imgNames: [], 
+        status: "draft"
+      },
+
+      editModal: false, //編輯燈箱
+      editArticle: { //編輯文章內容
+        title: "",
+        content: "",
+        imgNames: [], 
+        status: "publish"
       },
     }
   },
   computed: {
-    filteredNewsList() {
+    filteredNewsList() { //接收 newsFilter 屬性的值作為參數，把它轉換成小寫且去除空白字符，然後用 filter 方法過濾 newsList。
       const filterText = this.newsFilter.toLowerCase().trim();
       return this.newsList.filter(news => {
         return news.article_id.toString().includes(filterText) || news.title.toLowerCase().includes(filterText);
-      }); //接收 newsFilter 屬性的值作為參數，把它轉換成小寫且去除空白字符，然後用 filter 方法過濾 newsList。
+      }); 
     }
   },
   mounted() {
@@ -97,19 +108,24 @@ export default {
           console.error("Error:", error);
         });
     },
+
     uploadSuccess(response) { //上傳圖片是否成功
       this.imgNames.push(response.data.filename); //將上傳成功的圖片檔名放到陣列中
       console.log("上傳成功", response);
     },
+
     changeStatus(status) { //文章狀態選擇
       this.selectedStatus = status;
     },
+
     saveArticle() { //儲存文章
       this.selectedStatus = this.tempStatus;
     },
+
     cancelAdd() { //取消文章
-      this.modal2 = false;
+      this.addBox = false;
     },
+
     showEditModal(article){
       // 把傳入的文章賦值給編輯文章對象並打開彈窗
       this.editArticle = {
@@ -118,27 +134,23 @@ export default {
         imgNames: article.imgNames,
         status: article.status
       };
-      this.editModalVisible = true;
+      this.editModal = true;
     },
+
     saveEdit() { //保存編輯完的文章
       // 把編輯後的文章發到後端保存 關閉彈窗
-      this.editModalVisible = false;
+      this.editModal = false;
     },
+
     cancelEdit() {
       // 取消編輯 關閉彈窗
-      this.editModalVisible = false;
+      this.editModal = false;
+    },
+
+    getImageUrl(paths) {
+      return getImageUrl(paths);
     },
   },
-  // created() {
-  //   axios.get(`${import.meta.env.VITE_NORA_URL}/phps/getNews.php`)
-  //     .then((response) => {
-  //       this.newsList = response.data;
-  //     }
-  //     ).catch((error) => {
-  //       console.error("Error", error);
-  //     }
-  //     );
-  // },
 };
 </script>
 
@@ -152,11 +164,7 @@ export default {
       <Input search enter-button placeholder="請輸入文章編號或文章標題進行搜尋" class="news-id-search" v-model="newsFilter" />
     </div>
 
-    <!-- 新增文章按鈕 -->
-    <Button @click="modal2 = true">新增</Button>
-
     <!-- 文章列表 -->
-    <!-- <Table class="news-table" :columns="columns" :data="newsList"> -->
       <Table class="news-table" :columns="columns" :data="filteredNewsList">
       <template #title="{ row }">
         <strong>{{ row.title }}</strong>
@@ -179,13 +187,12 @@ export default {
       </template>
     </Table>
 
+    <!-- 新增文章按鈕 -->
+    <Button @click="addBox = true">新增文章</Button>
+
+    <!-- 新增文章燈箱 -->
     <Space wrap>
-
-      <!-- 新增文章燈箱 -->
-
-      <Modal title="新增文章" v-model="modal2" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消"
-        align="center">
-
+      <Modal title="新增文章" v-model="addBox" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消" align="center">
         <List item-layout="vertical">
           <Form>
             <ListItem>
@@ -231,7 +238,6 @@ export default {
                 <span class="statusBtn" :class="{ 'selected': selectedStatus === 'publish' }"
                   @click="changeStatus('publish')">立即上架</span>
 
-                <!-- <span class="statusBtn" :class="{ 'selected': selectedStatus === 'schedule' }" @click="changeStatus('schedule')">排程上架</span> -->
                 </Col>
               </Row>
 
@@ -245,8 +251,8 @@ export default {
         </template>
       </Modal>
 
-  <!-- 編輯文章 -->
-      <Modal title="编辑文章" v-model="editModalVisible" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消" align="center">
+  <!-- 編輯文章燈箱 -->
+      <Modal title="編輯文章" v-model="editModal" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消" align="center">
     <List item-layout="vertical">
       <Form>
         <ListItem>
@@ -304,32 +310,6 @@ export default {
 
   </main>
 </template>
-
-    <!-- <Button class="news-add" @click="addNew = true">新增</Button>
-  <Modal draggable default scrollable ok-text="送出"
-    class="add-window"
-    title="新增文章"
-    v-model="addNew"
-    :closable="false">
-    <div class="title-add">
-      <p>標題</p>
-      <input type="text" name="add-title" id="add-title">
-    </div>
-    <div class="content-add">
-      <p>內容</p>
-      <textarea name="add-content" id="add-content" cols="50" rows="15"></textarea>
-    </div>
-    <div class="upload-img">
-      <p>圖片</p>
-      <Upload multiple action="//jsonplaceholder.typicode.com/posts/">
-        <Button icon="ios-cloud-upload-outline">上傳檔案</Button>
-      </Upload>
-    </div>
-    <div class="status">
-      <input class="draft" type="button" name="draft" id="draft" value="草稿">
-      <input class="now" type="button" name="now" id="now" value="立即上架">
-    </div>
-  </Modal> -->
 
 <style lang="scss" scoped>
 h2 {
