@@ -181,21 +181,35 @@ export default {
 
     // 以下新增用, 還沒串
     addEquipToDb() {
-      //
-      this.changeImage();
+      if (this.checkInput()) {
+        this.changeImage();
 
-      apiInstance
-        .post("addEquipment.php", this.addData)
-        .then((response) => {
-          if (!response.data.error) {
-            alert(response.data.msg);
-            this.clearAddData();
-            this.getPHP();
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
+        apiInstance
+          .post("addEquipment.php", this.addData)
+          .then((response) => {
+            if (!response.data.error) {
+              alert(response.data.msg);
+              this.clearAddData();
+              this.getPHP();
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    },
+    checkInput() {
+      if (!this.addData.title) {
+        alert("請輸入裝備名稱");
+      } else if (!this.addData.info) {
+        alert("請輸入裝備描述");
+      } else if (!this.addData.price) {
+        alert("請輸入裝備價錢");
+      } else if (!this.addData.image) {
+        alert("請上傳裝備照片");
+      } else {
+        return true;
+      }
     },
 
     clearAddData() {
@@ -214,6 +228,10 @@ export default {
       this.newImage = new FormData();
       this.newImage.append("file", file);
       let filePath = "equipment/" + file.name;
+      if (file.name.length >= 40) {
+        alert("圖片檔名過長!請減少至40字元內");
+        return;
+      }
 
       if (this.editIndex >= 0) {
         const oldImgPath = "../image/" + this.displayList[this.editIndex].image;
@@ -249,12 +267,10 @@ export default {
           .then((response) => {
             // 處理上傳成功的情況
             console.log("Upload successful", response);
-            alert("已成功更新圖片!");
           })
           .catch((error) => {
             // 處理上傳失敗的情況
             console.error("Upload error", error);
-            alert("更新失敗圖片!");
           });
       }
     },
@@ -278,6 +294,24 @@ export default {
           })
           .catch((error) => {
             console.error("Error:", error);
+          });
+
+        // 刪除原本的圖片
+        let originalImagePath = "../image/" + selectItem.image;
+        let originalImage = new FormData();
+        originalImage.append("oldImgPath", originalImagePath);
+
+        apiInstance
+          .post("addEquipmentImage.php", originalImage, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((response) => {
+            console.log("已成功刪除原有圖片");
+          })
+          .catch((error) => {
+            console.error("Upload error", error);
           });
       }
     },
