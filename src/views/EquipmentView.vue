@@ -345,7 +345,11 @@ export default {
       </template>
 
       <template #image="{ row, index }">
-        <Upload :before-upload="handleBeforeUpload" v-if="editIndex === index">
+        <Upload
+          :before-upload="handleBeforeUpload"
+          v-if="editIndex === index"
+          action="dummy"
+        >
           <Button icon="md-add">更新圖片</Button>
         </Upload>
         <Image
@@ -414,7 +418,7 @@ export default {
               width="200px"
               height="200px"
             />
-            <Upload :before-upload="handleBeforeUpload">
+            <Upload action="dummy" :before-upload="handleBeforeUpload">
               <Button icon="md-add">上傳裝備照片</Button>
             </Upload>
           </ListItem>
@@ -454,9 +458,7 @@ export default {
                 <span>裝備價格：</span>
               </Col>
               <Col span="17">
-                <FromeItem>
-                  <Input v-model="addData.price" placeholder="請輸入單價" />
-                </FromeItem>
+                <Input v-model="addData.price" placeholder="請輸入單價" />
               </Col>
               <Col span="2" align="center">
                 <span>元</span>
