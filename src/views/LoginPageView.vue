@@ -18,7 +18,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(userStore, ['updateToken', 'checkLogin', 'updateAdminName']),
+    ...mapActions(userStore, ['updateToken', 'checkLogin', 'updateAdminId', 'updateAdminName']),
 
     login() {
       const bodyFormData = new FormData();
@@ -37,7 +37,8 @@ export default {
           // 如果後端success為true，則處理登入成功的情況
           this.updateToken(res.data.token);
           //
-          this.updateAdminName(res.data.acc);
+          this.updateAdminId(res.data.adminid);
+          this.updateAdminName(res.data.name);
           //
         } else if (res && res.data && res.data.success === false) {
           // 如果後端success為false，則處理登入失敗的情況

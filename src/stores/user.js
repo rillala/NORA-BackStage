@@ -9,6 +9,7 @@ export default defineStore('userStore', {
     token: '',   // 後端僅返回token(通行證/令牌)
     userData: {}, // 可以在login API中返回user資訊
     isLogin: false,
+    adminId: '',
     adminName: '',
   }),
 
@@ -66,10 +67,19 @@ export default defineStore('userStore', {
         return ''
       }
     },
+    updateAdminId(data) {
+      if (data) {
+        this.adminId = data
+        console.log(this.adminId)
+        localStorage.setItem('adminId', data)
+      } else {
+        this.adminId = ''
+        localStorage.removeItem('adminId')
+      }
+    },
     updateAdminName(data) {
       if (data) {
         this.adminName = data
-        console.log(this.adminName)
         localStorage.setItem('adminName', data)
       } else {
         this.adminName = ''

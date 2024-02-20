@@ -6,10 +6,11 @@ export default {
   components: { Button, Space },
   data() {
     return {
-      search: "",
+      // search: "",
       selectedList: [],
       editIndex: -1,
       editInfo: "",
+      //表格欄位、屬性屬性值
       columns: [
         {
           title: '管理員編號',
@@ -51,22 +52,26 @@ export default {
           slot: 'edit'
         }
       ],
-
+      //資料庫回傳資料
       adminList: [],
+      //新增燈箱開啟關閉
       modalAdd: false,
-      pswfirst: "",
+      //新增管理員輸入
       addAdminData: {
         name: '',
         acc: '',
         psw: '',
         status: 1,
-      }
+      },
+      //新增管理員第一次密碼輸入
+      pswfirst: "",
     };
   },
   mounted() {
     this.getAdminPHP();
   },
   methods: {
+    //控制編輯(擱置)
     handleEdit(row, index) {
       this.editName = row.name;
       this.editIndex = index;
@@ -75,25 +80,23 @@ export default {
       this.data[index].name = this.editName;
       this.editIndex = -1;
     },
-    statusChange(index) {
-      this.selectedList[index].adminstatus =
-        !this.selectedList[index].adminstatus;
-    },
+    // statusChange(index) {
+    //   this.selectedList[index].adminstatus =
+    //     !this.selectedList[index].adminstatus;
+    // },
 
-    //讀取
+    //讀取admin資料庫
     getAdminPHP() {
       apiInstance
         .get("./getAdmin.php")
         .then((response) => {
-          // console.log(response.data);
           this.adminList = response.data;
+          console.log(this.adminList);
         }).catch((error) => {
           console.error("Error", error);
         });
     },
-
     //新增管理員
-
     pswIdentify() {
       if (this.pswfirst === this.addAdminData.psw) {
         // 密碼一致，執行提交操作
@@ -103,7 +106,6 @@ export default {
         alert('兩次輸入的密碼不一致');
       }
     },
-
 
     clearForm() {
       this.pswfirst = "",
@@ -138,15 +140,44 @@ export default {
         });
     },
 
-    //狀態修改
+    //狀態切換
+    statusChange(index) {
+      console.log(index);
+      this.adminList[index].status = !this.adminList[index].status;
+      let newStatus = this.adminList[index].status == true ? 1 : 0;
+      let currentId = this.adminList[index].adminid;
+      console.log(newStatus);
 
+      let editItem = new FormData();
+      editItem.append("tablename", "admin");
+      editItem.append("status", newStatus);
+      editItem.append("id", currentId);
+      console.log(editItem);
 
+      apiInstance
+        .post("editStatus.php", editItem)
+        .then((response) => {
+          if (!response.data.error) {
+            // alert(response.data.msg);
+            this.getAdminPHP()
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    },
+    //編輯自身狀態判別
+    identifySelf(index) {
+      const loginId = Number(localStorage.getItem('adminId'));
+      const result = this.adminList[index].adminid !== loginId;
+      return result;
+    }
   },
 }
 </script>
 
 <template>
-  <!-- 新增燈箱(暫) -->
+  <!-- 新增燈箱 -->
   <Modal title="新增管理員" v-model="modalAdd">
     <div style="display: flex; flex-direction:column ; align-items: center;">
       <Space class="addInput">新增名稱：<Input v-model="addAdminData.name" />
@@ -178,14 +209,15 @@ export default {
 
     <Table class="admin-table" :columns="columns" :data="adminList">
 
-      <template #info="{ row, index }">
+      <!-- <template #info="{ row, index }">
         <Input type="text" v-model="editInfo" v-if="editIndex === index" />
         <span v-else>{{ row.info }}</span>
-      </template>
+      </template> -->
 
-      <!--狀態切換-->
-      <template #status="{ row, index }">
-        <Switch true-color="#13ce66" false-color="#ff4949" v-model="row.status" @on-change="statusChange(index)" />
+      <!--狀態切換開關-->
+      <template v-slot:status="{ index, row }">
+        <Switch v-model="row.status" true-color="#13ce66" false-color="#ff4949" v-if="identifySelf(index)"
+          @on-change="statusChange(index)" :true-value="1" :false-value="0" />
       </template>
 
       <!-- 編輯 -->
