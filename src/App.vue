@@ -47,7 +47,7 @@ const isLogin = computed(() => !!checkLogin());
 
   #app-content {
     height: 100svh;
-    padding: 80px 100px 0;
+    padding: 80px 40px 0;
     flex-grow: 1;
 
     #app-main-view {

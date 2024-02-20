@@ -22,7 +22,7 @@ export default {
 				state: 0,
 			},
 			formData: new FormData(),
-			
+
 		}
 	},
 	methods: {
@@ -56,19 +56,25 @@ export default {
 			});
 		},
 		handleImageUpload(event) {
-			this.selectedFiles = []; // 清空之前的選擇
 			const files = event.target.files;
 			if (files) {
 				for (let i = 0; i < files.length; i++) {
-					this.formData.append('images[]', files[i]);
-					// 創建並存储預覽 URL
-					const fileReader = new FileReader();
-					fileReader.onload = (e) => {
-						this.selectedFiles.push({ name: files[i].name, url: e.target.result });
+					const file = files[i];
+					const reader = new FileReader();
+					reader.onload = (e) => {
+						this.selectedFiles.push({
+							name: file.name,
+							url: e.target.result, // 用於預覽的DataURL
+							file: file, // 原始File對象，用於後續上傳
+						});
 					};
-					fileReader.readAsDataURL(files[i]);
+					reader.readAsDataURL(file);
 				}
 			}
+		},
+		// 刪除指定的圖片
+		removeImage(index) {
+			this.selectedFiles.splice(index, 1);
 		},
 		addColor() {
 			if (this.colorInput) {
@@ -89,6 +95,11 @@ export default {
 			this.productSizes.splice(index, 1);
 		},
 		addProduct() {
+			this.formData = new FormData();
+			// 添加圖片文件到formData
+			this.selectedFiles.forEach((fileObj, index) => {
+				this.formData.append(`images[${index}]`, fileObj.file);
+			});
 			// 在發送前自動設置 createdate 為當前日期時間
 			const now = new Date();
 			const timezoneOffset = now.getTimezoneOffset() * 60000; // 時區偏移量，以毫秒為單位
@@ -118,7 +129,7 @@ export default {
 			this.$emit('product-changed');
 			this.modal2 = false;
 		},
-		
+
 	}
 }
 </script>
@@ -133,9 +144,10 @@ export default {
 				<Form>
 					<ListItem justify="center" align="middle">
 						<p align="center" class="list-title">商品圖片</p>
-						<input type="file" id="images" @change="handleImageUpload" accept="image/*" multiple required>
-						<div v-for="(file, index) in selectedFiles" :key="index">
+						<input type="file" @change="handleImageUpload" accept="image/*" multiple>
+						<div v-for="(file, index) in selectedFiles" :key="index" class="image-preview">
 							<img :src="file.url" :alt="file.name" style="width: 100px; height: auto;">
+							<button @click="removeImage(index)">刪除</button>
 						</div>
 					</ListItem>
 
@@ -155,9 +167,9 @@ export default {
 							</Col>
 							<Col span="19">
 							<Select v-model="product.category" placeholder="請選擇商品類別">
-								<Option value="Nora品牌服飾">Nora品牌服飾</Option>
-								<Option value="Nora文青生活">Nora文青生活</Option>
-								<Option value="Nora營地用品">Nora營地用品</Option>
+								<Option value="NORA品牌服飾">NORA品牌服飾</Option>
+								<Option value="NORA文青生活">NORA文青生活</Option>
+								<Option value="NORA營地用品">NORA營地用品</Option>
 							</Select>
 							</Col>
 						</Row>
