@@ -31,11 +31,11 @@ export default {
         },
         {
           title: '顏色',
-          key: 'color',
+          key: 'colors',
         },
         {
           title: '尺寸',
-          key: 'size',
+          key: 'sizes',
         },
         {
           title: '商品價格',
