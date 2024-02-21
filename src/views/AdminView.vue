@@ -141,6 +141,7 @@ export default {
     },
 
     //狀態切換
+    //index改直接抓資料庫資料
     statusChange(index) {
       console.log(index);
       this.adminList[index].status = !this.adminList[index].status;
@@ -158,14 +159,15 @@ export default {
         .post("editStatus.php", editItem)
         .then((response) => {
           if (!response.data.error) {
-            // alert(response.data.msg);
-            this.getAdminPHP()
+            console.log(response.data.msg);
+            this.getAdminPHP();
           }
         })
         .catch((error) => {
           console.error("Error:", error);
         });
     },
+
     //編輯自身狀態判別
     identifySelf(index) {
       const loginId = Number(localStorage.getItem('adminId'));
