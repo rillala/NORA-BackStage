@@ -95,8 +95,8 @@ import { Row } from 'view-ui-plus';
     editFaq.value.answer = index.answer;
     editFaq.value.faq_status = String(index.faq_status);//SQL改字串儲存or轉型string
     
-    console.log(index);
-    // console.log(quesList.value);
+    console.log(index.faq_id);
+    //用index.faq_id檢索SQL PK
   }
 
   function remove(index){}
