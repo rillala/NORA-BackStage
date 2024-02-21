@@ -20,11 +20,6 @@ import { Row } from 'view-ui-plus';
       sortable: true 
     },
     {
-      title: '建立日期',
-      key: 'date', 
-      sortable: true 
-    },
-    {
       title: '問題類別', 
       key: 'faq_type', 
       sortable: true 
@@ -50,9 +45,15 @@ import { Row } from 'view-ui-plus';
       slot: "delete",
     },
   ]);
-
   const quesList = ref([]);
   const addBtn = ref(false);
+  const editFlag = ref(false);
+  const editFaq = ref({
+    faq_type:'',
+    question:'',
+    answer:'',
+    faq_status:'1',
+  });
   const selectDefault = ref('1');
 
   function getPHP(){
@@ -67,6 +68,7 @@ import { Row } from 'view-ui-plus';
   onMounted( () => {
     try {
       getPHP();
+      
     } catch (error) {
       console.error('發生錯誤:', error);
     }
@@ -74,11 +76,27 @@ import { Row } from 'view-ui-plus';
   function addNew(){
     addBtn.value = !addBtn.value;
   }
-  function store(){
-    // 新增數據
+  function storeData(){
+    // 新增數據 post to PHP
   }
 
-  function showDetail(){
+  function editData(index){
+    //燈箱開關
+    editFlag.value = !editFlag.value;
+    //撈取數據
+    // editFaq.value = {
+    //   faq_type: index.faq_type,
+    //   question: index.question,
+    //   answer:index.answer,
+    //   faq_status:index.faq_status,
+    // };上下兩種寫法都OK
+    editFaq.value.faq_type = index.faq_type;
+    editFaq.value.question = index.question;
+    editFaq.value.answer = index.answer;
+    editFaq.value.faq_status = String(index.faq_status);//SQL改字串儲存or轉型string
+    
+    console.log(index);
+    // console.log(quesList.value);
   }
 
   function remove(index){}
@@ -101,7 +119,7 @@ import { Row } from 'view-ui-plus';
     <div class="add-btn">
       <Button class="add" @click="addNew()">新增</Button>
     </div>
-    <!-- 燈箱 -->
+    <!-- 新增燈箱 -->
       <Modal title="新增常見問題" v-model="addBtn" class="vertical-center-modal" width="600">
       <List item-layout="vertical">
         <Form>
@@ -153,10 +171,64 @@ import { Row } from 'view-ui-plus';
       </List>
       <template #footer>
         <Button type="dashed" @click="addNew()">取消</Button>
-        <Button type="primary" @click="store()">儲存</Button>
+        <Button type="primary" @click="storeData()">儲存</Button>
       </template>
     </Modal>
-
+    <!-- 編輯燈箱 -->
+    <Modal title="修改常見問題" v-model="editFlag" class="vertical-center-modal" width="600">
+      <List item-layout="vertical">
+        <Form>
+          <ListItem justify="center" align="middle">
+            <Row class="form-row" justify="center" align="middle">
+              <Col span="5" align="center">
+                <span>問題類別：</span>
+              </Col>
+              <Col span="19">
+                <FromeItem>
+                  <Select v-model="editFaq.faq_type">
+                    <Option value="營地預約">營地預約</Option>
+                    <Option value="中途之家">中途之家</Option>
+                    <Option value="裝備租借">裝備租借</Option>
+                    <Option value="商品購物">商品購物</Option>
+                  </Select>
+                </FromeItem>
+              </Col>
+            </Row>
+            <Row class="form-row" justify="center" align="middle">
+              <Col span="5" align="center" >
+                <span>問題：</span>
+              </Col>
+              <Col span="19" align="center">
+                <Input placeholder="請輸入標題" v-model="editFaq.question" />
+              </Col>
+            </Row>
+            <Row class="form-row" justify="center" align="middle">
+              <Col span="5" align="center" >
+                <span>回答：</span>
+              </Col>
+              <Col span="19" align="center">
+                <Input type="textarea" :rows="4" placeholder="請輸入回覆" v-model="editFaq.answer"/> 
+              </Col>
+            </Row>
+            <Row class="form-row" justify="center" align="middle">
+              <Col span="5" align="center">
+                <span>顯示狀態</span>
+              </Col>
+              <Col span="19" align="start">
+                <RadioGroup  v-model="editFaq.faq_status">
+                  <Radio label="1" class="radioStyle">顯示</Radio>
+                  <Radio label="0" class="radioStyle">隱藏</Radio>
+                </RadioGroup>
+              </Col>
+            </Row>
+          </ListItem>
+        </Form>
+      </List>
+      <template #footer>
+        <Button type="dashed" @click="editData()">取消</Button>
+        <Button type="primary" @click="storeData()">儲存</Button>
+      </template>
+    </Modal>
     <!-- 數據列表 -->
     <Table class="table" :columns="columns" :data="quesList">
       <template #title="{ row }">
@@ -164,7 +236,7 @@ import { Row } from 'view-ui-plus';
       </template>
 
       <template #edit="{ row, index }">
-          <Button size="small" @click="showDetail(index)">
+          <Button size="small" @click="editData(row)">
             <img src="@/assets/image/icon/edit.svg" alt="編輯按鈕" />
           </Button>
       </template>
