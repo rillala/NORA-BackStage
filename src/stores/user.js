@@ -2,13 +2,15 @@
 // vuex
 
 import { defineStore } from 'pinia';
+
 export default defineStore('userStore', {
   // 對應 data
   //
   state: () => ({
-    token: '',   // 後端僅返回token(通行證/令牌)
+    token: '',   // 後端返回token(通行證/令牌)
     userData: {}, // 可以在login API中返回user資訊
     isLogin: false,
+    adminId: '',
     adminName: '',
   }),
 
@@ -21,7 +23,7 @@ export default defineStore('userStore', {
     updateToken(payload) {
       if (payload) {
         this.token = payload
-        console.log(this.token)
+        // console.log(this.token)
         localStorage.setItem('userToken', payload)
       } else {
         this.token = ''
@@ -66,15 +68,32 @@ export default defineStore('userStore', {
         return ''
       }
     },
+    updateAdminId(data) {
+      if (data) {
+        this.adminId = data
+        // console.log(this.adminId)
+        localStorage.setItem('adminId', data)
+      } else {
+        this.adminId = ''
+        localStorage.removeItem('adminId')
+      }
+    },
     updateAdminName(data) {
       if (data) {
         this.adminName = data
-        console.log(this.adminName)
         localStorage.setItem('adminName', data)
       } else {
         this.adminName = ''
         localStorage.removeItem('adminName')
       }
     },
+    // updateUserData(data) {
+    //   if (data) {
+    //     this.userData = data;
+    //     console.log(this.userData);
+    //   } else {
+    //     this.userData = {};
+    //   }
+    // },
   }
 })

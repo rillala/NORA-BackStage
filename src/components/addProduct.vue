@@ -10,16 +10,19 @@ export default {
 		return {
 			modal2: false,
 			selectedFiles: [], // 用於存储已選擇文件的信息
+			colorInput: '',//暫存顏色輸入框內容
+			sizeInput: '',//暫存尺寸輸入框內容
+			productColors: [], // 用於存儲多個顏色
+			productSizes: [], // 用於存儲多個尺寸
 			product: {
 				title: '',
 				category: '',
 				description: '',
 				price: null,
 				state: 0,
-				color: '',
-				size: '',
 			},
-			formData: new FormData()
+			formData: new FormData(),
+
 		}
 	},
 	methods: {
@@ -53,21 +56,50 @@ export default {
 			});
 		},
 		handleImageUpload(event) {
-			this.selectedFiles = []; // 清空之前的選擇
 			const files = event.target.files;
 			if (files) {
 				for (let i = 0; i < files.length; i++) {
-					this.formData.append('images[]', files[i]);
-					// 創建並存储預覽 URL
-					const fileReader = new FileReader();
-					fileReader.onload = (e) => {
-						this.selectedFiles.push({ name: files[i].name, url: e.target.result });
+					const file = files[i];
+					const reader = new FileReader();
+					reader.onload = (e) => {
+						this.selectedFiles.push({
+							name: file.name,
+							url: e.target.result, // 用於預覽的DataURL
+							file: file, // 原始File對象，用於後續上傳
+						});
 					};
-					fileReader.readAsDataURL(files[i]);
+					reader.readAsDataURL(file);
 				}
 			}
 		},
+		// 刪除指定的圖片
+		removeImage(index) {
+			this.selectedFiles.splice(index, 1);
+		},
+		addColor() {
+			if (this.colorInput) {
+				this.productColors.push(this.colorInput);
+				this.colorInput = ''; // 清空輸入
+			}
+		},
+		removeColor(index) {
+			this.productColors.splice(index, 1);
+		},
+		addSize() {
+			if (this.sizeInput) {
+				this.productSizes.push(this.sizeInput);
+				this.sizeInput = ''; // 清空輸入
+			}
+		},
+		removeSize(index) {
+			this.productSizes.splice(index, 1);
+		},
 		addProduct() {
+			this.formData = new FormData();
+			// 添加圖片文件到formData
+			this.selectedFiles.forEach((fileObj, index) => {
+				this.formData.append(`images[${index}]`, fileObj.file);
+			});
 			// 在發送前自動設置 createdate 為當前日期時間
 			const now = new Date();
 			const timezoneOffset = now.getTimezoneOffset() * 60000; // 時區偏移量，以毫秒為單位
@@ -78,8 +110,10 @@ export default {
 			this.formData.append('price', this.product.price);
 			this.formData.append('state', this.product.state);
 			this.formData.append('createdate', localISOTime); // 使用當前日期時間
-			this.formData.append('color', this.product.color);
-			this.formData.append('size', this.product.size);
+
+			// 將顏色和尺寸數據轉換為 JSON 字符串並添加到 formData
+			this.formData.append('colors', JSON.stringify(this.productColors));
+			this.formData.append('sizes', JSON.stringify(this.productSizes));
 
 			apiInstance.post('/addProduct.php', this.formData, {
 				headers: {
@@ -95,6 +129,7 @@ export default {
 			this.$emit('product-changed');
 			this.modal2 = false;
 		},
+
 	}
 }
 </script>
@@ -109,9 +144,10 @@ export default {
 				<Form>
 					<ListItem justify="center" align="middle">
 						<p align="center" class="list-title">商品圖片</p>
-						<input type="file" id="images" @change="handleImageUpload" accept="image/*" multiple required>
-						<div v-for="(file, index) in selectedFiles" :key="index">
+						<input type="file" @change="handleImageUpload" accept="image/*" multiple>
+						<div v-for="(file, index) in selectedFiles" :key="index" class="image-preview">
 							<img :src="file.url" :alt="file.name" style="width: 100px; height: auto;">
+							<button @click="removeImage(index)">刪除</button>
 						</div>
 					</ListItem>
 
@@ -131,9 +167,9 @@ export default {
 							</Col>
 							<Col span="19">
 							<Select v-model="product.category" placeholder="請選擇商品類別">
-								<Option value="Nora品牌服飾">Nora品牌服飾</Option>
-								<Option value="Nora文青生活">Nora文青生活</Option>
-								<Option value="Nora營地用品">Nora營地用品</Option>
+								<Option value="NORA品牌服飾">NORA品牌服飾</Option>
+								<Option value="NORA文青生活">NORA文青生活</Option>
+								<Option value="NORA營地用品">NORA營地用品</Option>
 							</Select>
 							</Col>
 						</Row>
@@ -146,9 +182,13 @@ export default {
 						</Row>
 						<Row class="form-row" justify="center" align="middle">
 							<Col span="19">
-							<Input type="text" v-model="product.color" placeholder="請輸入商品顏色(選填)"></Input>
+							<Input type="text" v-model="colorInput" placeholder="請輸入商品顏色"></Input>
+							<Button @click="addColor">添加顏色</Button>
 							</Col>
 						</Row>
+						<div v-for="(color, index) in productColors" :key="index">
+							{{ color }} <Button @click="removeColor(index)">移除</Button>
+						</div>
 					</ListItem>
 
 					<ListItem justify="center" align="middle">
@@ -157,9 +197,13 @@ export default {
 						</Row>
 						<Row class="form-row" justify="center" align="middle">
 							<Col span="19">
-							<Input type="text" v-model="product.size" placeholder="請輸入商品尺寸(選填)"></Input>
+							<Input type="text" v-model="sizeInput" placeholder="請輸入商品尺寸"></Input>
+							<Button @click="addSize">添加尺寸</Button>
 							</Col>
 						</Row>
+						<div v-for="(size, index) in productSizes" :key="index">
+							{{ size }} <Button @click="removeSize(index)">移除</Button>
+						</div>
 					</ListItem>
 
 					<ListItem justify="center" align="middle">

@@ -15,10 +15,11 @@ export default {
       // adminName: 'mor_2314',
       // adminPwwd: '83r5^_',
       //fakestoreapi登入
+      userstatus: {},
     };
   },
   methods: {
-    ...mapActions(userStore, ['updateToken', 'checkLogin', 'updateAdminName']),
+    ...mapActions(userStore, ['updateToken', 'checkLogin', 'updateAdminId', 'updateAdminName']),
 
     login() {
       const bodyFormData = new FormData();
@@ -35,10 +36,17 @@ export default {
         console.log(res);
         if (res && res.data && res.data.success === true) {
           // 如果後端success為true，則處理登入成功的情況
-          this.updateToken(res.data.token);
-          //
-          this.updateAdminName(res.data.acc);
-          //
+          this.userstatus = res.data.status;
+          //取得帳號資料辨識status
+          if (this.userstatus === 1) {
+            this.updateToken(res.data.token);
+            //取得token
+            this.updateAdminId(res.data.adminid);
+            this.updateAdminName(res.data.name);
+            //adminid和adnminName存入localstorage
+          } else {
+            alert('帳號已被停權');
+          }
         } else if (res && res.data && res.data.success === false) {
           // 如果後端success為false，則處理登入失敗的情況
           alert(res.data.message);
@@ -110,7 +118,7 @@ export default {
 <style lang="scss" scoped>
 main {
   height: 100vh;
-  background-color: $blue-3;
+  background-color: $blue-2;
   display: flex;
   align-items: center;
 }
@@ -125,6 +133,9 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: $blue-3;
+  border-radius: 30px;
+  padding-bottom: 20px;
 }
 
 #logo {
@@ -155,6 +166,8 @@ main {
     color: #000;
     font-weight: normal;
     padding: 0 10px;
+    border: none;
+    border-radius: 3px;
   }
 }
 
@@ -167,14 +180,26 @@ main {
     color: #000;
     font-weight: normal;
     padding: 0 10px;
+    border: none;
+    border-radius: 3px;
+
   }
 }
 
 button {
+  background: $blue-1;
   width: 80px;
   height: 30px;
   border: none;
   border-radius: 10px;
   margin: 10px;
+  transition: 200ms;
+  font-weight: bold;
+}
+
+button:hover {
+  color: $white01;
+  background: $blue-4;
+  transition: 200ms;
 }
 </style>
