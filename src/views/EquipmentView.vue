@@ -349,7 +349,7 @@ export default {
       />
     </div>
 
-    <br />
+    <Button class="addBtn" @click="addBox = true">新增裝備</Button>
 
     <Table class="table" height="500" :columns="columns" :data="displayList">
       <template #title="{ row, index }">
@@ -431,8 +431,6 @@ export default {
         </Button>
       </template>
     </Table>
-
-    <Button class="addBtn" @click="addBox = true">新增商品</Button>
 
     <Modal
       title="新增裝備"
@@ -541,7 +539,7 @@ h4 {
 
 .addBtn {
   display: block;
-  margin: 10px 0 0 auto;
+  margin: 10px 0;
 }
 
 //新增商品
