@@ -40,8 +40,7 @@
             <td>{{ product.createdate }}</td>
             <td>{{ product.color }}</td>
             <td>{{ product.size }}</td>
-            <td><Button type="primary" @click="editProduct(product.product_id)">編輯</Button>
-              <Button type="error" @click="deleteProduct(product.product_id)">刪除</Button>
+            <td><Button type="primary">編輯</Button>
             </td>
           </tr>
         </tbody>
@@ -80,27 +79,6 @@ export default {
     getImageUrl(image) {
       // 如果您的圖片路徑是相對於後端服務器的，這裡可能需要添加基礎URL
       return getImageUrl(image);
-    },
-    deleteProduct(productId) {
-      this.$Modal.confirm({
-        title: '確認刪除',
-        content: '您確定要刪除這個商品嗎？這個操作無法撤銷。',
-        onOk: () => {
-          // 確認刪除，向後端發送刪除請求
-          apiInstance.get(`/deleteProduct.php?productId=${productId}`)
-            .then(response => {
-              console.log(response.data);
-              // 刪除成功後，重新獲取商品列表或從當前列表中移除該商品
-              this.getProducts();
-            })
-            .catch(error => {
-              console.error("Error:", error);
-            });
-        },
-        onCancel: () => {
-          console.log('刪除操作已取消');
-        }
-      });
     },
 
     refreshPage() {

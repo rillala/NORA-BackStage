@@ -2,39 +2,40 @@
 import apiInstance from "@/plugins/auth";
 import { getImageUrl } from "@/assets/js/common";
 import AddProduct from "@/components/addProduct.vue";
+import EditProduct from "@/components/editProduct.vue";
 
 export default {
-  components: { AddProduct },
+  components: { AddProduct, EditProduct},
   data() {
     return {
+      isEditDialogVisible: false,
+      currentProductData: {},
       search: '',
       products: [],
       columns: [
+
         {
-          type: 'selection',
-          width: 60,
-          align: 'center'
+          title: '商品編號',
+          key: 'product_id',
+          sortable: true,
+          width: 100
         },
         {
           title: '商品圖片',
-          key: 'images',
-        },
-        {
-          title: '商品編號',
-          key: 'id',
-          sortable: true
+          slot: 'images',
+          width: 120
         },
         {
           title: '商品名稱',
-          key: 'name'
+          key: 'title'
         },
         {
           title: '顏色',
-          key: 'color'
+          key: 'colors',
         },
         {
           title: '尺寸',
-          key: 'size',
+          key: 'sizes',
         },
         {
           title: '商品價格',
@@ -64,62 +65,21 @@ export default {
         },
         {
           title: '商品狀態',
-          key: 'status',
+          key: 'state'
         },
         {
           title: '上架日期',
-          key: 'createdDate',
+          key: 'createdate',
           sortable: true,
         },
         {
           title: '編輯',
-          key: 'price'
+          slot: 'action',
         },
       ],
-      data: [
-        {
-          id: '11111',
-          name: 'New York ',
-          price: 18,
-          category: '文青生活',
-          color: '黑',
-          size: 'XL',
-          status: 'true'
-        },
-        {
-          id: '22222',
-          name: 'London',
-          price: 24,
-          category: '服飾',
-          color: '黑',
-          size: 'XL'
-        },
-        {
-          id: '33333',
-          name: 'Sydney',
-          price: 30,
-          category: '服飾',
-          color: '黑',
-          size: 'XL'
-        },
-        {
-          id: '44444',
-          name: 'Ottawa',
-          price: 26,
-          category: '營地用品',
-          color: '黑',
-          size: 'XL'
-        }
-      ]
     }
   },
   methods: {
-    handleSelectAll(status) {
-      this.$refs.selection.selectAll(status);
-    },
-    handleFilter() {
-      console.log(this.search.id)
-    },
     getProducts() {
       apiInstance
         .get("./getProduct.php")
@@ -134,8 +94,12 @@ export default {
       // 如果您的圖片路徑是相對於後端服務器的，這裡可能需要添加基礎URL
       return getImageUrl(image);
     },
-    refreshPage(){
+    refreshPage() {
       window.location.reload();
+    },
+    showEditDialog(product) {
+      this.currentProductData = product;
+      this.isEditDialogVisible = true;
     }
   },
   created() {
@@ -151,16 +115,22 @@ export default {
     <div class="product-search">
       <h4>商品列表清單</h4>
       <Input search enter-button placeholder="請輸入商品名稱或商品Id進行搜尋" class="product-id-search" v-model="this.search"
-      @onchange="handleFilter" />
+        @onchange="handleFilter" />
     </div>
     <AddProduct @product-changed="refreshPage"></AddProduct>
-    <Table class="product-table" border ref="selection" :columns="columns" :data="data">
-    
+    <Table class="product-table" height="500" ref="selection" :columns="columns" :data="products">
+      <template #images="{ row }">
+        <Carousel loop style="width: 100px; height: auto;">
+          <CarouselItem v-for="(image, index) in row.images" :key="index">
+            <Image :src="getImageUrl(image)" alt="商品圖片" fit="cover" width="100%" height="100%" />
+          </CarouselItem>
+        </Carousel>
+      </template>
+      <template #action="{ row }">
+        <Button @click="showEditDialog(row)">編輯</Button>
+      </template>
+      <EditProduct v-if="isEditDialogVisible" :productData="currentProductData" @close="isEditDialogVisible = false"></EditProduct>
     </Table>
-    <div style="margin-top: 16px">
-      <Button @click="handleSelectAll(true)">Set all selected</Button>
-      <Button @click="handleSelectAll(false)">Cancel all selected</Button>
-    </div>
   </main>
 </template>
 

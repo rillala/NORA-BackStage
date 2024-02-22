@@ -52,13 +52,16 @@ export default {
     this.getAdminName();
   },
   methods: {
-    ...mapActions(userStore, ['updateToken', 'checkUserData', 'updateAdminName']),
+    ...mapActions(userStore, ['updateToken', 'checkUserData', 'updateAdminId', 'updateAdminName']),
+    //登出
     logOut() {
       this.updateToken('');
       //清除token
-      this.updateAdminName('')
+      this.updateAdminId('');
+      this.updateAdminName('');
       window.location.reload();
     },
+    //取得登入者名稱
     getAdminName() {
       this.adminName = localStorage.getItem('adminName');
     },
