@@ -228,7 +228,7 @@ export default {
       this.newImage = new FormData();
       this.newImage.append("file", file);
       let filePath = "equipment/" + file.name;
-      if (file.name.length >= 40) {
+      if (filePath.length >= 40) {
         alert("圖片檔名過長!請減少至40字元內");
         return;
       }
