@@ -86,6 +86,7 @@ export default {
 
       editModal: false, //編輯燈箱
       editData: { //編輯文章內容
+        article_id: -1,
         title: "",
         content: "",
         img1: "",
@@ -239,11 +240,11 @@ export default {
         // 更新為當前時間
         this.uploadImages();
 
-        // 根據選定的文章狀態決定發送到數據庫的狀態值
+        // 根據選定的文章狀態決定發送到資料庫的狀態值
         const statusToSend = this.addData.status === 'draft' ? 0 : 1;
         this.addData.status = statusToSend;
 
-        // 若文章狀態為上架，publish_date欄位值設定為當前時間
+        // 若文章狀態為"上架"，publish_date欄位值設定為當前時間
         if (statusToSend === 1) {
           this.addData.publish_date = new Date().toLocaleString();
         }else{
@@ -289,6 +290,7 @@ export default {
     // 編輯文章燈箱
     showEditModal(article) {
       this.editData = {
+        article_id: article.article_id,
         title: article.title,
         content: article.content,
         img1: article.img1,
@@ -337,7 +339,8 @@ export default {
     },
 
     //編輯文章：保存編輯後的文章
-    saveEdit() {
+    saveEditToDb() {
+      
       apiInstance
         .post("editNews.php", this.editData) //editNews.php 是更新文章的後端API
         .then((response) => {
@@ -346,6 +349,7 @@ export default {
           this.editModal = false;
           // 刷新文章列表等操作
           this.getPHP(); // 重新獲取文章列表數據
+          alert(response.data.msg);
         })
         .catch((error) => {
           // 處理請求失敗的情況
@@ -364,7 +368,6 @@ export default {
 <template>
   <main>
     <h2 class="news-title dark">最新消息管理</h2>
-
   <!-- 搜尋列 -->
     <div class="news-search">
       <h4>最新消息清單</h4>
@@ -436,17 +439,17 @@ export default {
                 <!-- 圖片預覽 -->
                 <div class="img-previews" v-if="imagePreviews.length > 0">
                   <div v-for="(preview, index) in imagePreviews" :key="index" >
-                    <div v-if="index == 0 && imagePreviews[index] != '' ">
+                    <div class="news-img" v-if="index == 0 && imagePreviews[index] != '' ">
                         <img :src="preview" alt="圖片預覽" width="100px" height="100px" >
                         {{ addData.img1 }}
                         <Button class="remove-btn" @click="removeImageForAdd(index)">刪除圖片</Button>
                     </div>
-                    <div v-if="index == 1 && imagePreviews[index] != '' ">
+                    <div class="news-img" v-if="index == 1 && imagePreviews[index] != '' ">
                       <img :src="preview" alt="圖片預覽" width="100px" height="100px" >
                       {{ addData.img2 }}
                       <Button class="remove-btn" @click="removeImageForAdd(index)">刪除圖片</Button>
                     </div>
-                    <div v-if="index == 2 && imagePreviews[index] != ''">
+                    <div class="news-img" v-if="index == 2 && imagePreviews[index] != ''">
                       <img :src="preview" alt="圖片預覽" width="100px" height="100px" >
                       {{ addData.img3 }}
                       <Button class="remove-btn" @click="removeImageForAdd(index)">刪除圖片</Button>
@@ -551,10 +554,9 @@ export default {
           </ListItem>
         </Form>
       </List>
-
       <template #footer>
         <Button type="dashed" @click="cancelEdit">取消</Button>
-        <Button type="primary" @click="saveEdit">保存</Button>
+        <Button type="primary" @click="saveEditToDb">保存</Button>
       </template>
     </Modal>
   </main>
@@ -607,6 +609,11 @@ button {
   justify-content: flex-start;
 }
 
+.news-img {
+  display: flex;
+  flex-direction: column;
+}
+
 .edit-imgs {
   display: flex;
   gap: 10px;
@@ -614,8 +621,6 @@ button {
 .edit-img {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   gap: 5px;
 }
 
