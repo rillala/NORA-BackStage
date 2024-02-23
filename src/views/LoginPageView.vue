@@ -38,7 +38,7 @@ export default {
           // 如果後端success為true，則處理登入成功的情況
           this.userstatus = res.data.status;
           //取得帳號資料辨識status
-          if (this.userstatus === 1) {
+          if (this.userstatus == 1) {
             this.updateToken(res.data.token);
             //取得token
             this.updateAdminId(res.data.adminid);

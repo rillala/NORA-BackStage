@@ -17,26 +17,26 @@ export default {
           key: 'adminid',
           align: 'center',
           ellipsis: 'true',
-          width: '106'
+          width: '150'
         },
         {
           title: '管理員名稱',
           key: 'name',
           align: 'center',
           ellipsis: 'true',
-          width: '110'
+          width: '150'
         },
         {
           title: '管理員帳號',
           key: 'acc',
           align: 'center',
-          width: '150'
+          width: '220'
         },
         {
           title: '管理員密碼',
           key: 'psw',
           align: 'center',
-          width: '150'
+          width: '220'
         },
         {
           title: '帳號狀態',
@@ -134,6 +134,7 @@ export default {
             this.clearForm();
             //關閉燈箱
             this.modalAdd = false;
+            window.location.reload()
           }
         }).catch((error) => {
           console.error("Error", error);
@@ -207,9 +208,11 @@ export default {
       <!-- <Input class="search-input" search enter-button placeholder="請輸入管理員編號進行搜尋" v-model="search" /> -->
     </div>
 
-    <br />
+    <Space type="flex" style="justify-content: start; padding: 10px;">
+      <Button type="primary" @click="modalAdd = true">新增管理員</Button>
+    </Space>
 
-    <Table class="admin-table" :columns="columns" :data="adminList">
+    <Table class="admin-table" :columns="columns" :data="adminList" height="500">
 
       <!-- <template #info="{ row, index }">
         <Input type="text" v-model="editInfo" v-if="editIndex === index" />
@@ -252,9 +255,6 @@ export default {
 
     </Table>
 
-    <Space type="flex" style="justify-content: end; padding: 10px;">
-      <Button type="primary" @click="modalAdd = true">新增管理員</Button>
-    </Space>
 
   </main>
 </template>
@@ -305,5 +305,9 @@ h4 {
 
 .addInput {
   padding-bottom: 3px;
+}
+
+.admin-table {
+  width: 100%;
 }
 </style>
