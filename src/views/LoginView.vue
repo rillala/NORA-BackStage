@@ -83,6 +83,12 @@ export default {
       ],
       //^^^^^預約訂單明細^^^^^
 
+      imgDynamic: [
+        {
+          imgUrl: "",
+          imgAlt: ""
+        }
+      ],
       nameValue: "",
       priceValue: "",
       descriptionValue: "",
@@ -109,18 +115,6 @@ export default {
     }
   },
   methods: {
-    handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.$Message.success('Success!');
-        } else {
-          this.$Message.error('Fail!');
-        }
-      })
-    },
-    handleReset(name) {
-      this.$refs[name].resetFields();
-    },
     addColor() {
       this.index++;
       this.colorDynamic.colors.push({
@@ -142,6 +136,18 @@ export default {
     },
     removeSpec(index) {
       this.specDynamic.specs[index].status = 0;
+    },
+    handleSubmit(name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          this.$Message.success('儲存成功');
+        } else {
+          this.$Message.error('儲存失敗');
+        }
+      })
+    },
+    handleReset(name) {
+      this.$refs[name].resetFields();
     },
   }
 }
@@ -272,10 +278,14 @@ export default {
     <Modal title="新增商品" v-model="modal2" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消">
       <List item-layout="vertical">
         <Form>
-          <ListItem>
+          <ListItem justify="center" align="middle">
 
             <p align="center" class="list-title">商品照片</p>
 
+
+            <Upload multiple action="">
+              <Button icon="md-add">上傳圖片</Button>
+            </Upload>
 
           </ListItem>
 
@@ -393,7 +403,7 @@ export default {
 
       </List>
       <template #footer>
-        <Button>取消</Button>
+        <Button type="dashed">取消</Button>
         <Button type="primary">儲存</Button>
       </template>
     </Modal>

@@ -13,10 +13,10 @@ const isLogin = computed(() => !!checkLogin());
 //!!checkLogin()有值為true，沒有則為false
 
 
-onMounted(() => {
-  // 在組件掛載後檢查登入狀態
-  console.log(isLogin.value);
-});
+// onMounted(() => {
+//   // 在組件掛載後檢查登入狀態
+//   console.log(isLogin.value);
+// });
 
 // 開發後台登入頁面用變數 isLogin, 一般切後台內頁請設置為 "true", 之後接登入 token
 // const isLogin = false;
@@ -47,7 +47,7 @@ onMounted(() => {
 
   #app-content {
     height: 100svh;
-    padding: 80px 100px 0;
+    padding: 80px 40px 0;
     flex-grow: 1;
 
     #app-main-view {
