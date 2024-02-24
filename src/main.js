@@ -13,8 +13,10 @@ import router from "./router";
 // 創建一個 vue 應用程式(主要配置在 app.vue裡)
 const vueApp = createApp(App);
 
-vueApp.use(createPinia());
 // vueApp.use(router);
-
-const app = createApp(App);
-createApp(App).use(router).use(ViewUIPlus).mount("#app");
+vueApp.use(createPinia());
+vueApp.use(router)
+vueApp.use(ViewUIPlus)
+vueApp.mount("#app");
+// const app = createApp(App);
+// createApp(App).use(router).use(ViewUIPlus).mount("#app");

@@ -2,6 +2,7 @@
 
 export const getImageUrl = (paths) => {
   return `http://localhost/NORAapi/image/${paths}`;
+  // return `https://tibamef2e.com/chd104/g1/image/${paths}`;
 };
 
 // 資料庫中圖片路徑使用辦法:
