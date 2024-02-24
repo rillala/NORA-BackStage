@@ -1,7 +1,7 @@
 <script setup>
   import { ref, onMounted } from 'vue';
   import apiInstance from "@/plugins/auth";
-import { Row } from 'view-ui-plus';
+  import { Row } from 'view-ui-plus';
 
   const columns = ref([
     {
@@ -10,16 +10,22 @@ import { Row } from 'view-ui-plus';
       align: 'center' // 文字居中显示
     },
     {
+      width: 120,
+      align: 'center',
       title: '問題編號', 
       key: 'faq_id', 
       sortable: true 
     },
     {
+      width: 120,
+      align: 'center',
       title: '顯示狀態', 
       key: 'faq_status', 
       sortable: true 
     },
     {
+      width: 140,
+      align: 'center',
       title: '問題類別', 
       key: 'faq_type', 
       sortable: true 
@@ -54,8 +60,14 @@ import { Row } from 'view-ui-plus';
     answer:'',
     faq_status:'1',
   });
+  const addFaq = ref({
+    faq_type:'',
+    question:'',
+    answer:'',
+    faq_status:null,
+    date: new Date().toLocaleString(),
+  })
   const selectDefault = ref('1');
-
   function getPHP(){
     apiInstance.get("./getFaq.php") // API請求獲取getFaq.php檔的數據
     .then((response) => {
@@ -74,14 +86,49 @@ import { Row } from 'view-ui-plus';
     }
   });
   function addNew(){
+    // 新增燈箱開關
     addBtn.value = !addBtn.value;
   }
-  function storeData(){
-    // 新增數據 post to PHP
-  }
+  function storeToDB(){
+    // 新增數據 然後post to PHP
+    // 新增燈箱裡的儲存按鈕
+    //先確認燈箱填寫狀態
+    if(checkInput()){
+      //T，post to PHP
+      apiInstance
+          .post("addFaq.php", addFaq.value)
+          .then((response) => {
+            if (!response.error) {
+              alert(response.data.msg);
+              getPHP();
+              console.log("正確",addFaq.value);
+              console.log("正確",response.data);
+            }
+          })
+          .catch((error) => {
+            // console.error("Error:", error);
+            console.log("錯誤",addFaq.value);
 
+          });
+    }
+  }
+  function checkInput() {
+    console.log(addFaq.value.faq_type)
+    //檢查新增燈箱是否皆已填寫
+    if(!addFaq.value.faq_type){
+      alert("請選擇問題分類");
+    }else if(!addFaq.value.question){
+      alert("請填寫標題");
+    }else if(!addFaq.value.answer){
+      alert("請填寫回應");
+    }else if(!addFaq.value.faq_status){
+      alert("請選擇問題是否顯示");
+    }else{
+      return true;
+    }
+  }
   function editData(index){
-    //燈箱開關
+    //編輯燈箱開關
     editFlag.value = !editFlag.value;
     //撈取數據
     // editFaq.value = {
@@ -98,7 +145,9 @@ import { Row } from 'view-ui-plus';
     console.log(index.faq_id);
     //用index.faq_id檢索SQL PK
   }
-
+  function saveData(){
+    //編輯燈箱裡的儲存按鈕
+  }
   function remove(index){}
 </script>
 
@@ -129,14 +178,14 @@ import { Row } from 'view-ui-plus';
                 <span>問題類別：</span>
               </Col>
               <Col span="19">
-                <FromeItem>
-                  <Select>
+                <FormItem>
+                  <Select v-model="addFaq.faq_type">
                     <Option value="營地預約">營地預約</Option>
                     <Option value="中途之家">中途之家</Option>
                     <Option value="裝備租借">裝備租借</Option>
                     <Option value="商品購物">商品購物</Option>
                   </Select>
-                </FromeItem>
+                </FormItem>
               </Col>
             </Row>
             <Row class="form-row" justify="center" align="middle">
@@ -144,7 +193,7 @@ import { Row } from 'view-ui-plus';
                 <span>問題：</span>
               </Col>
               <Col span="19" align="center">
-                <Input placeholder="請輸入標題" />
+                <Input placeholder="請輸入標題" v-model="addFaq.question"/>
               </Col>
             </Row>
             <Row class="form-row" justify="center" align="middle">
@@ -152,7 +201,7 @@ import { Row } from 'view-ui-plus';
                 <span>回答：</span>
               </Col>
               <Col span="19" align="center">
-                <Input type="textarea" :rows="4" placeholder="請輸入回覆" /> 
+                <Input type="textarea" :rows="4" placeholder="請輸入回覆" v-model="addFaq.answer"/> 
               </Col>
             </Row>
             <Row class="form-row" justify="center" align="middle">
@@ -160,7 +209,7 @@ import { Row } from 'view-ui-plus';
                 <span>顯示狀態</span>
               </Col>
               <Col span="19" align="start">
-                <RadioGroup  v-model="selectDefault">
+                <RadioGroup  v-model="addFaq.faq_status">
                   <Radio label="1" class="radioStyle">顯示</Radio>
                   <Radio label="0" class="radioStyle">隱藏</Radio>
                 </RadioGroup>
@@ -171,7 +220,7 @@ import { Row } from 'view-ui-plus';
       </List>
       <template #footer>
         <Button type="dashed" @click="addNew()">取消</Button>
-        <Button type="primary" @click="storeData()">儲存</Button>
+        <Button type="primary" @click="storeToDB()">儲存</Button>
       </template>
     </Modal>
     <!-- 編輯燈箱 -->
@@ -184,14 +233,14 @@ import { Row } from 'view-ui-plus';
                 <span>問題類別：</span>
               </Col>
               <Col span="19">
-                <FromeItem>
+                <FormItem>
                   <Select v-model="editFaq.faq_type">
                     <Option value="營地預約">營地預約</Option>
                     <Option value="中途之家">中途之家</Option>
                     <Option value="裝備租借">裝備租借</Option>
                     <Option value="商品購物">商品購物</Option>
                   </Select>
-                </FromeItem>
+                </FormItem>
               </Col>
             </Row>
             <Row class="form-row" justify="center" align="middle">
@@ -226,7 +275,7 @@ import { Row } from 'view-ui-plus';
       </List>
       <template #footer>
         <Button type="dashed" @click="editData()">取消</Button>
-        <Button type="primary" @click="storeData()">儲存</Button>
+        <Button type="primary" @click="saveData()">儲存</Button>
       </template>
     </Modal>
     <!-- 數據列表 -->
