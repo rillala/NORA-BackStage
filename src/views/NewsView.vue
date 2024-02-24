@@ -6,15 +6,11 @@ export default {
   data() {
     return {
       search: "", //搜尋
-      newsFilter: "", //篩選
+      // newsFilter: "", //篩選
+      displayList: [],
 
       //表格內容
       columns: [
-        {
-          type: "selection",
-          width: "60",
-          align: "center",
-        },
         {
           title: "文章編號",
           key: "article_id",
@@ -97,14 +93,23 @@ export default {
     }
   },
 
-  computed: {
-    filteredNewsList() {
-      //接收newsFilter屬性的值作為參數，把它轉換成小寫 去除空白字符，再用filter方法過濾newsList
-      const filterText = this.newsFilter.toLowerCase().trim();
-      return this.newsList.filter(news => {
-        return news.article_id.toString().includes(filterText) || news.title.toLowerCase().includes(filterText);
-      });
-    }
+  // computed: {
+  //   filteredNewsList() {
+  //     //接收newsFilter屬性的值作為參數，把它轉換成小寫 去除空白字符，再用filter方法過濾newsList
+  //     const filterText = this.newsFilter.toLowerCase().trim();
+  //     return this.newsList.filter(news => {
+  //       return news.article_id.toString().includes(filterText) || news.title.toLowerCase().includes(filterText);
+  //     });
+  //   }
+  // },
+
+  watch: {
+    search(filterText) {
+      let searchList = this.newsList.filter((item) =>
+        item.title.toLowerCase().includes(filterText.toLowerCase()) || item.article_id.toString().includes(filterText.toString())
+      );
+      this.displayList = searchList;
+    },
   },
 
   mounted() {
@@ -112,13 +117,16 @@ export default {
   },
 
   methods: {
-
     //抓資料庫的資料
     getPHP() {
       apiInstance
         .get("./getNews.php")
         .then((response) => {
+          console.log(response.data);
           this.newsList = response.data;
+          this.displayList = this.newsList.map((item) => ({
+            ...item,
+          }));
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -176,7 +184,8 @@ export default {
 
     // 新增文章：準備上傳前的新增圖片
     handleBeforeUpload(file) {
-      if (this.newImages.length >= 3) { //newImages存放選好的file 判斷是否超出圖片數量限制
+      if (this.newImages.length >= 3) { 
+        //newImages存放選好的file 判斷是否超出圖片數量限制
         alert("最多只能上傳三張圖片"); //超出後跳窗提醒
         return false; // 阻止上傳
       }
@@ -238,7 +247,6 @@ export default {
 
     //新增文章到資料庫
     addNewsToDb() {
-      
       if (this.checkInput()) {
         this.uploadImages();
 
@@ -350,9 +358,7 @@ export default {
 
     //編輯文章：保存編輯後的文章
     saveEditToDb() {
-
       //根據選定的文章狀態決定發送到資料庫的狀態值
-
       if(this.editData.status == 'draft'){
         this.editData.status = 0;
       }else if(this.editData.status == 'publish'){
@@ -360,14 +366,6 @@ export default {
       }else if (this.editData.status == 'remove'){
         this.editData.status = 2;
       }
-
-
-      // // 若文章狀態為"上架"，publish_date欄位值設定為當前時間
-      // if (statusToSend === 1) {
-      //   this.editData.publish_date = new Date();
-      // }else{
-      //   this.editData.publish_date = "";
-      // }
 
       apiInstance
         .post("editNews.php", this.editData) //editNews.php 是更新文章的後端API
@@ -389,6 +387,30 @@ export default {
     cancelEdit() {
       this.editModal = false; //關閉彈窗
     },
+
+    //刪除文章
+    deleteNewsDb(index){
+      if(confirm("是否確認刪除？")){ //彈窗確認是否刪除(true/false)
+        console.log(this.displayList[index]);
+        let selectItem = this.displayList[index];
+
+        let deleteItem = new FormData();
+        deleteItem.append("tablename" , "news");
+        deleteItem.append("id" , selectItem.article_id);
+
+        apiInstance
+          .post("deleteData.php", deleteItem)
+          .then((response) => {
+            if (!response.data.error) {
+              alert(response.data.msg);
+              this.getPHP();
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    }
   },
 };
 </script>
@@ -399,11 +421,16 @@ export default {
   <!-- 搜尋列 -->
     <div class="news-search">
       <h4>最新消息清單</h4>
-      <Input search enter-button placeholder="請輸入文章編號或文章標題進行搜尋" class="news-id-search" v-model="newsFilter" />
+      <Input search enter-button placeholder="請輸入文章編號或文章標題進行搜尋" class="news-id-search" v-model="search" />
     </div>
 
+  <!-- 新增文章按鈕 -->
+  <Space type="flex" style="justify-content: start; padding: 10px;">
+    <Button class="add-btn" @click="showAddModal()">新增文章</Button>
+  </Space>
+
   <!-- 文章列表 -->
-    <Table class="news-table" :columns="columns" :data="filteredNewsList">
+    <Table class="news-table" :columns="columns" :data="displayList">
       <template #title="{ row }">
         <strong>{{ row.title }}</strong>
       </template>
@@ -423,16 +450,11 @@ export default {
       </template>
 
       <template #delete="{ row, index }">
-        <Button size="small" @click="remove(index)">
+        <Button size="small" @click="deleteNewsDb(index)">
           <img src="@/assets/image/icon/delete.svg" alt="刪除按鈕" />
         </Button>
       </template>
     </Table>
-
-  <!-- 新增文章按鈕 -->
-  <Space type="flex" style="justify-content: end; padding: 10px;">
-    <Button class="add-btn" @click="showAddModal()">新增文章</Button>
-  </Space>
 
   <!-- 新增文章燈箱 -->
     <Modal title="新增文章" v-model="addBox" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消"
