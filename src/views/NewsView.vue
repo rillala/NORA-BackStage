@@ -81,7 +81,7 @@ export default {
         img2: "",
         img3: "",
         status: "draft",
-        create_date: new Date().toLocaleString()
+        create_date:""
       },
 
       editModal: false, //編輯燈箱
@@ -141,17 +141,19 @@ export default {
       }
     },
 
+    //新增文章燈箱
+    showAddModal() {
+      this.addBox = true ;
+      this.imagePreviews = []; //清空預覽的圖片
+      this.newImages = []; //清空要上傳的圖片
+    },
+
     // 編輯文章：準備上傳前的新增圖片
     handleBeforeUploadForEdit(file){
-      if (this.newImages.length >= 3) { //newImages存放選好的file 判斷是否超出圖片數量限制
-        alert("最多只能上傳三張圖片"); //超出後跳窗提醒
-        return false; // 阻止上傳
-      }
-      this.newImages.push(file); // 若無超過三張就將file加到newImages陣列中
-
       const reader = new FileReader(); //當使用者選擇要上傳的圖片 程式會創建一個新的FileReader物件來讀取檔案內容
       reader.onload = (e) => { //等讀取完畢後觸發 再執行指定函數
       this.imagePreviews.push(e.target.result);
+      this.newImages.push(file); // 若無超過三張就將file加到newImages陣列中
         //將讀到的內容以Data URL的形式加到imagePreviews來儲存圖片預覽
         //Data URL是一種用來表示檔案內容的URL格式
 
@@ -162,10 +164,11 @@ export default {
         this.editData.img2 = "news/" + file.name;
       } else if (!this.editData.img3) {
         this.editData.img3 = "news/" + file.name;
+      } else {
+        alert("最多只能上傳三張圖片"); //超出後跳窗提醒
+        return false; // 阻止上傳
       }
-      console.log("aaathis.editData.img1 = " + file.name);
-      console.log("aaathis.editData.img2 = " + file.name);
-      console.log("aaathis.editData.img3 = " + file.name);
+
       };
       reader.readAsDataURL(file);
       return false; //阻止默認上傳行為(在上傳前先執行需要的驗證)
@@ -235,9 +238,8 @@ export default {
 
     //新增文章到資料庫
     addNewsToDb() {
+      
       if (this.checkInput()) {
-        this.addData.create_date = new Date().toLocaleString(); 
-        // 更新為當前時間
         this.uploadImages();
 
         // 根據選定的文章狀態決定發送到資料庫的狀態值
@@ -245,11 +247,11 @@ export default {
         this.addData.status = statusToSend;
 
         // 若文章狀態為"上架"，publish_date欄位值設定為當前時間
-        if (statusToSend === 1) {
-          this.addData.publish_date = new Date().toLocaleString();
-        }else{
-          this.addData.publish_date = "";
-        }
+        // if (statusToSend === 1) {
+        //   this.addData.publish_date = new Date();
+        // }else{
+        //   this.addData.publish_date = "";
+        // }
 
         apiInstance
           .post("addNews.php", this.addData)
@@ -289,6 +291,13 @@ export default {
 
     // 編輯文章燈箱
     showEditModal(article) {
+
+      this.imagePreviews = []; //清空預覽的圖片
+      this.newImages = []; //清空要上傳的圖片
+
+      console.log('aaa = ' + this.imagePreviews.length);
+      console.log('aaa = ' + this.newImages.length);
+
       this.editData = {
         article_id: article.article_id,
         title: article.title,
@@ -298,6 +307,7 @@ export default {
         img3: article.img3,
         status: article.status,
       };
+
       this.editModal = true;
     },
 
@@ -340,7 +350,25 @@ export default {
 
     //編輯文章：保存編輯後的文章
     saveEditToDb() {
-      
+
+      //根據選定的文章狀態決定發送到資料庫的狀態值
+
+      if(this.editData.status == 'draft'){
+        this.editData.status = 0;
+      }else if(this.editData.status == 'publish'){
+        this.editData.status = 1;
+      }else if (this.editData.status == 'remove'){
+        this.editData.status = 2;
+      }
+
+
+      // // 若文章狀態為"上架"，publish_date欄位值設定為當前時間
+      // if (statusToSend === 1) {
+      //   this.editData.publish_date = new Date();
+      // }else{
+      //   this.editData.publish_date = "";
+      // }
+
       apiInstance
         .post("editNews.php", this.editData) //editNews.php 是更新文章的後端API
         .then((response) => {
@@ -403,7 +431,7 @@ export default {
 
   <!-- 新增文章按鈕 -->
   <Space type="flex" style="justify-content: end; padding: 10px;">
-    <Button class="add-btn" @click="addBox = true">新增文章</Button>
+    <Button class="add-btn" @click="showAddModal()">新增文章</Button>
   </Space>
 
   <!-- 新增文章燈箱 -->
@@ -457,7 +485,7 @@ export default {
                   </div>
                 </div>
                 <!-- 上傳圖片按鈕 -->
-                <Upload multiple :limit="3" action="" :before-upload="handleBeforeUpload">
+                <Upload :limit="3" action="" :before-upload="handleBeforeUpload">
                   <Button icon="md-add">上傳圖片</Button>
                 </Upload>
               </Col>
