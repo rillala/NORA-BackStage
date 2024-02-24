@@ -16,7 +16,7 @@ export default defineConfig({
   },
   plugins: [vue()],
   server: {
-    post:5174,
+    // post:5174,
     host: "0.0.0.0",
   },
   resolve: {
