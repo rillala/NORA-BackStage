@@ -25,6 +25,13 @@ export default {
           sortable: true,
         },
         {
+          title: "令牌",
+          key: "token",
+          width: "100",
+          align: "center",
+          sortable: true,
+        },
+        {
           title: "會員名字",
           key: "name",
           width: "100",
