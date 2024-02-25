@@ -55,6 +55,7 @@
   const addBtn = ref(false);
   const editFlag = ref(false);
   const editFaq = ref({
+    faq_id:-1,
     faq_type:'',
     question:'',
     answer:'',
@@ -101,12 +102,10 @@
             if (!response.error) {
               alert(response.data.msg);
               getPHP();
-              console.log("正確",addFaq.value);
-              console.log("正確",response.data);
             }
           })
           .catch((error) => {
-            // console.error("Error:", error);
+            console.error("Error:", error);
             console.log("錯誤",addFaq.value);
 
           });
@@ -137,6 +136,7 @@
     //   answer:index.answer,
     //   faq_status:index.faq_status,
     // };上下兩種寫法都OK
+    editFaq.value.faq_id = index.faq_id;
     editFaq.value.faq_type = index.faq_type;
     editFaq.value.question = index.question;
     editFaq.value.answer = index.answer;
@@ -147,8 +147,52 @@
   }
   function saveData(){
     //編輯燈箱裡的儲存按鈕
+    if(editFaq.value.faq_status == '0'){
+      editFaq.value.faq_status = 0;
+    }else{
+      editFaq.value.faq_status = 1;
+    }
+
+    apiInstance
+    .post("editFaq.php", editFaq.value) //更新文章的後端API
+    .then((response) => {
+      // 處理請求成功的情況
+      // if(!response.data){
+        console.log("Updated successfully", response);
+        editFlag.value = false;
+        // 刷新文章列表等操作
+        getPHP(); // 重新獲取文章列表數據
+        console.log(response.data);
+        alert(response.data.msg);
+      // }
+    })
+    .catch((error) => {
+      // 處理請求失敗的情況
+      console.error("Error updating FAQ", error);
+    });
   }
-  function remove(index){}
+  function remove(index){
+    if(confirm("是否確認刪除？")){ 
+      //彈窗確認是否刪除(true/false)
+      console.log(this.displayList[index]);
+      let selectItem = this.displayList[index];
+      let deleteItem = new FormData();
+      deleteItem.append("tablename" , "news");
+      deleteItem.append("id" , selectItem.article_id);
+
+      apiInstance
+      .post("deleteData.php", deleteItem)
+      .then((response) => {
+        if (!response.data.error) {
+          alert(response.data.msg);
+          getPHP();
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+    }
+  }
 </script>
 
 
