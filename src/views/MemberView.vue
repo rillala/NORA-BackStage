@@ -1,4 +1,7 @@
 <script>
+import apiInstance from "@/plugins/auth";
+import { getImageUrl } from "@/assets/js/common";
+
 export default {
   data() {
     return {
@@ -7,36 +10,60 @@ export default {
       editIndex: -1,
       editInfo: "",
       columns: [
-        // {
-        //   type: "selection",
-        //   width: "60",
-        //   align: "center",
-        // },
         {
           title: "會員編號",
-          key: "campsiteId",
-          width: "120",
+          key: "member_id",
+          width: "100",
           align: "center",
           sortable: true,
         },
-        // {
-        //   title: "會員帳號",
-        //   key: "type",
-        //   width: "120",
-        //   align: "center",
-        //   sortable: true,
-        // },
+        {
+          title: "第三方登入",
+          key: "user_id",
+          width: "100",
+          align: "center",
+          sortable: true,
+        },
+        {
+          title: "令牌",
+          key: "token",
+          width: "100",
+          align: "center",
+          sortable: true,
+        },
+        {
+          title: "會員名字",
+          key: "name",
+          width: "100",
+          align: "center",
+        },
+        {
+          title: "日期",
+          key: "date",
+          width: "100",
+          align: "center",
+        },
         {
           title: "會員信箱",
-          key: "price",
+          key: "email",
+          width: "200",
+          align: "center",
+        },
+        {
+          title: "會員密碼",
+          key: "psw",
+          width: "160",
+          align: "center",
+        },
+        {
+          title: "照片",
+          key: "photo",
           width: "180",
           align: "center",
-          // sortable: true,
         },
         {
           title: "會員手機",
-          key: "info",
-          slot: "info",
+          key: "phone",
           width: "150",
         },
         {
@@ -44,7 +71,6 @@ export default {
           key: "address",
           width: "220",
           align: "center",
-          // sortable: true,
         },
         {
           title: "狀態",
@@ -52,234 +78,30 @@ export default {
           width: "100",
           align: "center",
           sortable: true,
-          slot: "status",
         },
         {
           title: "查看",
           width: "100",
           align: "center",
-          slot: "action",
         },
-        // {
-        //   title: "查看",
-        //   width: "100",
-        //   align: "center",
-        //   slot: "delete",
-        // },
       ],
-      choseZone: "",
-      siteList: [
-        {
-          campsiteId: 1,
-          typeId: 2,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 2,
-          typeId: 2,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 3,
-          typeId: 1,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 4,
-          typeId: 1,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 5,
-          typeId: 1,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 6,
-          typeId: 1,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 7,
-          typeId: 1,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 8,
-          typeId: 1,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 9,
-          typeId: 1,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 10,
-          typeId: 2,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 11,
-          typeId: 2,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 12,
-          typeId: 1,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 13,
-          typeId: 1,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 14,
-          typeId: 1,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 15,
-          typeId: 1,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 16,
-          typeId: 1,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 17,
-          typeId: 1,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-        {
-          campsiteId: 18,
-          typeId: 1,
-          openStatus: true,
-          price: 'tibame@gmail.com',
-          info: "0912-345-678",
-          address:"320桃園市中壢區復興路46號",
-        },
-
-      ],
+      memberList: [],
     };
   },
+  mounted() {
+    this.getPHP();
+  },
+
   watch: {
     search(newVal) {
-      let searchList = this.siteList.filter(
+      let searchList = this.memberList.filter(
         (site) => site.campsiteId == parseInt(newVal)
       );
       this.selectedList = this.changeListString(searchList);
       this.choseZone = "";
     },
   },
-  mounted() {
-    this.showCatZone();
-  },
   methods: {
-    showCatZone() {
-      this.choseZone = "cat";
-      let filterList = this.siteList.filter((site) => site.typeId < 4);
-      this.selectedList = this.changeListString(filterList);
-    },
-    showDogZone() {
-      this.choseZone = "dog";
-      let filterList = this.siteList.filter((site) => site.typeId > 3);
-      this.selectedList = this.changeListString(filterList);
-    },
-    changeListString(campsites) {
-      return campsites.map((site) => {
-        let type;
-
-        switch (site.typeId) {
-          case 1:
-            type = "貓區 草地區";
-            break;
-          case 2:
-            type = "貓區 棧板區";
-            break;
-          case 3:
-            type = "貓區 雨棚區";
-            break;
-          case 4:
-            type = "狗區 草地區";
-            break;
-          case 5:
-            type = "狗區 棧板區";
-            break;
-          case 6:
-            type = "狗區 雨棚區";
-            break;
-          default:
-            type = "錯誤，無分區編號";
-        }
-
-        return {
-          ...site,
-          type: type,
-        };
-      });
-    },
-    formatPrice(price) {
-      return "$" + price.toLocaleString("en-US");
-    },
-    // View UI 連動函數
-    remove(index) {
-      this.selectedList.splice(index, 1);
-    },
     handleEdit(row, index) {
       this.editInfo = row.info;
       this.editIndex = index;
@@ -291,6 +113,20 @@ export default {
     statusChange(index) {
       this.selectedList[index].openStatus =
         !this.selectedList[index].openStatus;
+    },
+    getPHP() {
+      apiInstance
+        .get("./members.php")
+        .then((response) => {
+          console.log(response.data); // 這裡應該能看到 { "number": 123 }
+          this.memberList = response.data.members;
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    },
+    getImageUrl(paths) {
+      return getImageUrl(paths);
     },
   },
 };
@@ -311,26 +147,9 @@ export default {
       />
     </div>
 
-    <!-- <div class="zoneType">
-      <Button
-        id="catZoneBtn"
-        size="large"
-        :type="choseZone === 'cat' ? 'primary' : 'default'"
-        @click="showCatZone"
-        >貓區</Button
-      >
-      <Button
-        id="dogZoneBtn"
-        size="large"
-        :type="choseZone === 'dog' ? 'primary' : 'default'"
-        @click="showDogZone"
-        >狗區</Button
-      >
-    </div> -->
-
     <br />
 
-    <Table class="table" height="500" :columns="columns" :data="selectedList">
+    <Table class="table" height="500" :columns="columns" :data="memberList">
       <template #info="{ row, index }">
         <Input type="text" v-model="editInfo" v-if="editIndex === index" />
         <span v-else>{{ row.info }}</span>
@@ -397,7 +216,8 @@ export default {
           </Button>
         </div>
       </template>
-      <template #delete="{ row, index }">
+      <template>
+      <!-- <template #delete="{ row, index }"> -->
         <Button class="btn" type="text" size="small" @click="remove(index)"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
