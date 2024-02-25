@@ -254,12 +254,12 @@ export default {
         const statusToSend = this.addData.status === 'draft' ? 0 : 1;
         this.addData.status = statusToSend;
 
-        // 若文章狀態為"上架"，publish_date欄位值設定為當前時間
-        // if (statusToSend === 1) {
-        //   this.addData.publish_date = new Date();
-        // }else{
-        //   this.addData.publish_date = "";
-        // }
+        //若文章狀態為"上架"，publish_date欄位值設定為當前時間
+        if (statusToSend === 1) {
+          this.addData.publish_date = new Date();
+        }else{
+          this.addData.publish_date = "";
+        }
 
         apiInstance
           .post("addNews.php", this.addData)
@@ -366,6 +366,13 @@ export default {
       }else if (this.editData.status == 'remove'){
         this.editData.status = 2;
       }
+
+      //若文章狀態為"上架"，publish_date欄位值設定為當前時間
+      // if (this.editData.status === 1) {
+      //   this.editData.publish_date = new Date();
+      // }else{
+      //   this.editData.publish_date = "";
+      // }
 
       apiInstance
         .post("editNews.php", this.editData) //editNews.php 是更新文章的後端API
