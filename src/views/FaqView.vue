@@ -68,7 +68,7 @@
     faq_status:null,
     date: new Date().toLocaleString(),
   })
-  const selectDefault = ref('1');
+
   function getPHP(){
     apiInstance.get("./getFaq.php") // API請求獲取getFaq.php檔的數據
     .then((response) => {
@@ -174,11 +174,11 @@
   function remove(index){
     if(confirm("是否確認刪除？")){ 
       //彈窗確認是否刪除(true/false)
-      console.log(this.displayList[index]);
-      let selectItem = this.displayList[index];
+      console.log(quesList.value[index]);
+      let selectItem = quesList.value[index];
       let deleteItem = new FormData();
-      deleteItem.append("tablename" , "news");
-      deleteItem.append("id" , selectItem.article_id);
+      deleteItem.append("tablename" , "faq_management");
+      deleteItem.append("id" , selectItem.faq_id);
 
       apiInstance
       .post("deleteData.php", deleteItem)
@@ -186,6 +186,8 @@
         if (!response.data.error) {
           alert(response.data.msg);
           getPHP();
+      console.log(response.data);
+
         }
       })
       .catch((error) => {
