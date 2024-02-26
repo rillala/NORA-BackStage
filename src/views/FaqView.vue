@@ -97,18 +97,17 @@
     if(checkInput()){
       //T，post to PHP
       apiInstance
-          .post("addFaq.php", addFaq.value)
-          .then((response) => {
-            if (!response.error) {
-              alert(response.data.msg);
-              getPHP();
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            console.log("錯誤",addFaq.value);
-
-          });
+        .post("addFaq.php", addFaq.value)
+        .then((response) => {
+          if (!response.error) {
+            alert(response.data.msg);
+            getPHP();
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          console.log("錯誤",addFaq.value);
+        });
     }
   }
   function checkInput() {
@@ -199,6 +198,7 @@
 
 
 <template>
+
   <main>
     <h2 class="dark">常見問題管理</h2>
 
