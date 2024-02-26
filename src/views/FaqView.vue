@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted , computed } from 'vue';
   import apiInstance from "@/plugins/auth";
   import { Row } from 'view-ui-plus';
 
@@ -194,6 +194,18 @@
       });
     }
   }
+  const pageSize = ref(10);
+  const nowPage = ref(1);
+  const currentPageData = computed(() => {
+    //根據目前頁碼和每頁顯示資料數計算目前頁面的資料數據
+    const start = (nowPage.value - 1) * pageSize.value;
+    const end = start + pageSize.value ;
+    return quesList.value.slice(start, end);
+  });
+
+  const handlePageChange = (page) => {
+    nowPage.value = page;
+  };
 </script>
 
 
@@ -325,7 +337,7 @@
       </template>
     </Modal>
     <!-- 數據列表 -->
-    <Table class="table" :columns="columns" :data="quesList">
+    <Table class="table" :columns="columns" :data="currentPageData">
       <template #title="{ row }">
         <strong>{{ row.title }}</strong>
       </template>
@@ -342,6 +354,7 @@
           </Button>
       </template>
     </Table>
+    <Page :total="quesList.length" show-total  :page-size="pageSize" @on-change="handlePageChange"/>
   </main>
 </template>
 
