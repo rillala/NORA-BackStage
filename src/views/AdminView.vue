@@ -225,7 +225,7 @@ export default {
           @on-change="statusChange(index)" :true-value="1" :false-value="0" />
       </template>
 
-      <!-- 編輯 -->
+      <!-- 編輯(擱置) -->
       <template #edit="{ row, index }">
         <div v-if="editIndex === index">
           <Button @click="handleSave(index)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"

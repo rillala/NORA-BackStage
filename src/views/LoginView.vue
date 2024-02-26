@@ -154,7 +154,7 @@ export default {
 </script>
 
 <template>
-  <Space wrap>
+  <Space wrap class="lightbox-ex">
 
     <Button @click="modal1 = true">查看預約訂單明細</Button>
 
@@ -408,9 +408,46 @@ export default {
       </template>
     </Modal>
   </Space>
+  <div>
+    <div class="logo-image">
+      <img src="@/assets/image/loginViewLogo.png" alt="請點選欲管理的頁面">
+      <p>請選擇欲管理的頁面</p>
+    </div>
+  </div>
 </template>
 
 <style lang="less" scoped>
+div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .logo-image {
+
+    img {
+      width: 50%;
+      filter: grayscale(100%);
+    }
+  }
+
+  p {
+    margin: 20px;
+    font-size: 36px;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+}
+
+
+
+// 燈箱範例
+.lightbox-ex {
+  display: none;
+}
+
 .ivu-row {
   display: flex;
   flex-flow: row nowrap;
