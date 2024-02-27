@@ -6,7 +6,6 @@ export default {
   data() {
     return {
       search: "", //搜尋
-      // newsFilter: "", //篩選
       displayList: [],
 
       //表格內容
@@ -93,16 +92,6 @@ export default {
     }
   },
 
-  // computed: {
-  //   filteredNewsList() {
-  //     //接收newsFilter屬性的值作為參數，把它轉換成小寫 去除空白字符，再用filter方法過濾newsList
-  //     const filterText = this.newsFilter.toLowerCase().trim();
-  //     return this.newsList.filter(news => {
-  //       return news.article_id.toString().includes(filterText) || news.title.toLowerCase().includes(filterText);
-  //     });
-  //   }
-  // },
-
   watch: {
     search(filterText) {
       let searchList = this.newsList.filter((item) =>
@@ -161,9 +150,10 @@ export default {
       const reader = new FileReader(); //當使用者選擇要上傳的圖片 程式會創建一個新的FileReader物件來讀取檔案內容
       reader.onload = (e) => { //等讀取完畢後觸發 再執行指定函數
       this.imagePreviews.push(e.target.result);
-      this.newImages.push(file); // 若無超過三張就將file加到newImages陣列中
-        //將讀到的內容以Data URL的形式加到imagePreviews來儲存圖片預覽
-        //Data URL是一種用來表示檔案內容的URL格式
+      this.newImages.push(file); 
+      // 若無超過三張就將file加到newImages陣列中
+      // 將讀到的內容以Data URL的形式加到imagePreviews來儲存圖片預覽
+      // Data URL是一種用來表示檔案內容的URL格式
 
       // 檢查editData中的img1/img2/img3的屬性 並將圖片路徑存到editData中
       if (!this.editData.img1) {
@@ -484,7 +474,7 @@ export default {
                 <span>消息內容</span>
               </Col>
               <Col span="19">
-                <textarea rows="15" cols="49" v-model="addData.content" placeholder="請輸入內文"></textarea>
+                <textarea maxlength="200" rows="15" cols="49" v-model="addData.content" placeholder="請輸入內文"></textarea>
               </Col>
             </Row>
 
@@ -560,7 +550,7 @@ export default {
                 <span>消息內容</span>
               </Col>
               <Col span="19">
-                <textarea rows="15" cols="49" v-model="editData.content" placeholder="請輸入內文"></textarea>
+                <textarea maxlength="200" rows="15" cols="49" v-model="editData.content" placeholder="請輸入內文"></textarea>
               </Col>
             </Row>
 
