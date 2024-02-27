@@ -30,7 +30,7 @@ const isLogin = computed(() => !!checkLogin());
     <section v-else id="app-wrap">
       <headerCom id="app-nav" />
       <div id="app-content">
-        <RouterView id="app-main-view" />
+        <RouterView />
       </div>
     </section>
   </main>
