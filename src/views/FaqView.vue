@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted , computed } from 'vue';
   import apiInstance from "@/plugins/auth";
   import { Row } from 'view-ui-plus';
 
@@ -68,7 +68,7 @@
     faq_status:null,
     date: new Date().toLocaleString(),
   })
-  const selectDefault = ref('1');
+
   function getPHP(){
     apiInstance.get("./getFaq.php") // API請求獲取getFaq.php檔的數據
     .then((response) => {
@@ -97,18 +97,17 @@
     if(checkInput()){
       //T，post to PHP
       apiInstance
-          .post("addFaq.php", addFaq.value)
-          .then((response) => {
-            if (!response.error) {
-              alert(response.data.msg);
-              getPHP();
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            console.log("錯誤",addFaq.value);
-
-          });
+        .post("addFaq.php", addFaq.value)
+        .then((response) => {
+          if (!response.error) {
+            alert(response.data.msg);
+            getPHP();
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          console.log("錯誤",addFaq.value);
+        });
     }
   }
   function checkInput() {
@@ -174,11 +173,11 @@
   function remove(index){
     if(confirm("是否確認刪除？")){ 
       //彈窗確認是否刪除(true/false)
-      console.log(this.displayList[index]);
-      let selectItem = this.displayList[index];
+      console.log(quesList.value[index]);
+      let selectItem = quesList.value[index];
       let deleteItem = new FormData();
-      deleteItem.append("tablename" , "news");
-      deleteItem.append("id" , selectItem.article_id);
+      deleteItem.append("tablename" , "faq_management");
+      deleteItem.append("id" , selectItem.faq_id);
 
       apiInstance
       .post("deleteData.php", deleteItem)
@@ -186,6 +185,8 @@
         if (!response.data.error) {
           alert(response.data.msg);
           getPHP();
+      console.log(response.data);
+
         }
       })
       .catch((error) => {
@@ -193,10 +194,23 @@
       });
     }
   }
+  const pageSize = ref(10);
+  const nowPage = ref(1);
+  const currentPageData = computed(() => {
+    //根據目前頁碼和每頁顯示資料數計算目前頁面的資料數據
+    const start = (nowPage.value - 1) * pageSize.value;
+    const end = start + pageSize.value ;
+    return quesList.value.slice(start, end);
+  });
+
+  const handlePageChange = (page) => {
+    nowPage.value = page;
+  };
 </script>
 
 
 <template>
+
   <main>
     <h2 class="dark">常見問題管理</h2>
 
@@ -323,7 +337,7 @@
       </template>
     </Modal>
     <!-- 數據列表 -->
-    <Table class="table" :columns="columns" :data="quesList">
+    <Table class="table" :columns="columns" :data="currentPageData">
       <template #title="{ row }">
         <strong>{{ row.title }}</strong>
       </template>
@@ -340,6 +354,7 @@
           </Button>
       </template>
     </Table>
+    <Page :total="quesList.length" show-total  :page-size="pageSize" @on-change="handlePageChange"/>
   </main>
 </template>
 

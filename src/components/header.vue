@@ -59,7 +59,7 @@ export default {
       //清除token
       this.updateAdminId('');
       this.updateAdminName('');
-      window.location.reload();
+      this.$router.push('/');
     },
     //取得登入者名稱
     getAdminName() {
