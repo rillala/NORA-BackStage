@@ -45,7 +45,7 @@ export default {
             this.updateAdminName(res.data.name);
             //adminid和adnminName存入localstorage
           } else {
-            alert('帳號已被停權');
+            alert('帳號已被停用');
           }
         } else if (res && res.data && res.data.success === false) {
           // 如果後端success為false，則處理登入失敗的情況

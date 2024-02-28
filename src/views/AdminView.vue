@@ -1,17 +1,21 @@
 <script>
 import apiInstance from "@/plugins/auth";
-import { Button, Space } from "view-ui-plus";
+import { Button, Input, Space } from "view-ui-plus";
 
 export default {
-  components: { Button, Space },
+  components: { Button, Space, Input },
   data() {
     return {
       //資料庫回傳資料
       adminList: [],
-      //編輯器輸入
+      //編輯器開關
       editIndex: -1,
+      //編輯器輸入
       editAdmin: {
-
+        adminid: "",
+        name: "",
+        acc: "",
+        psw: "",
       },
       //表格欄位、屬性屬性值
       columns: [
@@ -27,19 +31,24 @@ export default {
           key: 'name',
           align: 'center',
           ellipsis: 'true',
-          width: '150'
+          width: '150',
+          slot: 'name',
         },
         {
           title: '管理員帳號',
           key: 'acc',
           align: 'center',
-          width: '220'
+          width: '220',
+          slot: 'acc',
+
         },
         {
           title: '管理員密碼',
           key: 'psw',
           align: 'center',
-          width: '220'
+          width: '220',
+          slot: 'psw',
+
         },
         {
           title: '帳號狀態',
@@ -72,19 +81,7 @@ export default {
     this.getAdminPHP();
   },
   methods: {
-    //打開編輯器
-    handleEdit(row, index) {
-      this.editName = row.name;
-      this.editIndex = index;
-    },
-    handleSave(index) {
-      this.data[index].name = this.editName;
-      this.editIndex = -1;
-    },
-    // statusChange(index) {
-    //   this.selectedList[index].adminstatus =
-    //     !this.selectedList[index].adminstatus;
-    // },
+
 
     //讀取admin資料庫
     getAdminPHP() {
@@ -150,6 +147,38 @@ export default {
         });
     },
 
+
+    //打開編輯器
+    openEdit(row, index) {
+      this.editIndex = index;
+      //原本的值
+      this.editAdmin.adminid = this.adminList[index].adminid;
+      this.editAdmin.name = this.adminList[index].name;
+      this.editAdmin.acc = this.adminList[index].acc;
+      this.editAdmin.psw = this.adminList[index].psw;
+    },
+    //儲存更新動作
+    saveEdit(index) {
+      this.updatEdit()
+    },
+    //更新資料庫
+    updatEdit() {
+      apiInstance
+        .post("editAdmin.php", this.editAdmin)
+        .then((response) => {
+          if (!response.data.error) {
+            //重新讀取資料庫
+            alert(response.data.msg);
+            this.getAdminPHP();
+            this.editIndex = -1;
+          } else {
+            alert(response.data.msg);
+          }
+        }).catch((error) => {
+          console.error("Error", error);
+        });
+    },
+
     //狀態切換
     //index改直接抓資料庫資料
     statusChange(index) {
@@ -183,7 +212,7 @@ export default {
       const loginId = Number(localStorage.getItem('adminId'));
       const result = this.adminList[index].adminid !== loginId;
       return result;
-    }
+    },
   },
 }
 </script>
@@ -223,26 +252,36 @@ export default {
 
     <Table class="admin-table" :columns="columns" :data="adminList" height="500">
 
-      <!-- <template #info="{ row, index }">
-        <Input type="text" v-model="editInfo" v-if="editIndex === index" />
-        <span v-else>{{ row.info }}</span>
-      </template> -->
-
       <!--狀態切換開關-->
       <template #status="{ row, index }">
         <Switch v-if="identifySelf(index)" v-model="row.status" true-color="#13ce66" false-color="#ff4949"
           @on-change="statusChange(index)" />
       </template>
 
-      <!-- 編輯(擱置) -->
+      <!-- 開啟編輯欄位 -->
+      <template #name="{ row, index }">
+        <Input type="text" size="small" v-model="editAdmin.name" v-if="editIndex == index" />
+        <span v-else>{{ row.name }}</span>
+      </template>
+      <template #acc="{ row, index }">
+        <Input type="text" size="small" v-model="editAdmin.acc" v-if="editIndex == index" />
+        <span v-else>{{ row.acc }}</span>
+      </template>
+      <template #psw="{ row, index }">
+        <Input type="text" size="small" v-model="editAdmin.psw" v-if="editIndex == index" />
+        <span v-else>{{ row.psw }}</span>
+      </template>
+
+
+      <!-- 編輯按鈕 -->
       <template #edit="{ row, index }">
         <div v-if="editIndex === index">
-          <Button @click="handleSave(index)"><img src="@/assets/image/icon/save.svg" alt="saveBtn" /></Button>
+          <Button @click="saveEdit"><img src="@/assets/image/icon/save.svg" alt="saveBtn" /></Button>
           <Button @click="editIndex = -1">
             <img src="@/assets/image/icon/close.svg" alt="closeBtn" /></Button>
         </div>
         <div v-else>
-          <Button size="small" type="text" @click="handleEdit(row, index)"><img src="@/assets/image/icon/edit.svg"
+          <Button size="small" type="text" @click="openEdit(row, index)"><img src="@/assets/image/icon/edit.svg"
               alt="editBtn" />
           </Button>
         </div>

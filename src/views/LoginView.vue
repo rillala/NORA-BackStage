@@ -154,16 +154,16 @@ export default {
 </script>
 
 <template>
-  <Space wrap class="lightbox-ex">
+  <!-- <Space wrap class="lightbox-ex"> -->
 
-    <Button @click="modal1 = true">查看預約訂單明細</Button>
+  <!-- <Button @click="modal1 = true">查看預約訂單明細</Button> -->
 
-    <Modal title="預約訂單明細" v-model="modal1" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消">
+  <!-- <Modal title="預約訂單明細" v-model="modal1" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消">
       <List item-layout="vertical">
         <ListItem v-for="reserveOrd in reserveData" :key="clientId">
           <p align="center" class="list-title">預約人資訊</p>
           <Row class="row" justify="center" align="middle">
-            <!-- Col span為欄位比例，總和是=24 -->
+            Col span為欄位比例，總和是=24
             <Col span="5" align="center" class=" row-title">
             <span>預約編號：</span>
             </Col>
@@ -269,13 +269,13 @@ export default {
       <template #footer>
         <Button @click="modal1 = false">關閉</Button>
       </template>
-    </Modal>
+    </Modal> -->
 
 
-    <!-- 這邊下面是表格類的燈箱 -->
-    <Button @click="modal2 = true">新增商品</Button>
+  <!-- 這邊下面是表格類的燈箱 -->
+  <!-- <Button @click="modal2 = true">新增商品</Button> -->
 
-    <Modal title="新增商品" v-model="modal2" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消">
+  <!-- <Modal title="新增商品" v-model="modal2" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消">
       <List item-layout="vertical">
         <Form>
           <ListItem justify="center" align="middle">
@@ -384,30 +384,32 @@ export default {
               <FromeItem>
                 <Input v-model="priceValue" placeholder="請輸入單價" />
               </FromeItem>
-              </Col>
-              <Col span="2" align="center">
+            </Col>
+            <Col span="2" align="center">
               <span>元</span>
-              </Col>
+            </Col>
             </Row>
 
-          </ListItem>
+          </ListItem> -->
 
-          <!-- <FormItem> -->
-          <!-- <Button type="primary">Submit</Button> -->
-          <!-- @click="handleSubmit('formDynamic')" -->
-          <!-- <Button style="margin-left: 8px">Reset</Button> -->
-          <!-- @click="handleReset('formDynamic')" -->
-          <!-- </FormItem> -->
+  <!-- <FormItem> -->
+  <!-- <Button type="primary">Submit</Button> -->
+  <!-- @click="handleSubmit('formDynamic')" -->
+  <!-- <Button style="margin-left: 8px">Reset</Button> -->
+  <!-- @click="handleReset('formDynamic')" -->
+  <!-- </FormItem> -->
 
-        </Form>
-
-      </List>
-      <template #footer>
+  <!-- </Form>
+    
+  </List>
+  <template #footer>
         <Button type="dashed">取消</Button>
         <Button type="primary">儲存</Button>
       </template>
     </Modal>
-  </Space>
+  </Space> -->
+  <!-- 以上為給組員切版的參考版型 -->
+
   <div>
     <div class="logo-image">
       <img src="@/assets/image/loginViewLogo.png" alt="請點選欲管理的頁面">
