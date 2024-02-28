@@ -117,7 +117,7 @@ export default {
     },
     changetypeStr(type) {
       let typeStr = "";
-      switch (type) {
+      switch (parseInt(type)) {
         case 1:
           typeStr = "貓區 草地區";
           break;
@@ -246,26 +246,13 @@ export default {
       }
     },
     asignPrice() {
-      let price;
-
-      switch (parseInt(this.addData.type_id)) {
-        case 1:
-        case 4:
-          price = 1000;
-          break;
-        case 2:
-        case 5:
-          price = 1200;
-          break;
-        case 3:
-        case 6:
-          price = 1500;
-          break;
-        default:
-          price = 0; // 考慮未匹配到任何case時的默認行為
-      }
-
-      return (this.addData.price = price);
+      this.siteList.forEach((item) => {
+        // 檢查type_id和campsite_id是否相同
+        if (this.addData.type_id === item.type_id) {
+          // 如果相同，更新price變量
+          this.addData.price = item.price;
+        }
+      });
     },
 
     clearAddData() {
