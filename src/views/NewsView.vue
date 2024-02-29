@@ -230,7 +230,6 @@ export default {
     addNewsToDb() {
       if (this.checkInput()) {
         this.uploadImages();
-
         // 根據選定的文章狀態決定發送到資料庫的狀態值
         const statusToSend = this.addData.status === "draft" ? 0 : 1;
         this.addData.status = statusToSend;
@@ -330,17 +329,17 @@ export default {
 
     //移除原有的圖片-編輯
     removeImageForEdit(index) {
-      // 清空对应的图片路径
+      // 清空對應的圖片路徑
       this.editData[`img${index}`] = "";
-      // 清空预览图像URL
+      // 清空預覽圖片的URL
       const propertyPreview = `editPrev${index}`;
       this[propertyPreview] = "";
-      // 清空FormData对象，如果这里您存储的是FormData对象的引用
+      // 清空FormData對象，如果這裡存的是FormData對象的引用
       const propertyName = `editImg${index}`;
       if (this[propertyName] instanceof FormData) {
-        this[propertyName] = new FormData(); // 重置为新的FormData对象
+        this[propertyName] = new FormData(); // 重置為新的FormData對象
       } else {
-        this[propertyName] = ""; // 或者根据实际情况设置为空字符串或其他默认值
+        this[propertyName] = ""; // 或者根據實際情况設置為空字符串或其他默認值
       }
     },
 
@@ -375,8 +374,8 @@ export default {
         .post("editNews.php", this.editData) //editNews.php 是更新文章的後端API
         .then((response) => {
           // 處理請求成功的情況
-          this.uploadImages();
           console.log("Article updated successfully", response);
+          this.uploadImages();
           this.editModal = false;
           this.uploadEditNewImage();
           // 刷新文章列表等操作
@@ -655,7 +654,7 @@ export default {
                     <Button
                       v-if="editData.img1"
                       class="remove-btn"
-                      @click="removeImageForEdit(1)"
+                      @click="removeImageForEdit(0)"
                       >刪除圖片</Button
                     >
                     <Upload
@@ -681,7 +680,7 @@ export default {
                     <Button
                       v-if="editData.img2"
                       class="remove-btn"
-                      @click="removeImageForEdit(2)"
+                      @click="removeImageForEdit(1)"
                       >刪除圖片</Button
                     >
                     <Upload
@@ -707,7 +706,7 @@ export default {
                     <Button
                       v-if="editData.img3"
                       class="remove-btn"
-                      @click="removeImageForEdit(3)"
+                      @click="removeImageForEdit(2)"
                       >刪除圖片</Button
                     >
                     <Upload
