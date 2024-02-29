@@ -133,6 +133,7 @@ export default {
       } else if (!this.addData.content) {
         alert("請輸入消息內容");
       } else {
+        console.log('可以繼續新增')
         return true;
       }
     },
@@ -355,6 +356,7 @@ export default {
         .post("editNews.php", this.editData) //editNews.php 是更新文章的後端API
         .then((response) => {
           // 處理請求成功的情況
+          this.uploadImages();
           console.log("Article updated successfully", response);
           this.editModal = false;
           // 刷新文章列表等操作
