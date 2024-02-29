@@ -31,14 +31,14 @@ export default {
         {
           title: "入營日期",
           key: "checkin_date",
-          width: "120",
+          // width: "120",
           align: "center",
           sortable: true,
         },
         {
           title: "拔營日期",
           key: "checkout_date",
-          width: "120",
+          // width: "120",
           align: "center",
           sortable: true,
         },
@@ -171,7 +171,7 @@ export default {
     },
     changetypeStr(type) {
       let typeStr = "";
-      switch (type) {
+      switch (parseInt(type)) {
         case 1:
         case 4:
           typeStr = "草地區";
@@ -445,6 +445,7 @@ export default {
   width: 100px;
   height: 100px;
 }
+
 .search {
   width: 400px;
 
@@ -456,6 +457,7 @@ export default {
 h2 {
   margin-bottom: 20px;
 }
+
 h4 {
   font-weight: 700;
   margin-bottom: 5px;
@@ -466,6 +468,7 @@ h4 {
   justify-content: space-between;
   margin: 10px 0;
 }
+
 .zoneType {
   display: flex;
   justify-content: end;
