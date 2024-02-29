@@ -22,7 +22,7 @@ export default {
           title: "商品編號",
           key: "product_id",
           sortable: true,
-          width: 100,
+          width: 120,
         },
         {
           title: "商品圖片",
@@ -264,80 +264,37 @@ export default {
     <h2 class="product-title dark">商品列表管理</h2>
     <div class="product-search">
       <h4>商品列表清單</h4>
-      <Input
-        search
-        enter-button
-        placeholder="請輸入商品名稱或商品Id進行搜尋"
-        class="search"
-        v-model="this.search"
-      />
+      <Input search enter-button placeholder="請輸入商品名稱或商品Id進行搜尋" class="search" v-model="this.search" />
     </div>
     <AddProduct @product-changed="refreshPage"></AddProduct>
-    <Table
-      class="product-table"
-      height="500"
-      ref="selection"
-      :columns="columns"
-      :data="filteredProducts"
-    >
+    <Table class="product-table" height="500" ref="selection" :columns="columns" :data="filteredProducts">
       <template #images="{ row }">
         <Carousel loop style="width: 100px; height: auto">
           <CarouselItem v-for="(image, index) in row.images" :key="index">
-            <Image
-              :src="getImageUrl(image)"
-              alt="商品圖片"
-              fit="cover"
-              width="100%"
-              height="100%"
-            />
+            <Image :src="getImageUrl(image)" alt="商品圖片" fit="cover" width="100%" height="100%" />
           </CarouselItem>
         </Carousel>
       </template>
       <template #state="{ row, index }">
-        <Switch
-          v-model="row.stateBool"
-          @on-change="() => toggleProductState(index)"
-        ></Switch>
+        <Switch v-model="row.stateBool" @on-change="() => toggleProductState(index)"></Switch>
       </template>
       <template #action="{ row }">
-        <Button @click="showEditDialog(row)"
-          ><img src="@/assets/image/icon/edit.svg" alt="editBtn"
-        /></Button>
+        <Button @click="showEditDialog(row)"><img src="@/assets/image/icon/edit.svg" alt="editBtn" /></Button>
       </template>
     </Table>
   </main>
 
   <!-- 以下為Modal -->
-  <Modal
-    title="編輯商品"
-    v-model="editModal"
-    class="vertical-center-modal"
-    width="600"
-    ok-text="確定"
-    cancel-text="取消"
-    footer-hide
-  >
+  <Modal title="編輯商品" v-model="editModal" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消"
+    footer-hide>
     <!-- {{ this.currentProductData }} -->
     <List item-layout="vertical">
       <Form>
         <ListItem justify="center" align="middle">
           <p align="center" class="list-title">商品圖片</p>
-          <input
-            type="file"
-            @change="handleFileChange"
-            accept="image/*"
-            multiple
-          />
-          <div
-            v-for="(image, index) in currentProductData.images"
-            :key="index"
-            class="image-preview"
-          >
-            <img
-              :src="getImageUrl(image)"
-              :alt="`Image ${index}`"
-              style="width: 100px; height: auto"
-            />
+          <input type="file" @change="handleFileChange" accept="image/*" multiple />
+          <div v-for="(image, index) in currentProductData.images" :key="index" class="image-preview">
+            <img :src="getImageUrl(image)" :alt="`Image ${index}`" style="width: 100px; height: auto" />
             <button @click.prevent="removeImage(index)">刪除</button>
           </div>
         </ListItem>
@@ -345,29 +302,22 @@ export default {
         <ListItem>
           <Row class="form-row" justify="center" align="middle">
             <Col span="5" align="center" class="row-title">
-              <span>商品名稱：</span>
+            <span>商品名稱：</span>
             </Col>
             <Col span="19">
-              <Input
-                v-model="currentProductData.title"
-                placeholder="請輸入商品名稱"
-                required
-              />
+            <Input v-model="currentProductData.title" placeholder="請輸入商品名稱" required />
             </Col>
           </Row>
           <Row class="form-row" justify="center" align="middle">
             <Col span="5" align="center">
-              <span>商品類別：</span>
+            <span>商品類別：</span>
             </Col>
             <Col span="19">
-              <Select
-                v-model="currentProductData.category"
-                placeholder="請選擇商品類別"
-              >
-                <Option value="NORA品牌服飾">NORA品牌服飾</Option>
-                <Option value="NORA文青生活">NORA文青生活</Option>
-                <Option value="NORA營地用品">NORA營地用品</Option>
-              </Select>
+            <Select v-model="currentProductData.category" placeholder="請選擇商品類別">
+              <Option value="NORA品牌服飾">NORA品牌服飾</Option>
+              <Option value="NORA文青生活">NORA文青生活</Option>
+              <Option value="NORA營地用品">NORA營地用品</Option>
+            </Select>
             </Col>
           </Row>
         </ListItem>
@@ -376,14 +326,10 @@ export default {
         <ListItem justify="center" align="middle">
           <Row class="form-row" justify="center" align="middle">
             <Col span="5" align="center" class="row-title">
-              <span>商品顏色：</span>
+            <span>商品顏色：</span>
             </Col>
             <Col span="15">
-              <Input
-                type="text"
-                v-model="NewColorInput"
-                placeholder="請輸入商品顏色"
-              ></Input>
+            <Input type="text" v-model="NewColorInput" placeholder="請輸入商品顏色"></Input>
             </Col>
             <Button @click="addColor">添加顏色</Button>
           </Row>
@@ -396,14 +342,10 @@ export default {
         <ListItem justify="center" align="middle">
           <Row class="form-row" justify="center" align="middle">
             <Col span="5" align="center" class="row-title">
-              <span>商品尺寸：</span>
+            <span>商品尺寸：</span>
             </Col>
             <Col span="15">
-              <Input
-                type="text"
-                v-model="NewSizeInput"
-                placeholder="請輸入商品尺寸"
-              ></Input>
+            <Input type="text" v-model="NewSizeInput" placeholder="請輸入商品尺寸"></Input>
             </Col>
             <Button @click="addSize">添加尺寸</Button>
           </Row>
@@ -415,18 +357,12 @@ export default {
         <ListItem justify="center" align="middle">
           <Row class="form-row" justify="center" align="middle">
             <Col span="5" align="center" class="row-title">
-              <span>商品詳情：</span>
+            <span>商品詳情：</span>
             </Col>
           </Row>
           <Row class="form-row" justify="center" align="middle">
             <Col span="19">
-              <Input
-                type="textarea"
-                :rows="5"
-                v-model="currentProductData.description"
-                placeholder="請輸入商品詳情"
-                required
-              />
+            <Input type="textarea" :rows="5" v-model="currentProductData.description" placeholder="請輸入商品詳情" required />
             </Col>
           </Row>
         </ListItem>
@@ -434,28 +370,20 @@ export default {
         <ListItem>
           <Row class="form-row" justify="center" align="middle">
             <Col span="5" align="center">
-              <span>商品價格：</span>
+            <span>商品價格：</span>
             </Col>
             <Col span="17" align="middle">
-              <Input
-                v-model="currentProductData.price"
-                placeholder="請輸入單價"
-                required
-              />
+            <Input v-model="currentProductData.price" placeholder="請輸入單價" required />
             </Col>
             <Col span="2" align="center">
-              <span>元</span>
+            <span>元</span>
             </Col>
           </Row>
         </ListItem>
 
         <Row class="form-row form-footer" justify="center" align="middle">
           <Button @click="editModal = false">取消</Button>
-          <Button
-            style="background-color: rgb(71, 236, 236)"
-            @click="updateProduct"
-            >儲存</Button
-          >
+          <Button style="background-color: rgb(71, 236, 236)" @click="updateProduct">儲存</Button>
         </Row>
       </Form>
     </List>

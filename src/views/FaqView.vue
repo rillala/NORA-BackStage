@@ -4,11 +4,11 @@ import apiInstance from "@/plugins/auth";
 import { Row } from 'view-ui-plus';
 
 const columns = ref([
-  {
-    type: 'selection', // 列的类型为选择框
-    width: 60, // 列的宽度为 60
-    align: 'center' // 文字居中显示
-  },
+  // {
+  //   type: 'selection', // 列的类型为选择框
+  //   width: 60, // 列的宽度为 60
+  //   align: 'center' // 文字居中显示
+  // },
   {
     width: 120,
     align: 'center',
@@ -215,7 +215,7 @@ const handlePageChange = (page) => {
 
     <div class="search">
       <h4>常見問題清單</h4>
-      <Input search enter-button class="searchInput" />
+      <!-- <Input search enter-button class="searchInput" /> -->
     </div>
     <!-- 新增按鈕 -->
     <div class="add-btn" style="justify-content: start; padding: 10px 0;">
