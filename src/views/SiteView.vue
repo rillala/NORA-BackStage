@@ -46,7 +46,7 @@ export default {
         {
           title: "備註",
           key: "info",
-          width: "200",
+          // width: "200",
           align: "center",
           slot: "info",
         },
@@ -99,7 +99,7 @@ export default {
     this.getPHP();
     this.getTypePHP();
   },
-  mounted() {},
+  mounted() { },
   methods: {
     showCatZone() {
       this.choseZone = "cat";
@@ -312,31 +312,15 @@ export default {
     <div class="search">
       <h4 class="dark">營位清單</h4>
 
-      <Input
-        class="search-input"
-        search
-        enter-button
-        placeholder="請輸入營位編號進行搜尋"
-        v-model="search"
-      />
+      <Input class="search-input" search enter-button placeholder="請輸入營位編號進行搜尋" v-model="search" />
     </div>
     <div class="btn">
       <Button class="addBtn" @click="addBox = true">新增營位</Button>
       <div class="zoneType">
-        <Button
-          id="catZoneBtn"
-          size="large"
-          :type="choseZone === 'cat' ? 'primary' : 'default'"
-          @click="showCatZone"
-          >貓區</Button
-        >
-        <Button
-          id="dogZoneBtn"
-          size="large"
-          :type="choseZone === 'dog' ? 'primary' : 'default'"
-          @click="showDogZone"
-          >狗區</Button
-        >
+        <Button id="catZoneBtn" size="large" :type="choseZone === 'cat' ? 'primary' : 'default'"
+          @click="showCatZone">貓區</Button>
+        <Button id="dogZoneBtn" size="large" :type="choseZone === 'dog' ? 'primary' : 'default'"
+          @click="showDogZone">狗區</Button>
       </div>
     </div>
 
@@ -345,11 +329,7 @@ export default {
         <span>{{ changetypeStr(row.type_id) }}</span>
       </template>
       <template #price="{ row, index }">
-        <Input
-          type="number"
-          v-model="EditData.price"
-          v-if="editIndex == index"
-        />
+        <Input type="number" v-model="EditData.price" v-if="editIndex == index" />
         <span v-else>{{ row.price }}</span>
       </template>
 
@@ -360,67 +340,45 @@ export default {
 
       <template #status="{ row, index }">
         <!--switch btn-->
-        <Switch
-          true-color="#13ce66"
-          false-color="#ff4949"
-          v-model="row.status"
-          @on-change="statusChange(index)"
-        />
+        <Switch true-color="#13ce66" false-color="#ff4949" v-model="row.status" @on-change="statusChange(index)" />
       </template>
 
       <template #action="{ row, index }">
         <div v-if="editIndex === index">
-          <Button type="text" @click="editSave(index)"
-            ><img src="@/assets/image/icon/save.svg" alt="saveBtn" />
+          <Button type="text" @click="editSave(index)"><img src="@/assets/image/icon/save.svg" alt="saveBtn" />
           </Button>
-          <Button type="text" @click="editIndex = -1"
-            ><img src="@/assets/image/icon/close.svg" alt="closeBtn" />
+          <Button type="text" @click="editIndex = -1"><img src="@/assets/image/icon/close.svg" alt="closeBtn" />
           </Button>
         </div>
         <div v-else>
-          <Button size="small" type="text" @click="openEdit(row, index)"
-            ><img src="@/assets/image/icon/edit.svg" alt="editBtn" />
+          <Button size="small" type="text" @click="openEdit(row, index)"><img src="@/assets/image/icon/edit.svg"
+              alt="editBtn" />
           </Button>
         </div>
       </template>
 
       <template #delete="{ row, index }">
-        <Button
-          class="btn"
-          type="text"
-          size="small"
-          @click="deleteEquipDb(index)"
-          ><img src="@/assets/image/icon/delete.svg" alt="deleteBtn" />
+        <Button class="btn" type="text" size="small" @click="deleteEquipDb(index)"><img
+            src="@/assets/image/icon/delete.svg" alt="deleteBtn" />
         </Button>
       </template>
     </Table>
 
-    <Modal
-      title="新增營位"
-      v-model="addBox"
-      class="vertical-center-modal"
-      width="600"
-      ok-text="確定"
-      cancel-text="取消"
-    >
+    <Modal title="新增營位" v-model="addBox" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消">
       <List item-layout="vertical">
         <Form>
           <ListItem>
             <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center" class="row-title">
-                <span>營位種類：</span>
+              <span>營位種類：</span>
               </Col>
               <Col span="19">
-                <select
-                  v-model="addData.type_id"
-                  class="form-select"
-                  @change="asignPrice"
-                >
-                  <option disabled value="">請選擇種類</option>
-                  <option v-for="type in typeList" :value="type.type_id">
-                    {{ type.site_type }}
-                  </option>
-                </select>
+              <select v-model="addData.type_id" class="form-select" @change="asignPrice">
+                <option disabled value="">請選擇種類</option>
+                <option v-for="type in typeList" :value="type.type_id">
+                  {{ type.site_type }}
+                </option>
+              </select>
               </Col>
             </Row>
           </ListItem>
@@ -428,17 +386,11 @@ export default {
           <ListItem justify="center" align="middle">
             <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center" class="row-title">
-                <span>營位備註：</span>
+              <span>營位備註：</span>
               </Col>
               <Col span="19">
-                <Input
-                  type="textarea"
-                  :rows="5"
-                  v-model="addData.info"
-                  maxlength="200"
-                  show-word-limit
-                  placeholder="請輸入說明"
-                />
+              <Input type="textarea" :rows="5" v-model="addData.info" maxlength="200" show-word-limit
+                placeholder="請輸入說明" />
               </Col>
             </Row>
           </ListItem>
@@ -446,13 +398,13 @@ export default {
           <ListItem>
             <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center">
-                <span>營位價格：</span>
+              <span>營位價格：</span>
               </Col>
               <Col span="17">
-                <Input v-model="addData.price" readonly />
+              <Input v-model="addData.price" readonly />
               </Col>
               <Col span="2" align="center">
-                <span>元</span>
+              <span>元</span>
               </Col>
             </Row>
           </ListItem>
@@ -471,6 +423,7 @@ export default {
   width: 100px;
   height: 100px;
 }
+
 .search {
   width: 400px;
 
@@ -482,6 +435,7 @@ export default {
 h2 {
   margin-bottom: 20px;
 }
+
 h4 {
   font-weight: 700;
   margin-bottom: 5px;
@@ -492,6 +446,7 @@ h4 {
   justify-content: space-between;
   margin: 10px 0;
 }
+
 .zoneType {
   display: flex;
   justify-content: end;
@@ -507,6 +462,7 @@ h4 {
   display: flex;
   flex-flow: row nowrap;
 }
+
 .form-row {
   margin: 5px 40px;
 }
