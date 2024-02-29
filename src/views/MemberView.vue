@@ -40,7 +40,7 @@ export default {
         {
           title: "日期",
           key: "date",
-          width: "100",
+          width: "120",
           align: "center",
         },
         {
@@ -49,17 +49,18 @@ export default {
           width: "200",
           align: "center",
         },
-        {
-          title: "會員密碼",
-          key: "psw",
-          width: "160",
-          align: "center",
-        },
+        // {
+        //   title: "會員密碼",
+        //   key: "psw",
+        //   width: "160",
+        //   align: "center",
+        // },
         {
           title: "照片",
           key: "photo",
           width: "180",
           align: "center",
+          slot:"image",
         },
         {
           title: "會員手機",
@@ -72,18 +73,18 @@ export default {
           width: "220",
           align: "center",
         },
-        {
-          title: "狀態",
-          key: "openStatus",
-          width: "100",
-          align: "center",
-          sortable: true,
-        },
-        {
-          title: "查看",
-          width: "100",
-          align: "center",
-        },
+        // {
+        //   title: "狀態",
+        //   key: "openStatus",
+        //   width: "100",
+        //   align: "center",
+        //   sortable: true,
+        // },
+        // {
+        //   title: "查看",
+        //   width: "100",
+        //   align: "center",
+        // },
       ],
       memberList: [],
     };
@@ -153,6 +154,9 @@ export default {
       <template #info="{ row, index }">
         <Input type="text" v-model="editInfo" v-if="editIndex === index" />
         <span v-else>{{ row.info }}</span>
+      </template>
+      <template #image="{ row, index }">
+       <img :src="getImageUrl(row.photo)" :alt="row.name" class="photo">
       </template>
       <template #status="{ row, index }">
         <!--switch btn-->
@@ -265,5 +269,11 @@ h4 {
 
 .table {
   width: 100%;
+}
+
+.photo{
+  object-fit: contain;
+  width:50px;
+  height: 50px;
 }
 </style>

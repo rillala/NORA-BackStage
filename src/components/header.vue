@@ -30,7 +30,7 @@ export default {
           path: "/reserve",
         },
         {
-          name: "設備管理",
+          name: "裝備管理",
           path: "/equipment",
         },
         {
