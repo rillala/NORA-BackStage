@@ -20,7 +20,7 @@ export default {
         {
           title: "文章標題",
           key: "title",
-          width: "250",
+          // width: "250",
           align: "center",
           sortable: "true",
           ellipsis: "true",
@@ -28,7 +28,7 @@ export default {
         {
           title: "建立時間",
           key: "create_date",
-          width: "120",
+          // width: "120",
           align: "center",
           sortable: "true",
         },
@@ -76,7 +76,7 @@ export default {
         img2: "",
         img3: "",
         status: "draft",
-        create_date:""
+        create_date: ""
       },
 
       editModal: false, //編輯燈箱
@@ -140,32 +140,32 @@ export default {
 
     //新增文章燈箱
     showAddModal() {
-      this.addBox = true ;
+      this.addBox = true;
       this.imagePreviews = []; //清空預覽的圖片
       this.newImages = []; //清空要上傳的圖片
     },
 
     // 編輯文章：準備上傳前的新增圖片
-    handleBeforeUploadForEdit(file){
+    handleBeforeUploadForEdit(file) {
       const reader = new FileReader(); //當使用者選擇要上傳的圖片 程式會創建一個新的FileReader物件來讀取檔案內容
       reader.onload = (e) => { //等讀取完畢後觸發 再執行指定函數
-      this.imagePreviews.push(e.target.result);
-      this.newImages.push(file); 
-      // 若無超過三張就將file加到newImages陣列中
-      // 將讀到的內容以Data URL的形式加到imagePreviews來儲存圖片預覽
-      // Data URL是一種用來表示檔案內容的URL格式
+        this.imagePreviews.push(e.target.result);
+        this.newImages.push(file);
+        // 若無超過三張就將file加到newImages陣列中
+        // 將讀到的內容以Data URL的形式加到imagePreviews來儲存圖片預覽
+        // Data URL是一種用來表示檔案內容的URL格式
 
-      // 檢查editData中的img1/img2/img3的屬性 並將圖片路徑存到editData中
-      if (!this.editData.img1) {
-        this.editData.img1 = "news/" + file.name;
-      } else if (!this.editData.img2) {
-        this.editData.img2 = "news/" + file.name;
-      } else if (!this.editData.img3) {
-        this.editData.img3 = "news/" + file.name;
-      } else {
-        alert("最多只能上傳三張圖片"); //超出後跳窗提醒
-        return false; // 阻止上傳
-      }
+        // 檢查editData中的img1/img2/img3的屬性 並將圖片路徑存到editData中
+        if (!this.editData.img1) {
+          this.editData.img1 = "news/" + file.name;
+        } else if (!this.editData.img2) {
+          this.editData.img2 = "news/" + file.name;
+        } else if (!this.editData.img3) {
+          this.editData.img3 = "news/" + file.name;
+        } else {
+          alert("最多只能上傳三張圖片"); //超出後跳窗提醒
+          return false; // 阻止上傳
+        }
 
       };
       reader.readAsDataURL(file);
@@ -174,7 +174,7 @@ export default {
 
     // 新增文章：準備上傳前的新增圖片
     handleBeforeUpload(file) {
-      if (this.newImages.length >= 3) { 
+      if (this.newImages.length >= 3) {
         //newImages存放選好的file 判斷是否超出圖片數量限制
         alert("最多只能上傳三張圖片"); //超出後跳窗提醒
         return false; // 阻止上傳
@@ -188,17 +188,17 @@ export default {
         //將讀到的內容以Data URL的形式加到imagePreviews來儲存圖片預覽
         //Data URL是一種用來表示檔案內容的URL格式
 
-      // 檢查addData中的img1/img2/img3的屬性 並將圖片路徑存到addData中
-      if (!this.addData.img1) {
-        this.addData.img1 = "news/" + file.name;
-      } else if (!this.addData.img2) {
-        this.addData.img2 = "news/" + file.name;
-      } else if (!this.addData.img3) {
-        this.addData.img3 = "news/" + file.name;
-      }
-      console.log("aaathis.addData.img1 = " + file.name);
-      console.log("aaathis.addData.img2 = " + file.name);
-      console.log("aaathis.addData.img3 = " + file.name);
+        // 檢查addData中的img1/img2/img3的屬性 並將圖片路徑存到addData中
+        if (!this.addData.img1) {
+          this.addData.img1 = "news/" + file.name;
+        } else if (!this.addData.img2) {
+          this.addData.img2 = "news/" + file.name;
+        } else if (!this.addData.img3) {
+          this.addData.img3 = "news/" + file.name;
+        }
+        console.log("aaathis.addData.img1 = " + file.name);
+        console.log("aaathis.addData.img2 = " + file.name);
+        console.log("aaathis.addData.img3 = " + file.name);
       };
       reader.readAsDataURL(file);
 
@@ -214,7 +214,7 @@ export default {
         for (let i = 0; i < this.newImages.length; i++) {
           formData.append(`img${i + 1}`, this.newImages[i]);
         }
-        
+
         apiInstance
           .post("addNewsImage.php", formData, { //將FormData發送到後端的addNewsImage.php接口
             headers: {
@@ -247,7 +247,7 @@ export default {
         //若文章狀態為"上架"，publish_date欄位值設定為當前時間
         if (statusToSend === 1) {
           this.addData.publish_date = new Date();
-        }else{
+        } else {
           this.addData.publish_date = "";
         }
 
@@ -267,7 +267,7 @@ export default {
     },
 
     //文章狀態選擇
-    changeStatus(status) { 
+    changeStatus(status) {
       this.addData.status = status;
       this.editData.status = status;
     },
@@ -311,22 +311,22 @@ export default {
 
     // 移除原有的圖片-編輯
     removeImageForEdit(index) {
-      this.newImages.splice(0 , 1);
-      this.imagePreviews.splice(index , 1);
+      this.newImages.splice(0, 1);
+      this.imagePreviews.splice(index, 1);
 
-        if (index === 1) {
-          this.editData.img1 = '';
-        } else if (index === 2) {
-          this.editData.img2 = '';
-        } else if (index === 3) {
-          this.editData.img3 = '';
-        }
+      if (index === 1) {
+        this.editData.img1 = '';
+      } else if (index === 2) {
+        this.editData.img2 = '';
+      } else if (index === 3) {
+        this.editData.img3 = '';
+      }
     },
 
     // 移除原有的圖片-新增
     removeImageForAdd(index) {
-      this.newImages.splice(0 , 1);
-      this.imagePreviews.splice(index , 1);
+      this.newImages.splice(0, 1);
+      this.imagePreviews.splice(index, 1);
       if (index == 0) {
 
         this.addData.img1 = this.addData.img2;
@@ -338,7 +338,7 @@ export default {
         this.addData.img2 = this.addData.img3;
         this.addData.img3 = '';
 
-      }else if (index == 2) {
+      } else if (index == 2) {
         this.addData.img3 = '';
       }
       console.log("this.addData.img1 = " + this.addData.img1);
@@ -349,11 +349,11 @@ export default {
     //編輯文章：保存編輯後的文章
     saveEditToDb() {
       //根據選定的文章狀態決定發送到資料庫的狀態值
-      if(this.editData.status == 'draft'){
+      if (this.editData.status == 'draft') {
         this.editData.status = 0;
-      }else if(this.editData.status == 'publish'){
+      } else if (this.editData.status == 'publish') {
         this.editData.status = 1;
-      }else if (this.editData.status == 'remove'){
+      } else if (this.editData.status == 'remove') {
         this.editData.status = 2;
       }
 
@@ -386,14 +386,14 @@ export default {
     },
 
     //刪除文章
-    deleteNewsDb(index){
-      if(confirm("是否確認刪除？")){ //彈窗確認是否刪除(true/false)
+    deleteNewsDb(index) {
+      if (confirm("是否確認刪除？")) { //彈窗確認是否刪除(true/false)
         console.log(this.displayList[index]);
         let selectItem = this.displayList[index];
 
         let deleteItem = new FormData();
-        deleteItem.append("tablename" , "news");
-        deleteItem.append("id" , selectItem.article_id);
+        deleteItem.append("tablename", "news");
+        deleteItem.append("id", selectItem.article_id);
 
         apiInstance
           .post("deleteData.php", deleteItem)
@@ -415,19 +415,19 @@ export default {
 <template>
   <main>
     <h2 class="news-title dark">最新消息管理</h2>
-  <!-- 搜尋列 -->
+    <!-- 搜尋列 -->
     <div class="news-search">
       <h4>最新消息清單</h4>
       <Input search enter-button placeholder="請輸入文章編號或文章標題進行搜尋" class="news-id-search" v-model="search" />
     </div>
 
-  <!-- 新增文章按鈕 -->
-  <Space type="flex" style="justify-content: start; padding: 10px;">
-    <Button class="add-btn" @click="showAddModal()">新增文章</Button>
-  </Space>
+    <!-- 新增文章按鈕 -->
+    <Space type="flex" style="justify-content: start; padding: 10px 0;">
+      <Button @click="showAddModal()">新增文章</Button>
+    </Space>
 
-  <!-- 文章列表 -->
-    <Table class="news-table" :columns="columns" :data="displayList">
+    <!-- 文章列表 -->
+    <Table class="news-table" height="500" :columns="columns" :data="displayList">
       <template #title="{ row }">
         <strong>{{ row.title }}</strong>
       </template>
@@ -453,7 +453,7 @@ export default {
       </template>
     </Table>
 
-  <!-- 新增文章燈箱 -->
+    <!-- 新增文章燈箱 -->
     <Modal title="新增文章" v-model="addBox" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消"
       align="center">
 
@@ -462,63 +462,63 @@ export default {
           <ListItem>
             <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center" class="row-title">
-                <span>消息標題</span>
+              <span>消息標題</span>
               </Col>
               <Col span="19">
-                <Input v-model="addData.title" placeholder="請輸入標題" />
+              <Input v-model="addData.title" placeholder="請輸入標題" />
               </Col>
             </Row>
 
             <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center">
-                <span>消息內容</span>
+              <span>消息內容</span>
               </Col>
               <Col span="19">
-                <textarea maxlength="200" rows="15" cols="49" v-model="addData.content" placeholder="請輸入內文"></textarea>
+              <textarea maxlength="200" rows="15" cols="49" v-model="addData.content" placeholder="請輸入內文"></textarea>
               </Col>
             </Row>
 
             <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center">
-                <span>消息圖片</span>
+              <span>消息圖片</span>
               </Col>
               <Col span="19">
-                <!-- 圖片預覽 -->
-                <div class="img-previews" v-if="imagePreviews.length > 0">
-                  <div v-for="(preview, index) in imagePreviews" :key="index" >
-                    <div class="news-img" v-if="index == 0 && imagePreviews[index] != '' ">
-                        <img :src="preview" alt="圖片預覽" width="100px" height="100px" >
-                        {{ addData.img1 }}
-                        <Button class="remove-btn" @click="removeImageForAdd(index)">刪除圖片</Button>
-                    </div>
-                    <div class="news-img" v-if="index == 1 && imagePreviews[index] != '' ">
-                      <img :src="preview" alt="圖片預覽" width="100px" height="100px" >
-                      {{ addData.img2 }}
-                      <Button class="remove-btn" @click="removeImageForAdd(index)">刪除圖片</Button>
-                    </div>
-                    <div class="news-img" v-if="index == 2 && imagePreviews[index] != ''">
-                      <img :src="preview" alt="圖片預覽" width="100px" height="100px" >
-                      {{ addData.img3 }}
-                      <Button class="remove-btn" @click="removeImageForAdd(index)">刪除圖片</Button>
-                    </div>
+              <!-- 圖片預覽 -->
+              <div class="img-previews" v-if="imagePreviews.length > 0">
+                <div v-for="(preview, index) in imagePreviews" :key="index">
+                  <div class="news-img" v-if="index == 0 && imagePreviews[index] != ''">
+                    <img :src="preview" alt="圖片預覽" width="100px" height="100px">
+                    {{ addData.img1 }}
+                    <Button class="remove-btn" @click="removeImageForAdd(index)">刪除圖片</Button>
+                  </div>
+                  <div class="news-img" v-if="index == 1 && imagePreviews[index] != ''">
+                    <img :src="preview" alt="圖片預覽" width="100px" height="100px">
+                    {{ addData.img2 }}
+                    <Button class="remove-btn" @click="removeImageForAdd(index)">刪除圖片</Button>
+                  </div>
+                  <div class="news-img" v-if="index == 2 && imagePreviews[index] != ''">
+                    <img :src="preview" alt="圖片預覽" width="100px" height="100px">
+                    {{ addData.img3 }}
+                    <Button class="remove-btn" @click="removeImageForAdd(index)">刪除圖片</Button>
                   </div>
                 </div>
-                <!-- 上傳圖片按鈕 -->
-                <Upload :limit="3" action="" :before-upload="handleBeforeUpload">
-                  <Button icon="md-add">上傳圖片</Button>
-                </Upload>
+              </div>
+              <!-- 上傳圖片按鈕 -->
+              <Upload :limit="3" action="" :before-upload="handleBeforeUpload">
+                <Button icon="md-add">上傳圖片</Button>
+              </Upload>
               </Col>
             </Row>
 
             <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center">
-                <span>消息狀態</span>
+              <span>消息狀態</span>
               </Col>
               <Col span="19">
-                <span class="statusBtn" :class="{ 'selected': addData.status === 'draft' }"
-                  @click="changeStatus('draft')">草稿</span>
-                <span class="statusBtn" :class="{ 'selected': addData.status === 'publish' }"
-                  @click="changeStatus('publish')">立即上架</span>
+              <span class="statusBtn" :class="{ 'selected': addData.status === 'draft' }"
+                @click="changeStatus('draft')">草稿</span>
+              <span class="statusBtn" :class="{ 'selected': addData.status === 'publish' }"
+                @click="changeStatus('publish')">立即上架</span>
               </Col>
             </Row>
           </ListItem>
@@ -538,64 +538,64 @@ export default {
           <ListItem>
             <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center" class=" row-title">
-                <span>消息標題</span>
+              <span>消息標題</span>
               </Col>
               <Col span="19">
-                <Input v-model="editData.title" placeholder="請輸入標題" />
+              <Input v-model="editData.title" placeholder="請輸入標題" />
               </Col>
             </Row>
 
             <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center">
-                <span>消息內容</span>
+              <span>消息內容</span>
               </Col>
               <Col span="19">
-                <textarea maxlength="200" rows="15" cols="49" v-model="editData.content" placeholder="請輸入內文"></textarea>
+              <textarea maxlength="200" rows="15" cols="49" v-model="editData.content" placeholder="請輸入內文"></textarea>
               </Col>
             </Row>
 
             <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center">
-                <span>消息圖片</span>
+              <span>消息圖片</span>
               </Col>
               <Col span="19">
               <!-- 原有的圖片預覽 -->
-                <div class="edit-imgs">
-                  <div class="edit-img" v-if="editData.img1">
-                    <img :src="getImageUrl(editData.img1)" alt="圖片預覽" width="100px" height="100px">
-                    <Button class="remove-btn" @click="removeImageForEdit(1)">刪除圖片</Button>
-                  </div>
-                  <div class="edit-img" v-if="editData.img2">
-                    <img :src="getImageUrl(editData.img2)" alt="圖片預覽" width="100px" height="100px">
-                    <Button class="remove-btn" @click="removeImageForEdit(2)">刪除圖片</Button>
-                  </div>
-                  <div class="edit-img" v-if="editData.img3">
-                    <img :src="getImageUrl(editData.img3)" alt="圖片預覽" width="100px" height="100px">
-                    <Button class="remove-btn" @click="removeImageForEdit(3)">刪除圖片</Button>
-                  </div>
+              <div class="edit-imgs">
+                <div class="edit-img" v-if="editData.img1">
+                  <img :src="getImageUrl(editData.img1)" alt="圖片預覽" width="100px" height="100px">
+                  <Button class="remove-btn" @click="removeImageForEdit(1)">刪除圖片</Button>
                 </div>
-                <div class="file-previews">
-                  <div v-if="editData.img1">{{ editData.img1 }}</div>
-                  <div v-if="editData.img2">{{ editData.img2 }}</div>
-                  <div v-if="editData.img3">{{ editData.img3 }}</div>
+                <div class="edit-img" v-if="editData.img2">
+                  <img :src="getImageUrl(editData.img2)" alt="圖片預覽" width="100px" height="100px">
+                  <Button class="remove-btn" @click="removeImageForEdit(2)">刪除圖片</Button>
                 </div>
-                <Upload multiple :limit="3" action="" :before-upload="handleBeforeUploadForEdit">
-                  <Button icon="md-add">上傳圖片</Button>
-                </Upload>
+                <div class="edit-img" v-if="editData.img3">
+                  <img :src="getImageUrl(editData.img3)" alt="圖片預覽" width="100px" height="100px">
+                  <Button class="remove-btn" @click="removeImageForEdit(3)">刪除圖片</Button>
+                </div>
+              </div>
+              <div class="file-previews">
+                <div v-if="editData.img1">{{ editData.img1 }}</div>
+                <div v-if="editData.img2">{{ editData.img2 }}</div>
+                <div v-if="editData.img3">{{ editData.img3 }}</div>
+              </div>
+              <Upload multiple :limit="3" action="" :before-upload="handleBeforeUploadForEdit">
+                <Button icon="md-add">上傳圖片</Button>
+              </Upload>
               </Col>
             </Row>
 
             <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center">
-                <span>消息狀態</span>
+              <span>消息狀態</span>
               </Col>
               <Col span="19">
-                <span class="statusBtn" :class="{ 'selected': editData.status === 'draft' }"
-                  @click="changeStatus('draft')">草稿</span>
-                <span class="statusBtn" :class="{ 'selected': editData.status === 'publish' }"
-                  @click="changeStatus('publish')">上架</span>
-                <span class="statusBtn" :class="{ 'selected': editData.status === 'remove' }"
-                  @click="changeStatus('remove')">下架</span>
+              <span class="statusBtn" :class="{ 'selected': editData.status === 'draft' }"
+                @click="changeStatus('draft')">草稿</span>
+              <span class="statusBtn" :class="{ 'selected': editData.status === 'publish' }"
+                @click="changeStatus('publish')">上架</span>
+              <span class="statusBtn" :class="{ 'selected': editData.status === 'remove' }"
+                @click="changeStatus('remove')">下架</span>
               </Col>
             </Row>
           </ListItem>
@@ -627,13 +627,7 @@ h4 {
   width: 400px;
 }
 
-.news-search {
-  margin-bottom: 60px;
-}
 
-button {
-  border: none;
-}
 
 .news-add {
   width: 80px;
@@ -649,7 +643,7 @@ button {
   display: flex;
 }
 
-.file-previews ,
+.file-previews,
 .img-previews {
   display: flex;
   gap: 10px;
@@ -665,16 +659,14 @@ button {
   display: flex;
   gap: 10px;
 }
+
 .edit-img {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 
-.add-btn {
-  background-color: $blue-3;
-  color: $white01;
-}
+
 
 .remove-btn {
   width: 100px;

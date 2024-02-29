@@ -31,14 +31,14 @@ export default {
         {
           title: "入營日期",
           key: "checkin_date",
-          width: "120",
+          // width: "120",
           align: "center",
           sortable: true,
         },
         {
           title: "拔營日期",
           key: "checkout_date",
-          width: "120",
+          // width: "120",
           align: "center",
           sortable: true,
         },
@@ -250,13 +250,7 @@ export default {
     <div class="search">
       <h4 class="dark">預約清單</h4>
 
-      <Input
-        class="search-input"
-        search
-        enter-button
-        placeholder="請輸入 訂單編號 或 會員編號 進行搜尋"
-        v-model="search"
-      />
+      <Input class="search-input" search enter-button placeholder="請輸入 訂單編號 或 會員編號 進行搜尋" v-model="search" />
     </div>
 
     <Table class="table" height="500" :columns="columns" :data="displayList">
@@ -268,75 +262,63 @@ export default {
         <span>{{ formatStatus(row.reserve_status) }}</span>
       </template>
       <template #action="{ row, index }">
-        <Button size="small" type="text" @click="openBox(index)"
-          ><img src="@/assets/image/icon/check.svg" alt="check" />
+        <Button size="small" type="text" @click="openBox(index)"><img src="@/assets/image/icon/check.svg" alt="check" />
         </Button>
       </template>
     </Table>
 
-    <Modal
-      title="預約訂單明細"
-      v-model="reserveBox"
-      class="vertical-center-modal"
-      width="600"
-      v-if="reserveBox"
-    >
+    <Modal title="預約訂單明細" v-model="reserveBox" class="vertical-center-modal" width="600" v-if="reserveBox">
       <List item-layout="vertical">
         <ListItem>
           <p align="center" class="list-title">訂單資訊</p>
           <Row class="row" justify="center" align="middle">
             <Col span="5" align="center" class="row-title">
-              <span>入營日期：</span>
+            <span>入營日期：</span>
             </Col>
             <Col span="19" class="row-content">
-              <span>{{ reserveData.checkin_date }}</span>
+            <span>{{ reserveData.checkin_date }}</span>
             </Col>
           </Row>
           <Row class="row" justify="center" align="middle">
             <Col span="5" align="center" class="row-title">
-              <span>拔營日期：</span>
+            <span>拔營日期：</span>
             </Col>
             <Col span="19" class="row-content">
-              <span>{{ reserveData.checkout_date }}</span>
+            <span>{{ reserveData.checkout_date }}</span>
             </Col>
           </Row>
           <Row class="row" justify="center" align="middle">
             <Col span="5" align="center" class="row-title">
-              <span>是否夜衝：</span>
+            <span>是否夜衝：</span>
             </Col>
             <Col span="19" class="row-content">
-              <span>{{ reserveData.has_discount == 1 ? "是" : "否" }}</span>
+            <span>{{ reserveData.has_discount == 1 ? "是" : "否" }}</span>
             </Col>
           </Row>
           <Row class="row" justify="center" align="middle">
             <Col span="5" align="center" class="row-title">
-              <span>訂單狀態：</span>
+            <span>訂單狀態：</span>
             </Col>
             <Col span="19">
-              <Form class="reserve-Status">
-                <FormItem class="Status-col">
-                  <Select v-model="editStatue">
-                    <Option value="1">尚未入住</Option>
-                    <Option value="2">訂單完成(已入住)</Option>
-                    <Option value="0">訂單已取消</Option>
-                  </Select>
-                </FormItem>
-                <FormItem>
-                  <Button type="primary" @click="changeStatue">儲存</Button>
-                </FormItem>
-              </Form>
+            <Form class="reserve-Status">
+              <FormItem class="Status-col">
+                <Select v-model="editStatue">
+                  <Option value="1">尚未入住</Option>
+                  <Option value="2">訂單完成(已入住)</Option>
+                  <Option value="0">訂單已取消</Option>
+                </Select>
+              </FormItem>
+              <FormItem>
+                <Button type="primary" @click="changeStatue">儲存</Button>
+              </FormItem>
+            </Form>
             </Col>
           </Row>
         </ListItem>
 
         <ListItem>
           <p align="center" class="list-title">營位預定明細</p>
-          <Table
-            border
-            class="table"
-            :columns="reserveCloumn"
-            :data="reserveData.siteList"
-          >
+          <Table border class="table" :columns="reserveCloumn" :data="reserveData.siteList">
             <template #zone="{ row, index }">
               <span>{{ changeZoneStr(row.type_id) }}</span>
             </template>
@@ -351,12 +333,7 @@ export default {
 
         <ListItem>
           <p align="center" class="list-title">裝備租借明細</p>
-          <Table
-            border
-            class="table"
-            :columns="equipmentCloumn"
-            :data="reserveData.rentList"
-          >
+          <Table border class="table" :columns="equipmentCloumn" :data="reserveData.rentList">
           </Table>
         </ListItem>
 
@@ -365,42 +342,42 @@ export default {
           <Row class="row" justify="center" align="middle">
             <!-- Col span為欄位比例，總和是=24 -->
             <Col span="5" align="center" class="row-title">
-              <span>會員編號：</span>
+            <span>會員編號：</span>
             </Col>
             <Col span="19" class="row-content">
-              <span>{{ reserveData.member_id }}</span>
+            <span>{{ reserveData.member_id }}</span>
             </Col>
           </Row>
           <Row class="row" justify="center" align="middle">
             <Col span="5" align="center" class="row-title">
-              <span>姓名：</span>
+            <span>姓名：</span>
             </Col>
             <Col span="19" class="row-content">
-              <span>{{ reserveData.name }}</span>
+            <span>{{ reserveData.name }}</span>
             </Col>
           </Row>
           <Row class="row" justify="center" align="middle">
             <Col span="5" align="center" class="row-title">
-              <span>email：</span>
+            <span>email：</span>
             </Col>
             <Col span="19" class="row-content">
-              <span>{{ reserveData.email }}</span>
+            <span>{{ reserveData.email }}</span>
             </Col>
           </Row>
           <Row class="row" justify="center" align="middle">
             <Col span="5" align="center" class="row-title">
-              <span>電話：</span>
+            <span>電話：</span>
             </Col>
             <Col span="19" class="row-content">
-              <span>{{ reserveData.phone }}</span>
+            <span>{{ reserveData.phone }}</span>
             </Col>
           </Row>
           <Row class="row" justify="center" align="middle">
             <Col span="5" align="center" class="row-title">
-              <span>地址：</span>
+            <span>地址：</span>
             </Col>
             <Col span="19" class="row-content">
-              <span>{{ reserveData.address }}</span>
+            <span>{{ reserveData.address }}</span>
             </Col>
           </Row>
         </ListItem>
@@ -409,26 +386,26 @@ export default {
           <p align="center" class="list-title">付款資訊</p>
           <Row class="row" justify="center" align="middle">
             <Col span="5" align="center" class="row-title">
-              <span>營位金額小計：</span>
+            <span>營位金額小計：</span>
             </Col>
             <Col span="19" class="row-content">
-              <span>{{ formatPrice(reserveData.camp_price) }}</span>
+            <span>{{ formatPrice(reserveData.camp_price) }}</span>
             </Col>
           </Row>
           <Row class="row" justify="center" align="middle">
             <Col span="5" align="center" class="row-title">
-              <span>裝備金額小計：</span>
+            <span>裝備金額小計：</span>
             </Col>
             <Col span="19" class="row-content">
-              <span>{{ formatPrice(reserveData.equipment_price) }}</span>
+            <span>{{ formatPrice(reserveData.equipment_price) }}</span>
             </Col>
           </Row>
           <Row class="row" justify="center" align="middle">
             <Col span="5" align="center" class="row-title">
-              <span>總金額：</span>
+            <span>總金額：</span>
             </Col>
             <Col span="19" class="row-content">
-              <span>{{ formatPrice(reserveData.total_price) }}</span>
+            <span>{{ formatPrice(reserveData.total_price) }}</span>
             </Col>
           </Row>
         </ListItem>
@@ -445,6 +422,7 @@ export default {
   width: 100px;
   height: 100px;
 }
+
 .search {
   width: 400px;
 
@@ -456,6 +434,7 @@ export default {
 h2 {
   margin-bottom: 20px;
 }
+
 h4 {
   font-weight: 700;
   margin-bottom: 5px;
@@ -466,6 +445,7 @@ h4 {
   justify-content: space-between;
   margin: 10px 0;
 }
+
 .zoneType {
   display: flex;
   justify-content: end;
