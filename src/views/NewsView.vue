@@ -654,7 +654,7 @@ export default {
                     <Button
                       v-if="editData.img1"
                       class="remove-btn"
-                      @click="removeImageForEdit(0)"
+                      @click="removeImageForEdit(1)"
                       >刪除圖片</Button
                     >
                     <Upload
@@ -680,7 +680,7 @@ export default {
                     <Button
                       v-if="editData.img2"
                       class="remove-btn"
-                      @click="removeImageForEdit(1)"
+                      @click="removeImageForEdit(2)"
                       >刪除圖片</Button
                     >
                     <Upload
@@ -706,7 +706,7 @@ export default {
                     <Button
                       v-if="editData.img3"
                       class="remove-btn"
-                      @click="removeImageForEdit(2)"
+                      @click="removeImageForEdit(3)"
                       >刪除圖片</Button
                     >
                     <Upload
