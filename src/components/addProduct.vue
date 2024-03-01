@@ -28,7 +28,7 @@ export default {
 	methods: {
 		handleBeforeChange() {
 			return new Promise((resolve, reject) => {
-				if (this.product.state === 0) {
+				if (this.product.state == 0) {
 					this.$Modal.confirm({
 						title: '上架確認',
 						content: '您確認要上架商品嗎？',
