@@ -122,12 +122,13 @@ export default {
 			})
 				.then(response => {
 					console.log(response.data);
+					this.$emit('product-changed');
+			this.modal2 = false;
 				})
 				.catch(error => {
 					console.error(error);
 				});
-			this.$emit('product-changed');
-			this.modal2 = false;
+			
 		},
 
 	}
