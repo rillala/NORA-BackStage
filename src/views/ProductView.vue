@@ -118,7 +118,7 @@ export default {
       return getImageUrl(image);
     },
     refreshPage() {
-      window.location.reload();
+      this.getProducts();
     },
     toggleProductState(index) {
       const product = this.products[index];
