@@ -34,9 +34,9 @@ const columns = ref([
     filterMultiple: false,
     filterMethod (value, row) {
       if (value === 0) {
-          return row.faq_status === 0 ;
+          return row.faq_status === '0' ;
       } else if (value === 1) {
-          return row.faq_status === 1 ;
+          return row.faq_status === '1' ;
       }
     }
   },
