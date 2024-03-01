@@ -161,6 +161,11 @@ export default {
 
     // 新增文章：準備上傳前的新增圖片
     handleBeforeUpload(file) {
+      if (file.name.length > 15) {
+        alert("檔名必須少於或等於15個字元");
+        return false; // 阻止上傳
+      }
+
       if (this.newImages.length >= 3) {
         //newImages存放選好的file 判斷是否超出圖片數量限制
         alert("最多只能上傳三張圖片"); //超出後跳窗提醒
