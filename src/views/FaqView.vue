@@ -21,14 +21,63 @@ const columns = ref([
     align: 'center',
     title: '顯示狀態',
     key: 'faq_status',
-    sortable: true
+    filters: [
+      {
+        label: '已隱藏',
+        value: 0
+      },
+      {
+        label: '顯示中',
+        value: 1
+      }
+    ],
+    filterMultiple: false,
+    filterMethod (value, row) {
+      if (value === 0) {
+          return row.faq_status === 0 ;
+      } else if (value === 1) {
+          return row.faq_status === 1 ;
+      }
+    }
   },
   {
     width: 140,
     align: 'center',
     title: '問題類別',
     key: 'faq_type',
-    sortable: true
+    filters: [
+      {
+        label: '營地預約',
+        value: 1
+      },
+      {
+        label: '中途之家',
+        value: 2
+      },
+      {
+        label: '裝備租借',
+        value: 3
+      },
+      {
+        label: '商品購物',
+        value: 4
+      }
+      ],
+      filterMultiple: false,
+      filterMethod (value, row) {
+        if (value === 1) {
+          console.log(quesList.value.faq_type);
+          return row.faq_type === '營地預約';
+        } else if (value === 2) {
+          return row.faq_type === '中途之家';
+        }
+        else if (value === 3) {
+          return row.faq_type === '裝備租借';
+        }
+        else if (value === 4) {
+          return row.faq_type === '商品購物';
+        }
+      }
   },
   {
     title: '問題',
