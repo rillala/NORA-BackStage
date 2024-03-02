@@ -9,8 +9,8 @@ export default {
   data() {
     return {
       adminEnter: {
-        acc: "admin02",
-        psw: "NORA123"
+        acc: "",
+        psw: ""
       },
       // adminName: 'mor_2314',
       // adminPwwd: '83r5^_',
