@@ -109,7 +109,7 @@ export default {
   created() {
     this.getPHP();
   },
-  mounted() { },
+  mounted() {},
   methods: {
     formatPrice(price) {
       return "$" + price.toLocaleString("en-US");
@@ -149,6 +149,7 @@ export default {
       editItem.append("status", newStatus);
       editItem.append("id", currentId);
       console.log(editItem);
+      console.log(currentId);
 
       apiInstance
         .post("editStatus.php", editItem)
@@ -340,64 +341,116 @@ export default {
     <div class="search">
       <h4 class="dark">裝備清單</h4>
 
-      <Input class="search-input" search enter-button placeholder="請輸入裝備名稱進行搜尋" v-model="search" />
+      <Input
+        class="search-input"
+        search
+        enter-button
+        placeholder="請輸入裝備名稱進行搜尋"
+        v-model="search"
+      />
     </div>
 
     <Button class="addBtn" @click="addBox = true">新增裝備</Button>
 
     <Table class="table" height="500" :columns="columns" :data="displayList">
       <template #title="{ row, index }">
-        <Input type="text" v-model="EquipData.title" v-if="editIndex == index" />
+        <Input
+          type="text"
+          v-model="EquipData.title"
+          v-if="editIndex == index"
+        />
         <span v-else>{{ row.title }}</span>
       </template>
       <template #price="{ row, index }">
-        <Input type="number" v-model="EquipData.price" v-if="editIndex == index" />
+        <Input
+          type="number"
+          v-model="EquipData.price"
+          v-if="editIndex == index"
+        />
         <span v-else>{{ row.price }}</span>
       </template>
 
       <template #info="{ row, index }">
-        <Input type="text" v-model="EquipData.info" v-if="editIndex === index" />
+        <Input
+          type="text"
+          v-model="EquipData.info"
+          v-if="editIndex === index"
+        />
         <span v-else>{{ row.info }}</span>
       </template>
 
       <template #image="{ row, index }">
-        <Upload :before-upload="handleBeforeUpload" v-if="editIndex === index" action="dummy">
+        <Upload
+          :before-upload="handleBeforeUpload"
+          v-if="editIndex === index"
+          action="dummy"
+        >
           <Button icon="md-add">更新圖片</Button>
         </Upload>
-        <Image v-else :src="getImageUrl(row.image)" :alt="row.title" width="50px" height="50px" />
+        <Image
+          v-else
+          :src="getImageUrl(row.image)"
+          :alt="row.title"
+          width="50px"
+          height="50px"
+        />
       </template>
 
       <template #status="{ row, index }">
         <!--switch btn-->
-        <Switch true-color="#13ce66" false-color="#ff4949" v-model="row.status" @on-change="statusChange(index)" />
+        <Switch
+          true-color="#13ce66"
+          false-color="#ff4949"
+          v-model="row.status"
+          @on-change="statusChange(index)"
+        />
       </template>
 
       <template #action="{ row, index }">
         <div v-if="editIndex === index">
-          <Button type="text" @click="editSave(index)"><img src="@/assets/image/icon/save.svg" alt="saveBtn" />
+          <Button type="text" @click="editSave(index)"
+            ><img src="@/assets/image/icon/save.svg" alt="saveBtn" />
           </Button>
-          <Button type="text" @click="editIndex = -1"><img src="@/assets/image/icon/close.svg" alt="closeBtn" />
+          <Button type="text" @click="editIndex = -1"
+            ><img src="@/assets/image/icon/close.svg" alt="closeBtn" />
           </Button>
         </div>
         <div v-else>
-          <Button size="small" type="text" @click="openEdit(row, index)"><img src="@/assets/image/icon/edit.svg"
-              alt="editBtn" />
+          <Button size="small" type="text" @click="openEdit(row, index)"
+            ><img src="@/assets/image/icon/edit.svg" alt="editBtn" />
           </Button>
         </div>
       </template>
 
       <template #delete="{ row, index }">
-        <Button class="btn" type="text" size="small" @click="deleteEquipDb(index)"><img
-            src="@/assets/image/icon/delete.svg" alt="deleteBtn" />
+        <Button
+          class="btn"
+          type="text"
+          size="small"
+          @click="deleteEquipDb(index)"
+          ><img src="@/assets/image/icon/delete.svg" alt="deleteBtn" />
         </Button>
       </template>
     </Table>
 
-    <Modal title="新增裝備" v-model="addBox" class="vertical-center-modal" width="600" ok-text="確定" cancel-text="取消">
+    <Modal
+      title="新增裝備"
+      v-model="addBox"
+      class="vertical-center-modal"
+      width="600"
+      ok-text="確定"
+      cancel-text="取消"
+    >
       <List item-layout="vertical">
         <Form>
           <ListItem justify="center" align="middle">
-            <Image v-if="imagePreview" :src="imagePreview" alt="Image preview" width="200px" height="200px" />
+            <Image
+              v-if="imagePreview"
+              :src="imagePreview"
+              alt="Image preview"
+              width="200px"
+              height="200px"
+            />
             <Upload action="dummy" :before-upload="handleBeforeUpload">
               <Button icon="md-add">上傳裝備照片</Button>
             </Upload>
@@ -406,10 +459,10 @@ export default {
           <ListItem>
             <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center" class="row-title">
-              <span>裝備名稱：</span>
+                <span>裝備名稱：</span>
               </Col>
               <Col span="19">
-              <Input v-model="addData.title" placeholder="請輸入名稱" />
+                <Input v-model="addData.title" placeholder="請輸入名稱" />
               </Col>
             </Row>
           </ListItem>
@@ -417,11 +470,17 @@ export default {
           <ListItem justify="center" align="middle">
             <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center" class="row-title">
-              <span>裝備說明：</span>
+                <span>裝備說明：</span>
               </Col>
               <Col span="19">
-              <Input type="textarea" :rows="5" v-model="addData.info" maxlength="200" show-word-limit
-                placeholder="請輸入說明" />
+                <Input
+                  type="textarea"
+                  :rows="5"
+                  v-model="addData.info"
+                  maxlength="200"
+                  show-word-limit
+                  placeholder="請輸入說明"
+                />
               </Col>
             </Row>
           </ListItem>
@@ -429,13 +488,13 @@ export default {
           <ListItem>
             <Row class="form-row" justify="center" align="middle">
               <Col span="5" align="center">
-              <span>裝備價格：</span>
+                <span>裝備價格：</span>
               </Col>
               <Col span="17">
-              <Input v-model="addData.price" placeholder="請輸入單價" />
+                <Input v-model="addData.price" placeholder="請輸入單價" />
               </Col>
               <Col span="2" align="center">
-              <span>元</span>
+                <span>元</span>
               </Col>
             </Row>
           </ListItem>
