@@ -58,3 +58,25 @@ npm run dev
 - 管理員和會員管理：新增、編輯或搜尋管理員和會員資訊。
 - 商品和訂單管理：商品上下架、訂單狀態管理。
 - 營地和裝備管理：新增、修改和刪除營位資訊；新增、修改和刪除裝備管理，並於更新圖片時同時刪除資料庫中舊圖片；修改營位預訂訂單狀態。
+
+ ## 貢獻者
+<a href="https://github.com/victor6835">
+  <img src="https://github.com/victor6835.png?size=50" style="border-radius: 50%; border: 1px solid black;" alt="莊程富">
+</a>
+<a href="https://github.com/tiffany1029tw">
+  <img src="https://github.com/tiffany1029tw.png?size=50" style="border-radius: 50%; border: 1px solid black;" alt="江坤桂">
+</a>
+<a href="https://github.com/ortis88">
+  <img src="https://github.com/ortis88.png?size=50" style="border-radius: 50%; border: 1px solid black;" alt="陳柏廷">
+</a>
+<a href="https://github.com/nan-sansan">
+  <img src="https://github.com/nan-sansan.png?size=50" style="border-radius: 50%; border: 1px solid black;" alt="莊乃潔">
+</a>
+<a href="https://github.com/hsiaoyingchen">
+  <img src="https://github.com/hsiaoyingchen.png?size=50" style="border-radius: 50%; border: 1px solid black;" alt="陳曉穎">
+</a>
+<a href="https://github.com/rillala">
+  <img src="https://github.com/rillala.png?size=50" style="border-radius: 50%; border: 1px solid black;" alt="林育潔">
+</a>
+
+
