@@ -1,14 +1,12 @@
-@use 'sass:math';
-// base
-@import '@/assets/sass/base/reset';
-@import '@/assets/sass/base/variables';
-@import '@/assets/sass/base/color';
-@import '@/assets/sass/base/text';
-// function
-@import '@/assets/sass/mixin';
+@use "sass:math";
 
-// components
-@import '@/assets/sass/components/component';
+// base
+@import "@/assets/sass/base/reset";
+@import "@/assets/sass/base/variables";
+@import "@/assets/sass/base/color";
+@import "@/assets/sass/base/text";
+// function
+@import "@/assets/sass/mixin";
 
 // 生成顏色 class 名稱
 // 文字顏色 class 名稱-->以此類推
@@ -21,7 +19,7 @@
 * {
   scroll-behavior: smooth;
   box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 a,

@@ -1,16 +1,39 @@
-import { fileURLToPath, URL } from 'node:url'
+import { fileURLToPath, URL } from "node:url";
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(),
-  ],
+  base:
+    process.env.DEPLOY_TARGET === "GITHUB_PAGES"
+      ? "/NORA-BackStage/" // 替換為你的 GitHub 倉庫名
+      : process.env.NODE_ENV === "production"
+        ? "/chd104/g1/back/"
+        : "/",
+  build: {
+    outDir: "back",
+  },
+  plugins: [vue()],
+  server: {
+    // post:5174,
+    host: "0.0.0.0",
+  },
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  }
-})
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      less: {
+        javascriptEnabled: true,
+      },
+      scss: {
+        additionalData: `
+        @import "./src/assets/sass/main.scss";
+				`,
+      },
+    },
+  },
+});
