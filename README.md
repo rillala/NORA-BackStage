@@ -4,13 +4,17 @@
 
 歡迎來到**野良露營NoraCamping**——一個結合露營愛好與動物關懷的創新平台。通過我們的網站，我們不僅提供一個親密接觸大自然的場所，還讓您有機會參與保護和照顧流浪動物的活動。我們的目標是推動一種全新的露營文化，讓休閒活動與公益行為相輔相成。
 
+- [野良露營\_簡報](https://drive.google.com/file/d/1hTI494n8lbzKbaudzZiSmbZxcGdhtjUC/view)
+- [野良露營\_展示影片](https://www.youtube.com/watch?v=9_ODuTqBn6w)
+- [野良露營 Nora Camping](https://tibamef2e.com/chd104/g1/) <--正式網站請由此進入。
+
 ## 項目結構
 
 本項目包含三個主要部分：
 
 1. **前台**[repository](https://github.com/rillala/NORA-Camping) - 提供用戶界面，包括營地預約、線上選物等功能。
-2. **後台**[repository](https://github.com/rillala/NORA-BackStage)  - 給予管理者操作界面，用於管理網站內容和用戶。
-3. **後端資料庫與PHP**[repository](https://github.com/rillala/NORA-API)  - 處理資料儲存和後端邏輯。
+2. **後台**[repository](https://github.com/rillala/NORA-BackStage) - 給予管理者操作界面，用於管理網站內容和用戶。
+3. **後端資料庫與PHP**[repository](https://github.com/rillala/NORA-API) - 處理資料儲存和後端邏輯。
 
 ## 技術棧
 
@@ -27,6 +31,7 @@
 ## 安裝與設置
 
 ### 前提條件
+
 Node.js (建議安裝最新穩定版本)
 Vue 3 (v3.3.11)
 Vue Router (v4.2.5)
@@ -45,6 +50,7 @@ cd NORA-BackStage
 npm install
 npm run dev
 ```
+
 這將啟動一個本地開發服務器。
 
 ## 功能特色
