@@ -32,13 +32,13 @@
 
 ### 前提條件
 
-Node.js (建議安裝最新穩定版本)
-Vue 3 (v3.3.11)
-Vue Router (v4.2.5)
-Axios (v1.6.7)
-Pinia (v2.1.7)
-View UI Plus (v1.3.16)
-Vite (v5.0.10)
+- Node.js (建議安裝最新穩定版本)
+- Vue 3 (v3.3.11)
+- Vue Router (v4.2.5)
+- Axios (v1.6.7)
+- Pinia (v2.1.7)
+- View UI Plus (v1.3.16)
+- Vite (v5.0.10)
 
 ### 安裝步驟
 
